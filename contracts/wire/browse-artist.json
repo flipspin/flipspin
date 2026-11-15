@@ -1,0 +1,97 @@
+{
+  "albums": [
+    {
+      "artistName": "Daft Punk",
+      "artistRef": {
+        "id": "27",
+        "provider": "deezer",
+        "url": null
+      },
+      "coverUrl": "https://cdn.deezer.test/c.jpg",
+      "genres": [
+        "Electro"
+      ],
+      "kind": "album",
+      "label": "Daft Life Ltd.",
+      "recordType": "album",
+      "ref": {
+        "id": "302127",
+        "provider": "deezer",
+        "url": "https://www.deezer.com/album/302127"
+      },
+      "releaseDate": "2001-03-07",
+      "title": "Discovery",
+      "trackCount": 1
+    }
+  ],
+  "artist": {
+    "albumCount": null,
+    "fanCount": 5,
+    "imageUrl": null,
+    "kind": "artist",
+    "name": "Daft Punk",
+    "ref": {
+      "id": "27",
+      "provider": "deezer",
+      "url": "https://www.deezer.com/artist/27"
+    }
+  },
+  "partial": [
+    "related"
+  ],
+  "playlists": [
+    {
+      "description": null,
+      "kind": "playlist",
+      "owner": "Alex",
+      "pictureUrl": null,
+      "ref": {
+        "id": "908",
+        "provider": "deezer",
+        "url": "https://www.deezer.com/playlist/908"
+      },
+      "title": "En mode 60",
+      "trackCount": 1
+    }
+  ],
+  "related": [
+    {
+      "albumCount": null,
+      "fanCount": 5,
+      "imageUrl": null,
+      "kind": "artist",
+      "name": "Daft Punk",
+      "ref": {
+        "id": "27",
+        "provider": "deezer",
+        "url": "https://www.deezer.com/artist/27"
+      }
+    }
+  ],
+  "topTracks": [
+    {
+      "albumRef": {
+        "id": "302127",
+        "provider": "deezer",
+        "url": "https://www.deezer.com/album/302127"
+      },
+      "albumTitle": "Discovery",
+      "artistName": "Daft Punk",
+      "artistRef": null,
+      "coverUrl": "https://cdn.deezer.test/c.jpg",
+      "discNumber": 1,
+      "durationSeconds": 320.0,
+      "explicit": false,
+      "isrc": "GBDUW0000053",
+      "kind": "track",
+      "previewUrl": "https://cdn.deezer.test/p.mp3",
+      "ref": {
+        "id": "3135553",
+        "provider": "deezer",
+        "url": null
+      },
+      "title": "One More Time",
+      "trackPosition": 1
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+/* krobi-ui; AGPL-3.0; see LICENSE.
+ * The modal layer's position and motion (react/components/ModalLayer.tsx).
+ * Skins add colour, size and borders through their own classes; they never
+ * set position, z-index or animation here. Tokens: tokens/app.css. */
+
+.k-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--scrim);
+  animation: k-fade var(--dur-fast) var(--ease-out);
+}
+.k-scrim[data-state="closed"] { animation: k-fade-out var(--dur-fast) var(--ease-out) both; pointer-events: none; }
+
+.k-panel { outline: none; }
+.k-panel[data-state="open"] { animation: k-pop var(--dur-fast) var(--ease-out); }
+.k-panel[data-state="closed"] { animation: k-pop-out var(--dur-fast) var(--ease-out) both; pointer-events: none; }
+
+@keyframes k-fade { from { opacity: 0; } }
+@keyframes k-fade-out { to { opacity: 0; } }
+@keyframes k-pop { from { opacity: 0; translate: 0 8px; scale: 0.98; } }
+@keyframes k-pop-out { to { opacity: 0; translate: 0 8px; scale: 0.98; } }
+
+/* Popover (react/components/Popover.tsx): placed by script against its
+   trigger; skins add their look through their own class. The doubled
+   selector outranks a skin that sets its own position. */
+.k-popover[data-state] {
+  position: fixed;
+  z-index: var(--z-popover);
+  overflow: auto;
+  outline: none;
+}
+.k-popover[data-state="open"] { animation: k-pop var(--dur-fast) var(--ease-out); }
+.k-popover[data-state="closed"] { animation: k-pop-out var(--dur-fast) var(--ease-out) both; pointer-events: none; }

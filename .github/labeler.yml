@@ -1,0 +1,47 @@
+# Generated from .github/areas.yml by node scripts/check-areas.mjs --write-labeler
+area:backend:
+  - changed-files:
+      - any-glob-to-any-file:
+          - backend/**
+area:renderer:
+  - changed-files:
+      - any-glob-to-any-file:
+          - renderer/**
+          - package.json
+          - package-lock.json
+          - i18next.config.ts
+area:shell:
+  - changed-files:
+      - any-glob-to-any-file:
+          - src-tauri/**
+area:helper:
+  - changed-files:
+      - any-glob-to-any-file:
+          - helper/**
+area:contracts:
+  - changed-files:
+      - any-glob-to-any-file:
+          - contracts/**
+area:docs:
+  - changed-files:
+      - any-glob-to-any-file:
+          - docs/**
+          - "*.md"
+          - "*/AGENTS.md"
+area:ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - .github/**
+          - Makefile
+          - mise.toml
+          - rust-toolchain.toml
+          - .python-version
+          - .nvmrc
+          - scripts/**
+          - resources/**
+area:deploy:
+  - changed-files:
+      - any-glob-to-any-file:
+          - deploy/**
+          - backend/Dockerfile*
+          - docker-compose.yml

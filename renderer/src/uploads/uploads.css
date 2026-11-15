@@ -1,0 +1,122 @@
+/* This sheet opens from Library, outside the Settings / Setup token scopes. */
+.up-dialog {
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 15px;
+  --text-xl: 22px;
+  --leading-tight: 1.2;
+  --tracking-body: -0.01em;
+  --space-1: 4px;
+  --space-1-5: 6px;
+  --space-2: 8px;
+  --space-2-5: 10px;
+  --space-3: 12px;
+  --space-3-5: 14px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --focus-offset: 2px;
+}
+
+/* Paper colours override every modern/calm and OS theme block. */
+:root .krobi-upload-island .krobi-modern.up-dialog[data-profile="modern"][data-tone="calm"] {
+  color-scheme: inherit;
+  --color-bg-surface-primary: var(--paper);
+  --color-bg-surface-secondary: var(--panel);
+  --color-bg-surface-tertiary: var(--panel);
+  --color-bg-surface-head: var(--panel-2);
+  --color-bg-surface-hover: var(--paper-2);
+  --color-bg-surface-rail: var(--paper);
+  --color-bg-surface-foot: var(--panel-2);
+  --color-bg-surface-dim: var(--paper-2);
+  --color-text-primary: var(--ink);
+  --color-text-secondary: var(--ink-2);
+  --color-text-tertiary: var(--ink-3);
+  --color-text-body: var(--ink);
+  --color-text-disabled: var(--ink-4);
+  --color-text-on-hue: var(--yellow-ink);
+  --color-text-on-fill: var(--chalk);
+  --color-text-accent: var(--fg-coral);
+  --color-border-primary: var(--line);
+  --color-border-bold: var(--line);
+  --color-border-soft: var(--line-soft);
+  --color-border-mid: var(--line-med);
+  --color-border-accent: var(--coral);
+  --color-shadow-offset: var(--line);
+  --color-bg-fill-primary: var(--coral);
+  --color-bg-fill-primary-hover: var(--coral-deep);
+  --color-bg-fill-secondary: var(--paper);
+  --color-bg-fill-secondary-hover: var(--panel-2);
+  --zm-ink-fill: var(--ink);
+  --zm-ink-fill-hover: var(--ink-2);
+  --zm-on-ink: var(--paper);
+  --zm-tint-1: var(--paper-2);
+  --zm-bad: var(--rose);
+  --zm-bad-soft: var(--rose-tint);
+  --zm-bad-fg: var(--fg-rose);
+  --status-danger: var(--rose);
+  --status-danger-tint: var(--rose-tint);
+  --status-danger-fg: var(--fg-rose);
+  --shadow-1: 0 1px 1px color-mix(in srgb, var(--ink) 4%, transparent);
+  --shadow-2: 0 1px 2px color-mix(in srgb, var(--ink) 5%, transparent);
+  --shadow-3: 0 12px 32px color-mix(in srgb, var(--ink) 14%, transparent);
+  --zm-shadow-av: none;
+  --focus-ring: 2px solid var(--coral);
+}
+
+/* The standalone sheet stays within the viewport and scrolls when its content overflows. */
+.up-dialog[data-profile="modern"] {
+  box-sizing: border-box; display: grid; width: min(640px, 100%);
+  padding: var(--space-6); gap: var(--space-5);
+  max-height: calc(100dvh - var(--space-6) * 2); overflow: auto;
+  border: 0; border-radius: var(--radius-xl);
+  background: var(--color-bg-surface-secondary); color: var(--color-text-primary);
+  box-shadow: var(--shadow-3); font-family: var(--font-sans);
+  font-size: var(--text-base); line-height: var(--leading-body); letter-spacing: var(--tracking-body);
+}
+.up-dialog[data-profile="modern"]::before { display: none; }
+/* Upload buttons bypass base-layer borders and padding so local control styles apply. */
+@layer base {
+  .krobi-upload-island button,
+  .krobi-upload-island button:hover,
+  .krobi-upload-island button:active,
+  .krobi-upload-island button:focus,
+  .krobi-upload-island button:focus-visible { all: revert-layer; }
+}
+.up-head, .up-line, .up-actions, .up-foot { display: flex; align-items: center; gap: var(--space-3); }
+.up-head { gap: var(--space-4); }
+.up-heading { display: grid; gap: var(--space-1); flex: 1; min-width: 0; }
+.up-dialog .up-heading h3 { margin: 0; font-size: var(--text-xl); font-weight: 600; line-height: var(--leading-tight); }
+.up-facts { color: var(--ink-3); font-size: var(--text-sm); }
+.up-close { align-self: flex-start; flex: none; display: grid; place-items: center; width: 36px; height: 36px; padding: 0; border: 0; border-radius: var(--radius-md); background: var(--paper); color: var(--ink-2); cursor: pointer; }
+.up-close:hover { background: var(--paper-2); }
+.up-drop { padding: 28px; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: var(--space-4); border: 1px dashed var(--line-med); border-radius: var(--radius-md); color: var(--ink-2); }
+.up-summary { display: grid; gap: var(--space-2-5); }
+.up-line { justify-content: space-between; font-size: var(--text-sm); }
+.up-line b, .up-big b, .up-key b { font-family: var(--font-mono); font-weight: 500; }
+.up-summary progress { width: 100%; height: 8px; accent-color: var(--blue); }
+.up-big { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-2-5); }
+.up-big b { font-size: 30px; line-height: 1.2; letter-spacing: -.04em; }
+.up-big span { color: var(--ink-3); font-size: var(--text-sm); }
+.up-bar { display: flex; gap: 2px; height: 10px; border-radius: 5px; overflow: hidden; }
+.up-bar i { display: block; }
+.up-dialog .up-key { gap: var(--space-4); }
+.up-duplicates { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--space-4); padding: var(--space-3-5) var(--space-4); border: 1px solid var(--line-soft); border-radius: var(--radius-lg); font-size: var(--text-base); }
+.up-duplicates > b { font-weight: 600; }
+.up-segment { display: flex; padding: 3px; border-radius: var(--radius-md); background: var(--paper); gap: 2px; width: fit-content; }
+.up-segment button { min-height: 36px; padding: 0 var(--space-3); border: 0; border-radius: var(--radius-sm); color: var(--ink-3); background: transparent; cursor: pointer; font: inherit; font-size: 13px; font-weight: 600; }
+.up-segment button[aria-checked="true"] { background: var(--panel); color: var(--ink); box-shadow: 0 1px 3px color-mix(in srgb, var(--ink) 12%, transparent); }
+.up-current, .up-failure-group code { font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.up-current { padding: var(--space-3); border-radius: var(--radius-sm); background: var(--paper-2); }
+.up-failures { display: grid; gap: var(--space-3); max-height: 240px; overflow-y: auto; }
+.up-failure-group { display: grid; gap: var(--space-1); border-top: 1px solid var(--line-soft); padding-top: var(--space-2); }
+.up-status { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm); }
+.up-status i { width: 6px; height: 6px; border-radius: var(--radius-full); background: var(--rose); }
+.up-status b { margin-left: auto; font-family: var(--font-mono); }
+.up-foot { justify-content: flex-end; flex-wrap: wrap; gap: var(--space-2); }
+.up-dialog :focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }
+.krobi-upload-island .z-scrim { position: fixed; inset: 0; z-index: var(--z-modal); display: grid; place-items: center; padding: 24px; background: color-mix(in srgb, var(--ink) 28%, transparent); }
+@media (max-width: 600px) {
+  .up-duplicates { grid-template-columns: minmax(0, 1fr); }
+  .up-actions { flex-wrap: wrap; justify-content: center; gap: var(--space-2); }
+}

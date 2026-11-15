@@ -1,0 +1,45 @@
+{
+  "compilerOptions": {
+    "preserveSymlinks": true,
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "allowJs": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@state/*": [
+        "src/state/*"
+      ],
+      "@lib/*": [
+        "src/lib/*"
+      ],
+      "@context/*": [
+        "src/state/*"
+      ],
+      "@utils/*": [
+        "src/lib/*"
+      ],
+      "@wasm-audio-decoders/opus-ml": [
+        "src/player/engine/opusMlStub.ts"
+      ]
+    }
+  },
+  "include": [
+    "src"
+  ]
+}

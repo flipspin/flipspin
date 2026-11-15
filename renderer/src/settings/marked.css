@@ -1,0 +1,450 @@
+/* Scope account-pane geometry here and colors to theme tokens.
+   Reset global button styles so these panes retain their own borders and shadows. */
+
+.mk {
+  --mk-ink: var(--ink);
+  /* Outlines: the same colour as ink in every light theme, black at night. */
+  --mk-line: var(--line);
+  --mk-ink-2: var(--ink-2);
+  --mk-ink-3: var(--ink-3);
+  --mk-card: var(--panel);
+  --mk-app: var(--paper);
+  --mk-coral: var(--coral);
+  --mk-yellow: var(--yellow);
+  --mk-green: var(--green);
+  --mk-purple: var(--purple);
+  --mk-teal: var(--teal);
+  --mk-destructive: var(--rose);
+  /* Use the account selection tint without a translucent overlay. */
+  --mk-selection: var(--coral-tint);
+  --mk-mono: var(--font-mono, ui-monospace, monospace);
+  display: grid;
+  gap: 1.1rem;
+  color: var(--mk-ink);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+/* ─────────────────────────────── AccentCard ─────────────────────────────── */
+
+.mk-card {
+  --mk-accent: var(--mk-coral);
+  display: grid;
+  gap: 0.75rem;
+  padding: 14px;
+  background: var(--mk-card);
+  border: 2px solid var(--mk-line);
+  border-top-width: 8px; /* 2px border + the 6pt accent strip, drawn below */
+  border-top-color: var(--mk-accent);
+  border-radius: 14px;
+  box-shadow: 4px 4px 0 0 var(--mk-line);
+  overflow: hidden;
+}
+.mk-card--coral { --mk-accent: var(--mk-coral); }
+.mk-card--green { --mk-accent: var(--mk-green); }
+.mk-card--purple { --mk-accent: var(--mk-purple); }
+.mk-card--teal { --mk-accent: var(--mk-teal); }
+.mk-card--yellow { --mk-accent: var(--mk-yellow); }
+.mk-card--rose { --mk-accent: var(--mk-destructive); }
+
+.mk-card__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+.mk-card__title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--mk-ink);
+}
+/* The count or the spinner at the card's right, mono 10.5. */
+.mk-card__aside {
+  font-family: var(--mk-mono);
+  font-size: 10.5px;
+  color: var(--mk-ink-3);
+  white-space: nowrap;
+}
+
+/* ───────────────────────────────── Type ─────────────────────────────────── */
+
+.mk-body { margin: 0; font-size: 12.5px; color: var(--mk-ink-2); }
+.mk-muted { margin: 0; font-size: 12px; color: var(--mk-ink-3); }
+.mk-strong { font-weight: 700; color: var(--mk-ink); }
+.mk-meta {
+  margin: 0;
+  font-family: var(--mk-mono);
+  font-size: 10px;
+  color: var(--mk-ink-3);
+}
+/* `EtiquetaMono`: a mono kicker over a sub-list. A label, never a second title. */
+.mk-kicker {
+  margin: 0;
+  font-family: var(--mk-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.135em;
+  text-transform: uppercase;
+  color: var(--mk-ink-3);
+}
+.mk-kicker--lg { font-size: 10.5px; }
+
+.mk-stack { display: grid; gap: 0.6rem; }
+.mk-stack--tight { display: grid; gap: 0.3rem; }
+.mk-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.mk-row--between { justify-content: space-between; }
+.mk-row--top { align-items: flex-start; }
+
+/* ─────────────────────────────── Buttons ────────────────────────────────── */
+
+/* Use desktop-sized targets and shadows while preserving the shared account-pane geometry. */
+.mk-btn {
+  /* Reset of the global `button {}` first, then the Marcado look. */
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 5px 12px;
+  margin: 0;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--mk-ink);
+  background: var(--mk-coral);
+  border: 2px solid var(--mk-line);
+  border-radius: 6px;
+  box-shadow: 2px 2px 0 0 var(--mk-line);
+  cursor: pointer;
+  transition: transform var(--dur-press) var(--ease), box-shadow var(--dur-press) var(--ease), background-color var(--dur-fast) var(--ease);
+  text-align: center;
+}
+.mk-btn:hover { background: var(--mk-coral); opacity: 1; }
+.mk-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 0 var(--mk-line);
+}
+.mk-btn:focus-visible {
+  outline: 2px solid var(--mk-line);
+  outline-offset: 3px;
+}
+.mk-btn:disabled {
+  background: var(--mk-app);
+  opacity: 0.55;
+  cursor: default;
+  transform: none;
+  box-shadow: 2px 2px 0 0 var(--mk-line);
+}
+.mk-btn--green { background: var(--mk-green); }
+.mk-btn--green:hover { background: var(--mk-green); }
+.mk-btn--wide { width: 100%; }
+
+/* `MarcadoSecondaryButton`: paper fill, plain weight. */
+.mk-btn--paper-2 {
+  font-weight: 600;
+  background: var(--mk-app);
+}
+.mk-btn--paper-2:hover { background: var(--mk-card); }
+/* A row of mutually exclusive choices; Importar's source picker. Joined, so it
+   reads as one control and not as three separate actions. */
+.mk-segmented { display: inline-flex; justify-self: start; }
+.mk-segmented > .mk-btn { border-radius: 0; margin-left: -2px; box-shadow: 2px 2px 0 0 var(--mk-line); }
+.mk-segmented > .mk-btn:first-child { border-radius: 6px 0 0 6px; margin-left: 0; }
+.mk-segmented > .mk-btn:last-child { border-radius: 0 6px 6px 0; }
+.mk-segmented > .mk-btn[aria-pressed='true'] { font-weight: 800; position: relative; z-index: 1; }
+/* `aria-pressed`: the selected choice of a segmented pair (the log picker). */
+.mk-btn--paper-2[aria-pressed='true'] { background: var(--mk-yellow); }
+
+/* The filled destructive confirm; "Delete permanently". */
+.mk-btn--rose {
+  background: var(--mk-destructive);
+  color: var(--mk-card);
+}
+.mk-btn--rose:hover { background: var(--mk-destructive); }
+
+/* Keep actions neutral until confirmation so repeated rows do not all look destructive. */
+.mk-btn--text {
+  min-height: 28px;
+  padding: 0 4px;
+  font-size: 12px;
+  font-weight: 700;
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+.mk-btn--text:hover { background: transparent; text-decoration: underline; }
+.mk-btn--text:active { transform: none; }
+.mk-btn--text:disabled { background: transparent; box-shadow: none; }
+.mk-btn--text.mk-btn--danger-text { color: var(--mk-destructive); }
+/* A text verb that has to *look* clickable on its own, with no row of buttons
+   around it to say so: underlined, in the accent, like a link. */
+.mk-btn--link {
+  min-height: 0;
+  padding: 0;
+  line-height: 1.2;
+  font-weight: 600;
+  color: var(--coral-deep);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1.5px;
+}
+.mk-btn--link:hover { color: var(--mk-ink); text-decoration-thickness: 2px; }
+
+/* A square icon button at the right of a row; the trash. Neutral until
+   hovered: a red bin in every row is a row of alarms. */
+.mk-iconbtn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  color: var(--mk-ink);
+  background: var(--mk-card);
+  border: 2px solid var(--mk-line);
+  border-radius: 6px;
+  box-shadow: 2px 2px 0 0 var(--mk-line);
+  cursor: pointer;
+  transition: transform var(--dur-press) var(--ease), box-shadow var(--dur-press) var(--ease), background-color var(--dur-fast) var(--ease);
+}
+.mk-iconbtn svg { width: 14px; height: 14px; stroke: currentColor; }
+.mk-iconbtn:hover { background: var(--rose-tint); color: var(--mk-destructive); opacity: 1; }
+.mk-iconbtn:active { transform: translate(2px, 2px); box-shadow: 0 0 0 0 var(--mk-line); }
+.mk-iconbtn:focus-visible { outline: 2px solid var(--mk-line); outline-offset: 3px; }
+.mk-iconbtn:disabled { opacity: 0.5; cursor: default; transform: none; }
+
+/* ───────────────────────────────── Chips ────────────────────────────────── */
+
+.mk-chip {
+  display: inline-block;
+  padding: 5px 10px;
+  font-family: var(--mk-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--mk-ink);
+  background: var(--mk-card);
+  border: 2px solid var(--mk-line);
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.mk-chip--yellow { background: var(--mk-yellow); }
+.mk-chip--app { background: var(--mk-app); }
+.mk-chip--selection { background: var(--mk-selection); }
+
+/* ─────────────────────────────── Surfaces ───────────────────────────────── */
+
+/* Keep account identity facts visually separate from the card actions. */
+.mk-inset {
+  display: grid;
+  gap: 4px;
+  padding: 11px 13px;
+  background: var(--mk-card);
+  border: 2px solid var(--mk-line);
+  border-radius: 10px;
+  box-shadow: 2px 2px 0 0 var(--mk-line);
+}
+.mk-inset--app { background: var(--mk-app); }
+
+/* `EstadoVacio`: a title, a detail, maybe one secondary action. */
+.mk-empty {
+  display: grid;
+  gap: 9px;
+  padding: 14px;
+  background: var(--mk-card);
+  border: 2px solid var(--mk-line);
+  border-radius: 10px;
+  box-shadow: 2px 2px 0 0 var(--mk-line);
+}
+.mk-empty__title { margin: 0; font-size: 14px; font-weight: 700; color: var(--mk-ink); }
+.mk-empty--alarm { background: var(--yellow-tint); }
+
+/* The confirmation of an irreversible act. Louder than anything else here. */
+.mk-confirm {
+  display: grid;
+  gap: 7px;
+  padding: 12px 13px;
+  background: var(--mk-card);
+  border: 2px solid var(--mk-destructive);
+  border-radius: 10px;
+  box-shadow: 2px 2px 0 0 var(--mk-destructive);
+}
+.mk-confirm__title {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--mk-destructive);
+}
+.mk-confirm__warn { margin: 0; font-size: 12px; font-weight: 700; color: var(--mk-destructive); }
+
+/* ──────────────────────────────── Rows ──────────────────────────────────── */
+
+/* A list of rows inside a card; accounts, devices. Rows divide, the list has no box. */
+.mk-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  border-top: 1px solid var(--line-soft, rgba(21, 21, 21, 0.12));
+}
+.mk-list > li {
+  border-bottom: 1px solid var(--line-soft, rgba(21, 21, 21, 0.12));
+}
+.mk-rowhead {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 13px;
+}
+.mk-rowhead__body { display: grid; gap: 3px; min-width: 0; flex: 1 1 auto; }
+.mk-rowhead__title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--mk-ink);
+}
+/* The whole header is the toggle and it is a button: keyboard and announced. */
+.mk-rowline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-right: 13px;
+}
+.mk-rowline > .mk-toggle { flex: 1 1 auto; min-width: 0; }
+.mk-toggle {
+  appearance: none;
+  display: flex;
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 11px 13px;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  cursor: pointer;
+}
+.mk-toggle:hover { background: var(--mk-app); opacity: 1; }
+.mk-toggle:focus-visible { outline: 2px solid var(--mk-line); outline-offset: -2px; }
+.mk-chevron {
+  display: inline-block;
+  width: 11px;
+  flex: 0 0 11px;
+  margin-top: 3px;
+  font-size: 11px;
+  line-height: 1;
+  transition: transform var(--dur-fast) var(--ease);
+}
+.mk-chevron--open { transform: rotate(90deg); }
+/* What a row unfolds into. Indented past the chevron so it reads as the row's. */
+.mk-fold {
+  display: grid;
+  gap: 9px;
+  padding: 0 13px 11px 34px;
+}
+.mk-devices { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.mk-devices > li { display: grid; gap: 2px; }
+
+/* ──────────────────────────────── Fields ────────────────────────────────── */
+
+.mk-field {
+  appearance: none;
+  width: 100%;
+  max-width: 24rem;
+  min-height: 34px;
+  padding: 6px 10px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--mk-ink);
+  background: var(--mk-card);
+  border: 2px solid var(--mk-line);
+  border-radius: 6px;
+  box-shadow: none;
+  outline: none;
+}
+.mk-field::placeholder { color: var(--ink-4); }
+.mk-field:focus { box-shadow: 2px 2px 0 0 var(--mk-line); }
+.mk-field--mono { font-family: var(--mk-mono); letter-spacing: 0.04em; }
+.mk-field--secret { background: var(--yellow-tint); user-select: all; word-break: break-all; }
+.mk-field--grow { max-width: none; }
+.mk-label { font-size: 12.5px; font-weight: 700; color: var(--mk-ink); }
+select.mk-field { width: auto; min-width: 7rem; }
+.mk-fieldset { margin: 0; padding: 0; border: 0; min-width: 0; display: grid; gap: 0.5rem; }
+.mk-fieldset > legend { padding: 0; font-size: 12.5px; font-weight: 700; }
+.mk-radio { display: flex; gap: 8px; align-items: flex-start; font-size: 12.5px; }
+.mk-radio input { margin-top: 3px; }
+
+/* The dialog around a one-shot credential: a card with the yellow strip. */
+.mk-reveal { --mk-accent: var(--mk-yellow); }
+
+/* The log viewport: the one inverted surface; a log is read like a terminal. */
+.mk-log {
+  height: 20rem;
+  overflow: auto;
+  border: 2px solid var(--mk-line);
+  border-radius: 6px;
+  background: #17171a;
+  color: #e6e6df;
+}
+.mk-log ul { list-style: none; margin: 0; padding: 0; }
+.mk-log__line {
+  padding: 0.15rem 0.6rem;
+  margin: 0;
+  font-family: var(--mk-mono);
+  font-size: 0.76rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+  border-left: 3px solid transparent;
+}
+.mk-log__line--panel-2 { color: #9a9a92; }
+
+/* ─────────────────────────────── Dialog ─────────────────────────────────── */
+
+/* Above the settings modal, which is itself above the app: the scrim has to
+   win against `.settings-modal-overlay` or the dialog opens underneath the
+   thing that opened it. */
+.mk-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(21, 21, 21, 0.45);
+}
+.mk-dialog {
+  width: min(30rem, 100%);
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+  outline: none;
+}
+.mk-dialog .mk-card { box-shadow: 6px 6px 0 0 var(--mk-line); }
+
+/* ─────────────────────────────── Footer ─────────────────────────────────── */
+
+/* The end of a pane: one quiet line and the verb that undoes the pane. */
+.mk-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 8px 4px 0;
+  border-top: 1px solid var(--line-soft, rgba(21, 21, 21, 0.12));
+}

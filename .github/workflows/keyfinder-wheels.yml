@@ -1,0 +1,52 @@
+name: KeyFinder wheels
+on:
+  workflow_call:
+    inputs:
+      all_platforms:
+        description: Reusable calls build release platforms, even from a push event
+        type: boolean
+        default: true
+      macos:
+        type: boolean
+        default: true
+  workflow_dispatch:
+    inputs:
+      macos:
+        description: Build macOS wheels too
+        type: boolean
+        default: true
+  push:
+    branches: [main]
+    paths: ['helper/keyfinder/**', '.github/workflows/keyfinder-wheels.yml']
+permissions:
+  contents: read
+concurrency:
+  group: keyfinder-wheels-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  wheels:
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ${{ fromJSON(github.event_name == 'push' && !inputs.all_platforms && '["ubuntu-24.04","ubuntu-24.04-arm"]' || !inputs.macos && '["ubuntu-24.04","ubuntu-24.04-arm","windows-2022"]' || '["macos-15","ubuntu-24.04","ubuntu-24.04-arm","windows-2022"]') }}
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: pypa/cibuildwheel@9c00cb4f6b517705a3794b22395aedc36257242c # v3.2.1
+        with:
+          package-dir: helper/keyfinder
+        env:
+          CIBW_ARCHS_LINUX: ${{ matrix.os == 'ubuntu-24.04-arm' && 'aarch64' || 'x86_64' }}
+          # cibuildwheel installs each built wheel in a fresh test venv.
+          # No audio clip is checked in under helper/; retain the synthetic
+          # audio tests as well as checking the analysis extra without Torch.
+          CIBW_TEST_COMMAND: >-
+            python -m pip install "{project}/helper[analysis]" &&
+            python -c "import importlib.util; import krobi_helper, krobi_keyfinder, onnxruntime; assert importlib.util.find_spec('torch') is None, 'Torch must not be installed'" &&
+            python -m pytest "{package}/tests"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: keyfinder-${{ matrix.os }}
+          path: wheelhouse/*.whl
+          if-no-files-found: error

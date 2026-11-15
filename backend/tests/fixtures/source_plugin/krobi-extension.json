@@ -1,0 +1,28 @@
+{
+  "manifest": 1,
+  "id": "fake",
+  "kind": "source",
+  "name": "Fake",
+  "version": "1.0.0",
+  "protocol": {
+    "source": [
+      1
+    ]
+  },
+  "runs": [
+    "nest"
+  ],
+  "adds": [
+    "source:audio"
+  ],
+  "reaches": [],
+  "entry": {
+    "command": [
+      "{python}",
+      "-m",
+      "fake_source"
+    ]
+  },
+  "license": "MIT",
+  "homepage": "https://example.test/plugin"
+}

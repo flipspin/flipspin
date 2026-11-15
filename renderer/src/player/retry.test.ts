@@ -1,0 +1,257 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { PlaybackController } from './PlaybackController'
+import { fakeAudio } from './fakeAudio'
+import { setFakeBridgeForTest } from '../bridge'
+import type { KrobiBridge } from '../lib/ipc'
+import { deferred, flush } from '../stems/fakeAudio'
+
+const track = (key = 'a/song') => ({ key, src: `krobi-media://localhost/${key}`, title: key, origin: 'https://nest.example' })
+const disposers: (() => void)[] = []
+function setup(status = 200) {
+  const audio = fakeAudio()
+  const fetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response(null, { status }))
+  const advance = vi.fn(), notice = vi.fn()
+  const controller = new PlaybackController({ advance, notice, fetcher })
+  disposers.push(controller.attach(audio.element))
+  controller.setIntent(true); controller.select(track())
+  audio.emit('loadedmetadata'); audio.emit('playing')
+  audio.element.currentTime = 42; audio.emit('timeupdate')
+  return { ...audio, fetcher, advance, notice, controller }
+}
+beforeEach(() => { vi.useFakeTimers(); localStorage.clear() })
+afterEach(() => { disposers.splice(0).forEach(fn => fn()); vi.useRealTimers(); vi.restoreAllMocks() })
+
+describe('C4 retry and cancellation', () => {
+  it('resets the exact src at 1, 2, 4, 8, 15 s and seeks after metadata to position minus 2', async () => {
+    const x = setup()
+    for (const delay of [1000, 2000, 4000, 8000, 15000]) {
+      const count = x.load.mock.calls.length
+      x.error(2); await flush()
+      expect(x.fetcher).toHaveBeenLastCalledWith(track().src, expect.objectContaining({ method: 'HEAD' }))
+      expect(x.controller.getSnapshot().state).toBe('retrying')
+      await vi.advanceTimersByTimeAsync(delay - 1)
+      expect(x.load).toHaveBeenCalledTimes(count)
+      await vi.advanceTimersByTimeAsync(1)
+      expect(x.load).toHaveBeenCalledTimes(count + 1)
+      expect(x.element.getAttribute('src')).toBe(track().src)
+      expect(x.element.currentTime).toBe(0)
+      x.emit('loadedmetadata')
+      expect(x.element.currentTime).toBe(40)
+    }
+    x.error(2); await flush()
+    expect(x.controller.getSnapshot()).toMatchObject({ state: 'failed', cause: 'network' })
+    expect(x.advance).not.toHaveBeenCalled()
+  })
+  it('pauses the remaining budget when disconnected and resumes on reconnect', async () => {
+    const x = setup()
+    x.error(2); await flush(); await vi.advanceTimersByTimeAsync(400)
+    x.controller.setConnected(false)
+    await vi.advanceTimersByTimeAsync(60000)
+    expect(x.load).toHaveBeenCalledTimes(1)
+    x.controller.setConnected(true)
+    await vi.advanceTimersByTimeAsync(599)
+    expect(x.load).toHaveBeenCalledTimes(1)
+    await vi.advanceTimersByTimeAsync(1)
+    expect(x.load).toHaveBeenCalledTimes(2)
+  })
+  it('waits without spending attempts when the server was already down', async () => {
+    const x = setup(); x.controller.setConnected(false)
+    x.error(2); await flush(); await vi.advanceTimersByTimeAsync(60000)
+    expect(x.load).toHaveBeenCalledTimes(1)
+    x.controller.setConnected(true); await vi.advanceTimersByTimeAsync(1000)
+    expect(x.load).toHaveBeenCalledTimes(2)
+  })
+  it('probes decode/network errors for 401, retries once, then fails as auth', async () => {
+    const x = setup(401)
+    x.error(3); await flush(); await vi.advanceTimersByTimeAsync(1000)
+    x.emit('loadedmetadata'); x.error(2); await flush()
+    expect(x.load).toHaveBeenCalledTimes(2)
+    expect(x.controller.getSnapshot()).toMatchObject({ state: 'failed', cause: 'auth' })
+    expect(x.notice).toHaveBeenCalledWith('auth', track().title)
+    expect(x.advance).not.toHaveBeenCalled()
+  })
+  it.each(['skip', 'pause', 'other'] as const)('%s cancels the retry loop', async action => {
+    const x = setup(); x.error(2); await flush()
+    if (action === 'pause') x.controller.setIntent(false)
+    else x.controller.select(track(action))
+    const loads = x.load.mock.calls.length
+    await vi.advanceTimersByTimeAsync(60000)
+    expect(x.load).toHaveBeenCalledTimes(loads)
+    expect(x.controller.getSnapshot().state).not.toBe('retrying')
+  })
+  it('drops a stale HEAD response and aborts it when a newer song wins', async () => {
+    const x = setup(), pending = deferred<Response>()
+    x.fetcher.mockReturnValueOnce(pending.promise)
+    x.error(2); await flush()
+    const signal = x.fetcher.mock.calls.at(-1)![1]!.signal!
+    x.controller.select(track('new/song'))
+    pending.resolve(new Response(null, { status: 401 })); await flush()
+    expect(signal.aborted).toBe(true)
+    expect(x.controller.getSnapshot()).toMatchObject({ state: 'loading', cause: null })
+  })
+  it('does not race a reconnect against an unresolved HEAD probe', async () => {
+    const x = setup(), pending = deferred<Response>()
+    x.fetcher.mockReturnValueOnce(pending.promise)
+    x.error(2); x.controller.setConnected(false); x.controller.setConnected(true)
+    await vi.advanceTimersByTimeAsync(1000)
+    expect(x.load).toHaveBeenCalledTimes(1)
+    pending.resolve(new Response(null, { status: 200 })); await flush()
+    await vi.advanceTimersByTimeAsync(1000)
+    expect(x.load).toHaveBeenCalledTimes(2)
+    x.emit('loadedmetadata'); x.emit('playing')
+    expect(x.controller.getSnapshot().state).toBe('playing')
+  })
+  it.each(['ended', 'failed'] as const)('does not reload the previous %s song while React commits the next selection', async state => {
+    const x = setup(200)
+    if (state === 'ended') x.emit('ended'); else { x.error(4); await flush() }
+    const loads = x.load.mock.calls.length
+    x.controller.prepareSelection(); x.controller.setIntent(true)
+    x.emit('playing'); x.emit('pause'); x.error(2)
+    await flush()
+    expect(x.load).toHaveBeenCalledTimes(loads)
+    x.controller.select(track('new/song'))
+    expect(x.load).toHaveBeenCalledTimes(loads + 1)
+    expect(x.element.getAttribute('src')).toBe(track('new/song').src)
+  })
+  it('ignores old play rejection and old playing events before new metadata', async () => {
+    const x = setup(), pending = deferred<void>()
+    x.controller.setIntent(false)
+    x.play.mockReturnValueOnce(pending.promise)
+    x.controller.setIntent(true)
+    x.controller.select(track('new/song')); x.emit('playing')
+    pending.reject(new DOMException('old', 'NotAllowedError')); await flush()
+    expect(x.controller.getSnapshot()).toMatchObject({ state: 'loading', intent: true })
+    expect(x.notice).not.toHaveBeenCalled()
+  })
+  it('NotAllowedError pauses with one notification; other rejections enter retry', async () => {
+    const x = setup(); await flush(); x.controller.setIntent(false)
+    x.play.mockRejectedValue(new DOMException('gesture', 'NotAllowedError'))
+    x.controller.setIntent(true); await flush()
+    expect(x.controller.getSnapshot().state).toBe('paused')
+    x.controller.setIntent(true); await flush()
+    expect(x.notice).toHaveBeenCalledTimes(1)
+    x.play.mockRejectedValue(new Error('network'))
+    x.controller.setIntent(true); await flush()
+    expect(x.controller.getSnapshot().state).toBe('retrying')
+  })
+  it('only retries stalled after more than 10 seconds while buffering', async () => {
+    const x = setup()
+    x.emit('stalled'); x.emit('suspend'); await vi.advanceTimersByTimeAsync(11000)
+    expect(x.fetcher).not.toHaveBeenCalled()
+    x.emit('waiting'); x.emit('stalled'); await vi.advanceTimersByTimeAsync(10000)
+    expect(x.fetcher).not.toHaveBeenCalled()
+    await vi.advanceTimersByTimeAsync(1)
+    expect(x.controller.getSnapshot().state).toBe('retrying')
+  })
+  it('does not retry a stall that recovered', async () => {
+    const x = setup(); x.emit('waiting'); x.emit('stalled'); x.emit('playing')
+    await vi.advanceTimersByTimeAsync(12000)
+    expect(x.fetcher).not.toHaveBeenCalled()
+  })
+  it('maps engine HTTP status without a HEAD probe, including stems on the same transport', async () => {
+    const x = setup()
+    x.error(2, 401); await flush(); await vi.advanceTimersByTimeAsync(1000)
+    expect(x.fetcher).not.toHaveBeenCalled()
+    x.emit('loadedmetadata'); x.error(2, 401); await flush()
+    expect(x.controller.getSnapshot()).toMatchObject({ state: 'failed', cause: 'auth' })
+  })
+  it('decode retries once, then fails and advances only after three seconds', async () => {
+    const x = setup(); x.error(3); await flush(); await vi.advanceTimersByTimeAsync(0)
+    x.emit('loadedmetadata'); expect(x.element.currentTime).toBe(42)
+    x.error(3); await flush()
+    expect(x.controller.getSnapshot()).toMatchObject({ state: 'failed', cause: 'decode' })
+    await vi.advanceTimersByTimeAsync(2999); expect(x.advance).not.toHaveBeenCalled()
+    await vi.advanceTimersByTimeAsync(1)
+    expect(x.advance).toHaveBeenCalledOnce()
+    expect(x.notice).toHaveBeenCalledWith('decode', track().title)
+  })
+  it.each([404, 410, 200])('missing / unsupported (%i) skips immediately', async status => {
+    const x = setup(status); x.error(status === 200 ? 4 : 2); await flush()
+    expect(x.load).toHaveBeenCalledOnce()
+    expect(x.advance).toHaveBeenCalledOnce()
+    if (status === 200) expect(x.notice).toHaveBeenCalledWith('notSupported', track().title)
+    else expect(x.notice).not.toHaveBeenCalled()
+  })
+  it('stops after three consecutive unsupported songs', async () => {
+    const x = setup(200)
+    x.advance.mockImplementation(() => x.controller.select(track(`a/${x.advance.mock.calls.length}`)))
+    for (let n = 0; n < 3; n++) {
+      x.error(4); await flush()
+    }
+    expect(x.advance).toHaveBeenCalledTimes(2)
+    expect(x.controller.getSnapshot()).toMatchObject({ state: 'paused', intent: false })
+    expect(x.notice).toHaveBeenLastCalledWith('consecutive', expect.any(String))
+  })
+})
+
+it('local failures keep retrying without a HEAD probe, connection or manual Retry', async () => {
+  const x = setup()
+  x.element.dispatchEvent(new CustomEvent('firstByte', { detail: { cacheHit: true, src: x.element.src } }))
+  x.controller.setConnected(false)
+  const states: string[] = []
+  disposers.push(x.controller.subscribe(() => states.push(x.controller.getSnapshot().state)))
+  for (const delay of [1000, 2000, 4000, 8000, 15000, 15000, 15000]) {
+    x.error(2)
+    await vi.advanceTimersByTimeAsync(delay)
+    x.emit('loadedmetadata')
+    expect(x.element.currentTime).toBe(40)
+  }
+  x.emit('playing')
+  expect(x.controller.getSnapshot().state).toBe('playing')
+  expect(states).not.toContain('failed')
+  expect(x.fetcher).not.toHaveBeenCalled()
+  expect(x.advance).not.toHaveBeenCalled()
+})
+it('disconnecting during a local backoff does not stop it; pause does', async () => {
+  const x = setup()
+  x.element.dispatchEvent(new CustomEvent('firstByte', { detail: { cacheHit: true, src: x.element.src } }))
+  x.error(2)
+  await vi.advanceTimersByTimeAsync(400)
+  x.controller.setConnected(false)
+  await vi.advanceTimersByTimeAsync(600)
+  expect(x.load).toHaveBeenCalledTimes(2)
+  x.error(2)
+  x.controller.setIntent(false)
+  await vi.advanceTimersByTimeAsync(60000)
+  expect(x.load).toHaveBeenCalledTimes(2)
+})
+
+it('local corrupt content skips without ever presenting a manual Retry', async () => {
+  const x = setup()
+  x.element.dispatchEvent(new CustomEvent('firstByte', { detail: { cacheHit: true, src: x.element.src } }))
+  const states: string[] = []
+  disposers.push(x.controller.subscribe(() => states.push(x.controller.getSnapshot().state)))
+  x.error(3, 200)
+  await vi.advanceTimersByTimeAsync(0)
+  x.emit('loadedmetadata'); x.error(3, 200)
+  await vi.advanceTimersByTimeAsync(3000)
+  expect(x.advance).toHaveBeenCalledOnce()
+  expect(states).not.toContain('failed')
+})
+
+it.each(['offline', 'cache'])('recognizes a stalled %s head before its first media response', async pool => {
+  const invoke = vi.fn(async () => ({ tracks: [{ verifiedAt: 1, state: 'descargado', pool }] }))
+  disposers.push(setFakeBridgeForTest({ invoke, on: () => () => {} } as KrobiBridge))
+  const x = setup()
+  await flush()
+  x.controller.setConnected(false)
+  x.error(2)
+  await vi.advanceTimersByTimeAsync(1000)
+  expect(x.load).toHaveBeenCalledTimes(2)
+  expect(x.fetcher).not.toHaveBeenCalled()
+  expect(x.controller.getSnapshot().state).not.toBe('failed')
+})
+it('ignores stale local-copy status after another selection', async () => {
+  const pending = deferred<unknown>()
+  const invoke = vi.fn(async (channel: string) => channel === 'offline:status' ? pending.promise : undefined)
+  disposers.push(setFakeBridgeForTest({ invoke, on: () => () => {} } as KrobiBridge))
+  const x = setup()
+  x.controller.select(track('server/song'))
+  x.element.dispatchEvent(new CustomEvent('firstByte', { detail: { src: x.element.src } }))
+  pending.resolve({ tracks: [{ verifiedAt: 1, state: 'descargado' }] })
+  await flush()
+  x.controller.setConnected(false); x.error(2)
+  await vi.advanceTimersByTimeAsync(1000)
+  expect(x.load).toHaveBeenCalledTimes(2)
+  expect(x.fetcher).toHaveBeenCalledOnce()
+})

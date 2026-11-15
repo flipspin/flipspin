@@ -1,0 +1,90 @@
+[workspace]
+members = ["crates/krobi-offline"]
+default-members = [".", "crates/krobi-offline"]
+resolver = "2"
+
+[package]
+name = "krobi-desktop"
+version = "0.1.0-rc.16"
+description = "Flipspin desktop music manager"
+authors = ["nckperez"]
+license = "AGPL-3.0-or-later"
+edition = "2021"
+rust-version = "1.77.2"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "krobi_desktop_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.6.3", features = [] }
+
+[dependencies]
+krobi-offline = { path = "crates/krobi-offline" }
+fs2 = "0.4"
+base64 = "0.22.1"
+sha2 = "0.10.9"
+lofty = "0.22.4"
+rusqlite = { version = "0.32.1", features = ["bundled"] }
+percent-encoding = "2"
+keyring = { version = "3.6", features = ["apple-native", "windows-native", "sync-secret-service", "crypto-rust"] }
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+log = "0.4"
+tauri = { version = "2.12", features = ["tray-icon", "image-png"] }
+tauri-plugin-log = "2"
+tauri-plugin-single-instance = "2.4.4"
+dirs = "6"
+open = "5"
+reqwest = { version = "0.12", default-features = false, features = ["blocking", "json", "rustls-tls", "stream"] }
+rfd = "0.17.2"
+tokio = { version = "1", features = ["fs", "io-util", "time", "sync", "macros"] }
+url = "2"
+# LAN addresses support pairing; mDNS discovers servers without manual IP entry.
+# gethostname names devices off macOS, where scutil supplies the display name.
+# Discovery uses a blocking thread with a deadline, so mdns-sd needs no async feature.
+if-addrs = "0.15.0"
+# Native network notifications on macOS and Windows; only the tokio adapter.
+if-watch = { version = "3.2.2", default-features = false, features = ["tokio"] }
+futures-util = "0.3"
+rand = "0.10"
+mdns-sd = { version = "0.21.5", default-features = false, features = ["logging"] }
+gethostname = "1.1.0"
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+# Hides AppKit's own close/minimise/zoom buttons on the main window; the
+# renderer draws its own (lib.rs::hide_native_window_buttons). Already in the
+# lock through tauri, so this adds no new crate.
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = "0.6"
+objc2-app-kit = { version = "0.3", default-features = false, features = ["std", "NSButton", "NSControl", "NSResponder", "NSView", "NSWindow", "NSWorkspace", "block2"] }
+objc2-foundation = { version = "0.3", features = ["NSNotification", "NSString", "NSOperation", "block2"] }
+block2 = "0.6"
+# Which displays are showing a full-screen app (placement.rs). Already in the
+# lock through tao, so no new crate.
+core-graphics = "0.25"
+core-foundation = "0.10"
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows-sys = { version = "0.61", features = ["Win32_System_Power", "Win32_System_Registry", "Win32_System_SystemInformation", "Win32_Foundation", "Win32_Security", "Win32_System_JobObjects", "Win32_System_Threading", "Win32_System_Diagnostics_ToolHelp", "Win32_System_Console", "Win32_NetworkManagement_IpHelper", "Win32_Networking_WinSock"] }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+zbus = "5.19"
+
+# Cargo's defaults are 16 codegen units and no LTO: no inlining across
+# reqwest / serde_json / tauri, and a dylib that still carries its symbols.
+[profile.release]
+codegen-units = 1
+lto = true
+strip = true
+
+[dev-dependencies]
+tokio = { version = "1", features = ["test-util"] }
+
+# Keep transfer checksums representative of packaged throughput in debug/test builds.
+[profile.dev.package.sha2]
+opt-level = 3

@@ -1,0 +1,6 @@
+.lb-filters { display: flex; flex-wrap: wrap; align-items: end; gap: 6px; padding: 4px 0 12px; }
+.lb-filters > div { flex: 1 1 100px; }
+.lb-filters .krobi-select { height: 30px; min-height: 0; padding: 0 10px; border: 1.5px solid var(--line-med); border-radius: 8px; box-shadow: none; background: var(--panel); color: var(--ink-2); font-size: 13px; }
+.lb-filters .krobi-select--active { background: var(--yellow); border-color: var(--ink); color: #3D2A1E; }
+.lb-count { font: 11px var(--font-mono, monospace); margin-left: 5px; color: var(--ink-3); }
+.lb-filters .krobi-select--active .lb-count { color: #3D2A1E; }

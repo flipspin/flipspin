@@ -1,0 +1,34 @@
+{
+  "about": "«Una cuenta, muchos dispositivos»: the words no client may show any more, and how each role is named. Read by krobi-ios Tools/Checks, krobi-android ContratosTest and the renderer's oneAccount.test.ts. Each client checks its own Spanish strings against forbidden (whole words, case-insensitive), skipping the phrases in allowed.",
+  "forbidden": [
+    "casa",
+    "hogar",
+    "familia",
+    "miembro",
+    "miembros",
+    "persona",
+    "personas",
+    "gente",
+    "dueña",
+    "dueño"
+  ],
+  "allowed": [
+    "carpeta personal",
+    "su biblioteca quedaría sin dueño",
+    "alguien entró con tu contraseña antigua",
+    "alguien",
+    "Solo desde casa o la VPN",
+    "equipo de la casa",
+    "lejos de casa"
+  ],
+  "roleLabel": [
+    {
+      "role": "owner",
+      "label": "Admin"
+    },
+    {
+      "role": "member",
+      "label": "Normal"
+    }
+  ]
+}

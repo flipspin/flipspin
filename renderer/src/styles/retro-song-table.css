@@ -1,0 +1,1321 @@
+/*
+ * Song tables: a retro frame (ink border, hard offset shadow, dark header,
+ * zebra rows) shared by every song list.  These classes are
+ * deliberately structural: every screen keeps its own columns and controls,
+ * while the frame, header, zebra rows and hover treatment stay identical.
+ */
+.retro-song-table {
+  --song-table-ink: var(--line);
+  --song-table-paper: var(--panel);
+  --song-table-zebra: var(--paper-2);
+  --song-table-hover: color-mix(in srgb, var(--teal) 16%, transparent);
+  width: 100%;
+  min-width: 0;
+  color: var(--ink);
+  background: var(--song-table-paper);
+  border: 2px solid var(--song-table-ink);
+  border-radius: 0 !important;
+  box-shadow: 4px 4px 0 var(--song-table-ink);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.retro-song-table > .window-content-alt {
+  background: var(--song-table-paper) !important;
+}
+
+.retro-song-table__header {
+  flex: none;
+  color: var(--song-table-head-ink, var(--panel)) !important;
+  /* --song-table-head / -ink: an open playlist sets its own badge colour. */
+  background: var(--song-table-head, var(--song-table-ink)) !important;
+  border: 0 !important;
+  border-bottom: 2px solid var(--song-table-ink) !important;
+  transition: background var(--dur) var(--ease);
+  border-radius: 0 !important;
+  font-family: var(--font-pixel, var(--font-mono, ui-monospace, monospace));
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  line-height: 1.3;
+  text-transform: uppercase;
+  column-gap: 0.5rem !important;
+}
+
+.retro-song-table__header > * + * {
+  box-shadow: inset 1px 0 rgba(251, 251, 251, 0.18);
+}
+
+.retro-song-table__body {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--song-table-paper);
+}
+
+.retro-song-table__row {
+  position: relative;
+  /* No `content-visibility: auto` here. It let WebKit skip offscreen
+     rows, and WebKit paints them only once they are on screen: a fast scroll
+     showed half a table of blank rows for a beat. A few hundred rows lay out
+     in a millisecond or two; the flicker cost more than it saved. */
+  margin: 0 !important;
+  color: var(--ink) !important;
+  background: var(--song-table-paper) !important;
+  border: 0 !important;
+  border-bottom: 1px solid color-mix(in srgb, var(--song-table-ink) 18%, transparent) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-family: var(--font-pixel, var(--font-mono, ui-monospace, monospace));
+  /* No background transition: a mouse sweep started ~20 overlapping fades
+     and hover read as lag. Hover is instant. */
+  column-gap: 0.5rem !important;
+}
+
+.retro-song-table__row:nth-child(even) {
+  background: var(--song-table-zebra) !important;
+}
+
+.retro-song-table__row:hover,
+.retro-song-table__row:focus-visible {
+  color: var(--ink) !important;
+  background: var(--song-table-hover) !important;
+  opacity: 1 !important;
+}
+
+.retro-song-table__row:last-child {
+  border-bottom: 0 !important;
+}
+
+.retro-song-table__row > * + * {
+  box-shadow: inset 1px 0 color-mix(in srgb, var(--song-table-ink) 8%, transparent);
+}
+
+.retro-song-table__row--active,
+.retro-song-table__row[aria-current="true"] {
+  background: var(--yellow) !important;
+  box-shadow: inset 4px 0 0 var(--coral) !important;
+}
+/* The estimate colour is a yellow in dark mode: on the yellow playing row it
+   vanished. Here the row's ink carries it; ≈ and the dotted underline still
+   mark an estimate. */
+.retro-song-table__row--active .analysis-value--estimated,
+.retro-song-table__row[aria-current="true"] .analysis-value--estimated { color: inherit; }
+
+.retro-song-table__empty {
+  margin: 0;
+  padding: 1.5rem 1rem;
+  color: var(--ink-3);
+  background: var(--song-table-paper);
+  font-family: var(--font-pixel, var(--font-mono, ui-monospace, monospace));
+  text-align: center;
+}
+
+/* Compact lists (player queues and pickers) use the same rules without a
+   heavyweight outer shadow competing with their containing panel. */
+.retro-song-table--embedded {
+  border-width: 1px;
+  box-shadow: 2px 2px 0 var(--song-table-ink);
+}
+
+/* A song table that scrolls inside its frame. The base rule's
+   `overflow: hidden` is unlayered CSS, so it beat Tailwind's layered
+   `overflow-y-auto` and these lists never scrolled. */
+.retro-song-table--scroll {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Controls belonging to a song table share the same square frame and hard
+   shadow as its rows. This replaces the mixed pill/Win95 control vocabulary. */
+.retro-table-toolbar {
+  background: var(--paper) !important;
+}
+
+.retro-table-field,
+.retro-table-toolbar input,
+.retro-table-toolbar select {
+  min-height: 32px;
+  box-sizing: border-box;
+  color: var(--ink);
+  background: var(--panel);
+  border: 2px solid var(--song-table-ink, #1a1a18) !important;
+  border-radius: 0 !important;
+  box-shadow: 2px 2px 0 var(--song-table-ink, #1a1a18) !important;
+  font-family: var(--font-pixel, var(--font-mono, ui-monospace, monospace));
+  outline: none;
+}
+
+.retro-table-field:focus,
+.retro-table-toolbar input:focus,
+.retro-table-toolbar select:focus {
+  background: color-mix(in srgb, var(--yellow) 24%, var(--panel));
+  outline: 2px solid var(--teal);
+  outline-offset: 1px;
+}
+
+.retro-table-segment {
+  border-radius: 0 !important;
+  background: var(--panel) !important;
+  box-shadow: 2px 2px 0 var(--song-table-ink, #1a1a18);
+}
+
+.retro-table-segment__button {
+  min-height: 24px !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  font-family: var(--font-pixel, var(--font-mono, ui-monospace, monospace));
+}
+
+/* Compact row actions are real little table controls rather than floating
+   glyphs. A row that is itself a button is explicitly excluded. */
+.retro-song-table__row button:not(.retro-song-table__row):not(.song-row__action):not(.analysis-open-info),
+.retro-song-table__row .filter-chip-x {
+  border: 2px solid var(--song-table-ink, #1a1a18) !important;
+  border-radius: 0 !important;
+  background: var(--panel) !important;
+  box-shadow: 2px 2px 0 var(--song-table-ink, #1a1a18) !important;
+  color: var(--ink) !important;
+}
+
+.retro-song-table__row button:not(.retro-song-table__row):not(.song-row__action):not(.analysis-open-info):hover {
+  background: var(--yellow) !important;
+  transform: translate(-1px, -1px);
+}
+
+.retro-song-table__row button:not(.retro-song-table__row):not(.song-row__action):not(.analysis-open-info):active {
+  box-shadow: none !important;
+  transform: translate(2px, 2px);
+}
+
+/* ── Library row actions ──────────────────────────────────────────────────
+   Flat, row-height glyphs instead of bevelled boxes: a 3D button in every row
+   made the table read as a grid of buttons with some text between them. The
+   number cell shows the track number at rest and ▶ on hover —
+   so the play control costs no column of its own. */
+.retro-song-table .retro-song-table__row button.song-row__action {
+  /* `appearance: none`, explicitly. Tailwind's preflight gives every button
+     `appearance: button`, and WebKit on macOS 26 paints that native chrome
+     *over* a transparent background; a cream box behind the glyph. */
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding: 0;
+  border: 0 !important;
+  border-radius: 3px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--ink-3) !important;
+  line-height: 1;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease), opacity var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+
+.retro-song-table .retro-song-table__row button.song-row__action:hover {
+  color: var(--ink) !important;
+  transform: none;
+}
+
+.retro-song-table .retro-song-table__row button.song-row__action:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.song-row__num {
+  margin-left: var(--song-row-indent, 0px);
+  color: var(--ink-3);
+  font-size: 0.8em;
+}
+
+.song-row__num-label {
+  display: block;
+  transition: opacity var(--dur-press) var(--ease);
+}
+
+.retro-song-table .retro-song-table__row button.song-row__play {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  /* `--coral-deep`, not `--coral`: the bright coral is ~2.6:1 on the card
+     and a 12px glyph vanishes into cream. The deep one clears 3:1. */
+  color: var(--coral-deep) !important;
+}
+
+.retro-song-table__row:hover .song-row__num-label,
+.retro-song-table__row:focus-within .song-row__num-label {
+  opacity: 0;
+}
+
+.retro-song-table .retro-song-table__row:hover button.song-row__play,
+.retro-song-table .retro-song-table__row:focus-within button.song-row__play {
+  opacity: 1;
+}
+
+/* Hovering the glyph itself turns it into a solid disc:
+   the row hover reveals the affordance, the button hover promises the click. */
+/* The glyph is placed absolutely, centred under the number, rather than through flex/grid inside the button: WebKit lays a
+   button's contents out as a plain inline box, so `justify-content` on the
+   button is ignored and the icon lands at its left edge. */
+.retro-song-table .retro-song-table__row button.song-row__play > svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 22px;
+  height: 22px;
+  padding: 5px;
+  border-radius: 50%;
+  box-sizing: border-box;
+  transform: translate(-50%, -50%);
+  transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+
+.retro-song-table .retro-song-table__row button.song-row__play:hover > svg {
+  background: var(--coral);
+  color: var(--panel);
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.retro-song-table .retro-song-table__row button.song-row__play:active > svg {
+  background: var(--coral-deep);
+  transform: translate(-50%, -50%) scale(0.96);
+}
+
+.retro-song-table__row[aria-current="true"] .song-row__num {
+  color: var(--coral-deep);
+  font-weight: 700;
+}
+
+.retro-song-table .retro-song-table__row button.song-row__info {
+  width: 18px;
+  height: 18px;
+  border: 1px solid color-mix(in srgb, var(--song-table-ink, #1a1a18) 35%, transparent) !important;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.retro-song-table .retro-song-table__row button.song-row__info:hover {
+  background: var(--yellow) !important;
+  border-color: var(--song-table-ink, #1a1a18) !important;
+}
+
+/* Download is the secondary action, so it takes the cool accent: teal sits
+   near coral's complement, so the two never compete, and it is the hue the
+   row's own hover tint is mixed from, so it belongs on that surface. Hidden
+   until the row is hovered; once the file is here the check *stays*, as a
+   filled badge; the row is now telling you something, not offering. */
+.retro-song-table .retro-song-table__row button.song-row__download {
+  width: 22px;
+  height: 22px;
+  border-radius: 50% !important;
+  opacity: 0;
+  color: var(--teal) !important;
+  transition: opacity var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+
+.retro-song-table .retro-song-table__row:hover button.song-row__download,
+.retro-song-table .retro-song-table__row:focus-within button.song-row__download,
+.retro-song-table .retro-song-table__row button.song-row__download--done {
+  opacity: 1;
+}
+
+.retro-song-table .retro-song-table__row button.song-row__download:hover {
+  background: var(--teal) !important;
+  color: var(--panel) !important;
+  transform: scale(1.08);
+}
+
+.retro-song-table .retro-song-table__row button.song-row__download:active {
+  transform: scale(0.96);
+}
+
+.retro-song-table .retro-song-table__row button.song-row__download--done {
+  background: var(--teal) !important;
+  color: var(--panel) !important;
+}
+
+.retro-song-table .retro-song-table__row button.song-row__download--done:hover {
+  background: color-mix(in srgb, var(--teal) 80%, var(--ink)) !important;
+}
+
+/* ── Browse rows ─────────────────────────────────────────────────────────
+   No play here (a catalog row is a recording, not a file), so the number
+   stays put. Save is the row's one real action and takes the green the
+   "saved" badge already wears; a triadic step from coral and teal, so the
+   three surfaces (play / download / save) each own a hue. Always visible: on
+   the phone it is the tap target, and hiding it on desktop would make the
+   two clients disagree about what a row offers. */
+.retro-song-table .retro-song-table__row button.browse-row__save {
+  width: 22px;
+  height: 22px;
+  border-radius: 50% !important;
+  color: var(--green) !important;
+}
+
+.retro-song-table .retro-song-table__row button.browse-row__save:hover {
+  background: var(--green) !important;
+  color: var(--panel) !important;
+  transform: scale(1.08);
+}
+
+.retro-song-table .retro-song-table__row button.browse-row__save:active {
+  transform: scale(0.96);
+}
+
+/* Saving: the "+" becomes a spinner, no fill, no hover lift. */
+.retro-song-table .retro-song-table__row button.browse-row__save.is-busy,
+.retro-song-table .retro-song-table__row button.browse-row__save.is-busy:hover {
+  background: transparent !important;
+  color: var(--green) !important;
+  opacity: 1;
+  transform: none;
+  cursor: progress;
+}
+
+.song-row__badge {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+}
+
+.browse-row__saved {
+  background: var(--green);
+  color: var(--panel);
+}
+
+/* "›" walks into the album: navigation, not an action, so hover-only. */
+.retro-song-table .retro-song-table__row button.browse-row__open {
+  width: 22px;
+  height: 22px;
+  opacity: 0;
+}
+
+.retro-song-table .retro-song-table__row:hover button.browse-row__open,
+.retro-song-table .retro-song-table__row:focus-within button.browse-row__open {
+  opacity: 1;
+}
+
+/* ── Group headers (Group → Album / Artist) ────────────────────────────
+   A classic desktop-player layout: one line naming the group, a rule running out to the
+   right edge, and the group's rows stepped in beneath it. Lives *inside* the
+   table so it shares the rows' gutter and the header's column origin. */
+.retro-song-table__group {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0.6rem 0.75rem 0.35rem;
+  color: var(--coral-deep);
+  background: var(--song-table-paper);
+  border-bottom: 1px solid color-mix(in srgb, var(--song-table-ink) 18%, transparent);
+  font-family: var(--font-pixel, var(--font-mono, ui-monospace, monospace));
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.3;
+  cursor: pointer;
+  user-select: none;
+}
+
+.retro-song-table__group:hover {
+  color: var(--coral);
+}
+
+.retro-song-table__group::after {
+  content: "";
+  flex: 1 1 auto;
+  min-width: 2rem;
+  height: 2px;
+  align-self: center;
+  background: currentColor;
+  opacity: 0.45;
+}
+
+.retro-song-table__group-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.retro-song-table__group-meta {
+  flex: none;
+  color: var(--ink-3);
+  font-weight: 500;
+}
+
+/* Second level (an album under its artist): quieter, stepped in, not sticky —
+   two sticky levels fight over the same top edge. */
+.retro-song-table__group--sub {
+  position: static;
+  padding: 0.45rem 0.75rem 0.25rem calc(0.75rem + 1.25rem);
+  color: var(--ink-2);
+  font-size: 0.76rem;
+}
+
+.retro-song-table__group--sub::after {
+  opacity: 0.2;
+}
+
+/* ── Column picker ────────────────────────────────────────────────────────
+   The user's own choice of columns. `songTableColumns.ts` puts one
+   `song-table--hide-<id>` class per hidden column on the table root, and the
+   rules below switch that column off in the header and in every row at once —
+   the same mechanism as the container queries further down, so the two can
+   never disagree about where a column is. */
+.song-table--hide-artist .song-col--artist,
+.song-table--hide-album .song-col--album,
+.song-table--hide-genre .song-col--genre,
+.song-table--hide-date .song-col--date,
+.song-table--hide-analysis .song-col--analysis,
+.song-table--hide-key .song-col--key,
+.song-table--hide-bpm .song-col--bpm,
+.song-table--hide-lyrics .song-col--lyrics,
+.song-table--hide-duration .song-col--duration {
+  display: none !important;
+}
+
+.song-table-columns {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* A ghost glyph in the header's ink: cream at rest, dimmed so the column names
+   stay louder than the control that edits them. Every `!important` here is
+   against `index.css`'s coral-pill `button` rule. */
+.retro-song-table .retro-song-table__header button.song-table-columns__trigger {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 24px;
+  height: 22px;
+  min-height: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 4px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--song-table-head-ink, var(--panel)) !important;
+  opacity: 0.62;
+  line-height: 1;
+  cursor: pointer;
+  transition: opacity var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+
+.retro-song-table .retro-song-table__header button.song-table-columns__trigger:hover,
+.retro-song-table .retro-song-table__header button.song-table-columns__trigger:focus-visible,
+.retro-song-table .retro-song-table__header button.song-table-columns__trigger[aria-expanded="true"] {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.14) !important;
+  transform: none;
+}
+
+.retro-song-table .retro-song-table__header button.song-table-columns__trigger:focus-visible {
+  outline: 2px solid var(--yellow) !important;
+  outline-offset: 1px;
+}
+
+/* The dot: "this table is not showing everything". Yellow, because that is
+   the colour the table already uses for a state you set yourself. */
+.retro-song-table .retro-song-table__header button.song-table-columns__trigger--custom::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--yellow);
+  box-shadow: 0 0 0 1.5px var(--song-table-ink, #1a1a18);
+}
+
+/* The popover: the context menu's card; 2px ink, hard 5px shadow; with the
+   table header's own strip on top so it reads as a piece of the table. */
+.song-table-columns__menu {
+  position: absolute;
+  width: 248px;
+  overflow: hidden;
+  background: var(--song-table-paper, var(--panel));
+  border: 2px solid var(--song-table-ink, #1a1a18);
+  border-radius: 10px;
+  box-shadow: 5px 5px 0 0 var(--song-table-ink, #1a1a18);
+  color: var(--ink);
+  font-family: var(--font-display, "Inter", system-ui, sans-serif);
+  font-size: 0.82rem;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.song-table-columns__title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  background: var(--song-table-ink, #1a1a18);
+  color: var(--panel);
+  font-family: var(--font-pixel, var(--font-mono, ui-monospace, monospace));
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.song-table-columns__count {
+  opacity: 0.6;
+  font-variant-numeric: tabular-nums;
+}
+
+.song-table-columns__list {
+  margin: 0;
+  padding: 0.375rem;
+  list-style: none;
+}
+
+.song-table-columns__row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-radius: 6px;
+  background: var(--song-table-paper, var(--panel));
+  transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+.song-table-columns__row > label { flex: 1; min-width: 0; }
+.song-table-columns__list[data-dragging] { user-select: none; }
+.song-table-columns__list[data-settling] .song-table-columns__row { transition: none; }
+.song-table-columns__row--lifted {
+  z-index: var(--z-sticky);
+  transition: box-shadow var(--dur-fast) var(--ease) !important;
+  box-shadow: 4px 4px 0 0 var(--ink);
+}
+.song-table-columns__menu button.song-table-columns__grip {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  min-height: 0;
+  margin-right: 4px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--ink-3);
+  cursor: grab;
+  touch-action: none;
+}
+.song-table-columns__menu button.song-table-columns__grip:active { cursor: grabbing; }
+.song-table-columns__menu button.song-table-columns__grip:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .song-table-columns__row { transition: none; }
+}
+
+.song-table-columns__item {
+  position: relative; /* the hidden input's containing block, so it stays inside its row */
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--dur-press) var(--ease);
+}
+
+.song-table-columns__item:hover {
+  background: var(--song-table-hover, rgba(79, 156, 139, 0.16));
+}
+
+/* The native checkbox does the work; keyboard, screen reader, form
+   semantics; and the box after it does the drawing. */
+.song-table-columns__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.song-table-columns__box {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  /* --ink, not the table's line colour: lines are near-black in dark mode,
+     so a box drawn with them vanished on the dark menu. */
+  border: 2px solid var(--ink);
+  border-radius: 3px;
+  background: var(--song-table-paper, var(--panel));
+  color: var(--panel);
+  transition: background var(--dur-press) var(--ease);
+}
+
+.song-table-columns__input:checked + .song-table-columns__box {
+  background: var(--ink);
+}
+
+.song-table-columns__input:focus-visible + .song-table-columns__box {
+  outline: 2px solid var(--yellow);
+  outline-offset: 1px;
+}
+
+.song-table-columns__label {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.song-table-columns__label small {
+  font-weight: 400;
+  font-size: 0.7rem;
+  color: var(--ink-2);
+  opacity: 0.85;
+}
+
+.song-table-columns__item--empty { cursor: default; }
+.song-table-columns__item--empty:hover { background: transparent; }
+.song-table-columns__empty { color: var(--ink-3); font-size: 0.7rem; font-weight: 400; }
+
+.song-table-columns__item--locked {
+  cursor: default;
+}
+
+.song-table-columns__item--locked:hover {
+  background: transparent;
+}
+
+.song-table-columns__item--locked .song-table-columns__box {
+  background: var(--ink);
+  opacity: 0.45;
+}
+
+.song-table-columns__item--locked .song-table-columns__label {
+  opacity: 0.6;
+}
+
+.song-table-columns__lock {
+  color: var(--ink-3);
+}
+
+.song-table-columns__footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.375rem 0.5rem 0.5rem;
+  border-top: 1px solid color-mix(in srgb, var(--song-table-ink, #1a1a18) 18%, transparent);
+}
+
+/* A quiet text action, not a pill: it undoes a preference, it does not send
+   anything anywhere. */
+.song-table-columns__menu button.song-table-columns__reset {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  min-height: 0 !important;
+  padding: 0.25rem 0.5rem !important;
+  border: 0 !important;
+  border-radius: 4px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--ink) !important;
+  font-family: inherit;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.song-table-columns__menu button.song-table-columns__reset:hover {
+  background: var(--yellow-tint) !important;
+  transform: none;
+}
+
+.song-table-columns__menu button.song-table-columns__reset:disabled {
+  opacity: 0.35;
+  text-decoration: none;
+  cursor: default;
+}
+
+.song-table-columns__menu button.song-table-columns__reset:focus-visible {
+  outline: 2px solid var(--yellow) !important;
+  outline-offset: 1px;
+}
+
+/* Share named columns between headers and rows to preserve alignment.
+   Hidden columns collapse to zero; spacing belongs to cells so it collapses too.
+   Title gets twice the flexible width of artist and album and keeps a 9rem minimum. */
+.song-grid {
+  --sc-num: 2rem;
+  --sc-cover: 0px;
+  --sc-title: minmax(9rem, 2fr);
+  --sc-artist: var(--sc-w-artist, minmax(7.75rem, 1fr));
+  --sc-album: var(--sc-w-album, minmax(7.75rem, 1fr));
+  --sc-genre: var(--sc-w-genre, 8.75rem);
+  --sc-date: var(--sc-w-date, 6.75rem);
+  --sc-analysis: var(--sc-w-analysis, 4.25rem);
+  --sc-key: var(--sc-w-key, 13rem);
+  --sc-bpm: var(--sc-w-bpm, 4.75rem);
+  --sc-lyrics: var(--sc-w-lyrics, 8.75rem);
+  --sc-duration: var(--sc-w-duration, 5.75rem);
+  --sc-end: calc(56px + 0.75rem);
+  display: grid !important;
+  grid-template-columns: var(--sc-template,
+    [num] var(--sc-num) [cover] var(--sc-cover) [title] var(--sc-title) [artist] var(--sc-artist) [album] var(--sc-album)
+    [genre] var(--sc-genre) [date] var(--sc-date) [analysis] var(--sc-analysis) [key] var(--sc-key) [bpm] var(--sc-bpm)
+    [lyrics] var(--sc-lyrics) [duration] var(--sc-duration) [end] var(--sc-end));
+  align-items: center;
+}
+.retro-song-table__header.song-grid,
+.retro-song-table__row.song-grid { column-gap: 0 !important; }
+.song-grid > * { min-width: 0; grid-row: 1; }
+.song-grid > * + * { padding-left: 0.75rem; }
+.song-grid > :is(.song-row__num, .song-col--num) { grid-column: num; }
+.song-grid > .song-col--cover { grid-column: cover; }
+.song-grid > .song-col--title { grid-column: title; }
+.song-grid > .song-col--artist { grid-column: artist; }
+.song-grid > .song-col--album { grid-column: album; }
+.song-grid > .song-col--genre { grid-column: genre; }
+.song-grid > .song-col--date { grid-column: date; }
+.song-grid > .song-col--analysis { grid-column: analysis; }
+.song-grid > .song-col--key { grid-column: key; }
+.song-grid > .song-col--bpm { grid-column: bpm; }
+.song-grid > .song-col--lyrics { grid-column: lyrics; }
+.song-grid > .song-col--duration { grid-column: duration; }
+.song-grid > .acquire-row-end { grid-column: end; width: auto; min-width: 0; max-width: none; }
+
+/* The Library header sits outside the scroller, so it is wider than the
+   rows by the scroller's right padding and scrollbar; AlbumListPanel measures
+   that into --song-gutter. */
+.retro-song-table__header.song-grid { padding-right: calc(0.75rem + var(--song-gutter, 0px)); }
+
+/* After a sizing interaction Title alone consumes free space. The optional
+   tracks retain pixel preferences, but can contract to their minima when the
+   window narrows. Title reserves those minima before claiming free space.
+   These fallbacks are inherited; hide rules still own --sc-<id> on each grid. */
+:where(.retro-song-table[data-column-widths]) .song-grid {
+  --sc-title: minmax(min(9rem, max(0px, calc(100% - var(--sc-num) - var(--sc-cover) - var(--sc-end) - var(--sc-min-rest, 0px)))), 1fr);
+  --sc-artist: minmax(48px, var(--sc-w-artist, 7.75rem));
+  --sc-album: minmax(48px, var(--sc-w-album, 7.75rem));
+  --sc-genre: minmax(48px, var(--sc-w-genre, 8.75rem));
+  --sc-date: minmax(48px, var(--sc-w-date, 6.75rem));
+  --sc-analysis: minmax(40px, var(--sc-w-analysis, 4.25rem));
+  --sc-key: minmax(48px, var(--sc-w-key, 13rem));
+  --sc-bpm: minmax(40px, var(--sc-w-bpm, 4.75rem));
+  --sc-lyrics: minmax(48px, var(--sc-w-lyrics, 8.75rem));
+  --sc-duration: minmax(48px, var(--sc-w-duration, 5.75rem));
+}
+
+.song-table--hide-artist .song-grid { --sc-artist: 0px; }
+.song-table--hide-album .song-grid { --sc-album: 0px; }
+.song-table--hide-genre .song-grid { --sc-genre: 0px; }
+.song-table--hide-date .song-grid { --sc-date: 0px; }
+.song-table--hide-analysis .song-grid { --sc-analysis: 0px; }
+.song-table--hide-key .song-grid { --sc-key: 0px; }
+.song-table--hide-bpm .song-grid { --sc-bpm: 0px; }
+.song-table--hide-lyrics .song-grid { --sc-lyrics: 0px; }
+.song-table--hide-duration .song-grid { --sc-duration: 0px; }
+.retro-song-table:not(.song-table--lyrics) .song-grid { --sc-lyrics: 0px; }
+
+/* The second line under the title: only in the narrowest step. */
+.song-row__sub { display: none; }
+
+@container (max-width: 1320px) {
+  .song-grid { --sc-genre: 0px; }
+  .song-col--genre { display: none !important; }
+}
+
+@container (max-width: 940px) {
+  .song-grid { --sc-key: 0px; --sc-bpm: 0px; --sc-analysis: 0px; }
+  .song-col--key,
+  .song-col--bpm,
+  .song-col--analysis { display: none !important; }
+}
+
+@container (max-width: 1180px) {
+  .song-grid { --sc-date: 0px; }
+  .song-col--date { display: none !important; }
+}
+
+@container (max-width: 1080px) {
+  .song-grid { --sc-album: 0px; }
+  .song-col--album { display: none !important; }
+}
+
+@container (max-width: 540px) {
+  .song-grid { --sc-artist: 0px; }
+  .song-col--artist { display: none !important; }
+  .song-row__title-text { display: block; overflow: hidden; text-overflow: ellipsis; }
+  .song-row__sub {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.72rem;
+    color: var(--ink-3);
+  }
+}
+
+@media (max-width: 640px) {
+  .retro-song-table__header { font-size: 0.66rem; }
+  .retro-song-table__row { font-size: 0.78rem; }
+}
+
+/* Explore controls: lighter and quieter than the table action buttons, while
+   keeping the app's dark outline and direct pressed-state feedback. */
+.explore-button,
+.explore-icon-button,
+.explore-category-button {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0 0.8rem;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 2px 0 var(--line);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+
+.explore-icon-button {
+  width: 34px;
+  padding: 0 !important;
+}
+
+.explore-category-button {
+  min-height: 32px;
+  padding-inline: 0.75rem;
+  font-size: 0.78rem;
+}
+
+.explore-button:hover:not(:disabled),
+.explore-icon-button:hover:not(:disabled),
+.explore-category-button:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--teal) 18%, var(--panel));
+  transform: translateY(-1px);
+  box-shadow: 0 3px 0 var(--line);
+}
+
+.explore-button:active:not(:disabled),
+.explore-icon-button:active:not(:disabled),
+.explore-category-button:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+.explore-button:disabled,
+.explore-icon-button:disabled,
+.explore-category-button:disabled {
+  opacity: 0.38;
+  cursor: default;
+}
+
+.explore-search__input {
+  min-height: 34px;
+  box-sizing: border-box;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1.5px solid var(--line);
+  border-radius: 9px;
+  box-shadow: 0 2px 0 var(--line);
+  outline: none;
+}
+
+.explore-search__input:focus {
+  border-color: var(--teal);
+  box-shadow: 0 2px 0 var(--line), 0 0 0 3px color-mix(in srgb, var(--teal) 20%, transparent);
+}
+
+/* Browse's catalog search, collapsible (Dashboard.tsx CatalogSearchBox):
+   closed it is one Paper button like Library's (CollapsibleSearch boxed). */
+.explore-search__box { box-sizing: border-box; display: flex; align-items: center; gap: 8px; inline-size: 34px; block-size: 34px; padding-left: 7px; overflow: hidden; border: 2px solid var(--line); border-radius: var(--r-sm); background: var(--panel); box-shadow: var(--shadow-pop-sm); color: var(--ink); cursor: pointer; transition: inline-size var(--dur-fast) var(--ease); }
+.explore-search__box:not([data-open]):hover { background: var(--yellow); }
+.explore-search__box[data-open] { inline-size: clamp(200px, 24vw, 300px); padding-right: 8px; cursor: text; transition: inline-size var(--dur) var(--ease-out); }
+.explore-search__box > svg { flex: none; }
+.explore-search__box input { flex: 1; min-width: 0; padding: 0; border: 0; outline: none; background: transparent; box-shadow: none; color: inherit; font: 500 13px var(--font-main); }
+.explore-search__box:not([data-open]) input { opacity: 0; }
+.explore-search__box input::-webkit-search-cancel-button { display: none; -webkit-appearance: none; }
+
+.explore-search__input::-webkit-search-cancel-button {
+  display: none;
+  -webkit-appearance: none;
+}
+
+.explore-clear-button {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  width: 26px;
+  height: 26px;
+  min-height: 0 !important;
+  padding: 0 !important;
+  display: grid;
+  place-items: center;
+  transform: translateY(-50%);
+  color: var(--ink-3);
+  background: transparent !important;
+  border: 0 !important;
+  border-radius: 50%;
+  box-shadow: none !important;
+}
+
+.explore-clear-button:hover {
+  color: var(--ink);
+  background: var(--paper-2) !important;
+}
+
+/* Browse's ranked rows (browse/ExplorePanel.tsx). Unlayered so the hover beats
+   the base button rule's coral fill. */
+button.explore-entity-row {
+  background: transparent;
+  color: var(--ink);
+  font-weight: 400;
+  transition: background var(--dur-fast) var(--ease);
+}
+button.explore-entity-row:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--yellow) 30%, var(--panel));
+  opacity: 1;
+}
+button.explore-entity-row:disabled { opacity: 1; }
+
+/* Artist names as a wrap of tags: a square thumb and the name. */
+button.explore-tag {
+  min-height: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 3px 10px 3px 3px;
+  color: var(--ink);
+  background: var(--panel);
+  border: 2px solid var(--line);
+  border-radius: 9px;
+  box-shadow: 2px 2px 0 var(--line);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+}
+button.explore-tag:hover {
+  background: color-mix(in srgb, var(--teal) 18%, var(--panel));
+  opacity: 1;
+  transform: translateY(-1px);
+}
+button.explore-tag:active { transform: translate(2px, 2px); box-shadow: none; }
+
+/* Browse's two columns: cover grids wide, ranked lists narrow. One column
+   when the window is too narrow for both. */
+.explore-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+@media (min-width: 1180px) {
+  /* Each column scrolls on its own; the header stays put. */
+  .explore-columns {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+    flex: 1 1 0;
+    min-height: 0;
+    align-items: stretch;
+  }
+  .explore-column {
+    min-height: 0;
+    overflow-y: auto;
+    /* room for the panels' offset shadow, which overflow would clip */
+    padding: 0 6px 6px 0;
+  }
+  /* panels keep their height; the column scrolls instead of squeezing them */
+  .explore-column > * { flex-shrink: 0; }
+}
+
+/* A catalog row the server already has (browse/TrackList.tsx): a coral edge,
+   the same on striped and plain rows. It used to borrow --active, the
+   now-playing yellow, which the zebra rule overrode on every even row. */
+.retro-song-table__row.browse-row--owned {
+  box-shadow: inset 4px 0 0 var(--coral) !important;
+}
+
+/* The song title as the link into its album (browse/TrackList.tsx): plain
+   text that underlines on hover, nothing more. */
+.browse-row__title-link {
+  cursor: pointer;
+}
+.browse-row__title-link:hover,
+.browse-row__title-link:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  outline: none;
+}
+
+/* "You have another version" (browse/TrackList.tsx): the saved check's shape in
+   yellow, and a button, because it opens the details. */
+.retro-song-table .retro-song-table__row button.browse-row__near {
+  width: 22px;
+  height: 22px;
+  border-radius: 50% !important;
+  background: var(--yellow) !important;
+  color: var(--ink) !important;
+  box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--line) 35%, transparent) !important;
+}
+
+/* "See all" / "See less": a text link, not a button; ink at rest,
+   coral and underlined on hover. */
+.explore-link {
+  min-height: 0;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease);
+}
+.explore-link:hover,
+.explore-link:active {
+  background: transparent;
+  opacity: 1;
+  color: var(--coral);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.explore-link:focus-visible { outline: 2px solid var(--coral); outline-offset: 3px; }
+
+/*  Selection (shared/useSongSelection)
+   Its own look, never the playing row's yellow: a tint of the theme's main
+   accent and a bar down the left. Rows are not text-selectable; a
+   Shift-click selects a run of songs, not a run of letters. Two classes, so
+   it out-ranks the zebra stripe (:nth-child(even)); with one, every even
+   selected row kept its stripe and showed only the bar. */
+.retro-song-table__row { user-select: none; -webkit-user-select: none; }
+.retro-song-table__row.retro-song-table__row--selected {
+  background: color-mix(in oklab, var(--coral) 18%, var(--song-table-paper)) !important;
+  box-shadow: inset 4px 0 0 var(--coral) !important;
+}
+.retro-song-table__row.retro-song-table__row--selected.retro-song-table__row--active {
+  background: var(--yellow) !important;
+  box-shadow: inset 4px 0 0 var(--coral), inset 0 0 0 2px var(--coral) !important;
+}
+
+/* The album cell as a link to the album's page: plain until hovered. */
+.song-row__album-link { cursor: pointer; text-underline-offset: 2px; }
+.song-row__album-link:hover { text-decoration: underline; color: var(--ink); }
+
+/* A song of the album you do not have (album page, "Show full album"):
+   faded, not clickable as a song; its one action is the "+" to get it. */
+.retro-song-table__row.song-row--missing { color: var(--ink-3) !important; font-style: italic; }
+.retro-song-table__row.song-row--missing > *:not(:last-child) { opacity: 0.62; }
+.song-row--missing__note {
+  margin-left: 8px;
+  padding: 0 6px;
+  border-radius: 4px;
+  font: 600 10.5px var(--font-mono, ui-monospace, monospace);
+  font-style: normal;
+  background: var(--yellow-tint);
+  color: var(--fg-yellow);
+}
+.retro-song-table .retro-song-table__row button.song-row__get {
+  opacity: 1;
+  color: var(--ink);
+}
+.retro-song-table .retro-song-table__row button.song-row__get:hover { color: var(--coral); }
+
+/* Lyrics is a contextual column, controlled with the other table columns. */
+.retro-song-table:not(.song-table--lyrics) .song-col--lyrics { display: none; }
+.song-col--lyrics { font-size: 11px; font-weight: 600; }
+.lyric-state-dot { width: 7px; height: 7px; border: 1px solid var(--ink); border-radius: 50%; background: var(--ink-4); flex: none; }
+[data-state="synced"] .lyric-state-dot, [data-state="plain"] .lyric-state-dot { background: var(--teal); }
+[data-state="pending"] .lyric-state-dot { background: var(--yellow); }
+[data-state="queued"] .lyric-state-dot { background: var(--purple); }
+
+/* The details button: an italic "i" on every song; dimmer when the song has no
+   analysis yet (the details still has its metadata). */
+.retro-song-table .retro-song-table__row button.song-row__info { font-family: var(--font-main); font-style: italic; }
+.retro-song-table .retro-song-table__row button.song-row__info--bare { opacity: 0.55; }
+
+/* Playlist page: the band, stack and rows share the page's scroll owner. */
+.playlist-page { overflow-anchor: none; scroll-padding-top: var(--stack-h, 0px); overscroll-behavior-y: contain; }
+.playlist-page-content { min-width: 0; }
+.playlist-band-anchor { position: relative; }
+.playlist-title-sentinel { position: absolute; left: 0; width: 1px; height: 16px; pointer-events: none; }
+.retro-song-table.playlist-song-card {
+  overflow: visible;
+  container-type: normal;
+  border: 2px solid var(--line);
+  border-radius: 12px !important;
+  box-shadow: var(--shadow-pop-lg);
+}
+.playlist-song-stack {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  background: var(--panel);
+  border-radius: 10px 10px 0 0;
+  container-type: inline-size;
+}
+.playlist-song-rows { container-type: inline-size; border-radius: 0 0 10px 10px; }
+.playlist-songs .retro-song-table__body { border-radius: 0 0 10px 10px; }
+.playlist-songs .retro-song-table__row { height: 44px; box-sizing: border-box; }
+.playlist-songs .retro-song-table__row:last-of-type { border-radius: 0 0 10px 10px !important; }
+.playlist-table-tools {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 40px;
+  padding: 0 8px 0 4px;
+  position: relative;
+  border-radius: inherit;
+  background: var(--panel);
+  contain: layout;
+}
+.playlist-table-tools__spacer { flex: 1; min-width: 0; }
+.playlist-table-tools__count { font: 12px var(--font-mono, ui-monospace, monospace); white-space: nowrap; margin-inline: 8px; }
+.playlist-table-tools button.playlist-table-tool,
+.playlist-table-tools button.song-table-columns__trigger {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  box-shadow: none;
+  background: transparent;
+  color: var(--ink-2); /* full-strength enough to read as active controls, not disabled */
+}
+.playlist-table-tools button:hover { background: var(--paper-2); color: var(--ink); }
+.playlist-table-tools button:focus-visible { outline: 2px solid var(--teal); outline-offset: 1px; }
+.playlist-table-tools button:disabled { opacity: 0.4; }
+.playlist-table-tools button.playlist-table-tool--cancel { width: auto; gap: 8px; padding-inline: 8px; font-size: 12px; }
+.playlist-table-tool kbd { color: var(--ink-3); font: 10px var(--font-mono, ui-monospace, monospace); }
+.song-table-columns--context { position: absolute; right: 0; bottom: 0; width: 0; height: 0; }
+.song-table-columns--context > button { visibility: hidden; }
+.playlist-sort-menu { padding: 6px; border: 2px solid var(--line); border-radius: 8px; background: var(--panel); box-shadow: var(--shadow-pop-lg); }
+.playlist-sort-menu button { display: block; width: 100%; padding: 6px 12px; border: 0; border-radius: 4px; background: transparent; color: var(--ink); box-shadow: none; text-align: left; font-size: 13px; }
+.playlist-sort-menu button:hover, .playlist-sort-menu button[aria-checked="true"] { background: var(--paper-2); }
+.song-sort-arrow { opacity: 0; }
+[data-sort-header]:is(:hover, :focus-visible, [data-sorted]) .song-sort-arrow { opacity: 1; }
+
+/* Song tables only: Geist text, Geist Mono numeric facts. */
+.retro-song-table__row :is(.song-col--title, .song-col--artist, .song-col--album) { font-family: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.retro-song-table__row :is(.song-row__num, .song-col--bpm, .song-col--date, .song-col--duration) { font-family: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-variant-numeric: tabular-nums; }
+
+/* Header strip swaps opacity only; both states keep the same slot. */
+.playlist-header-slot { position: relative; align-self: stretch; display: grid; align-items: center; }
+.playlist-header-slot > :is(h1, .playlist-header-strip) { grid-area: 1 / 1; }
+.playlist-header-slot > span:empty { display: none; }
+.playlist-header-slot > h1 { transition: opacity var(--dur-fast) var(--ease-out); }
+.playlist-header-slot[data-collapsed] > h1 { opacity: 0; }
+.playlist-header-strip { position: relative; display: flex; align-items: center; gap: 10px; width: max-content; max-width: min(40vw, 600px); min-width: 0; opacity: 0; pointer-events: none; transition: opacity var(--dur-fast) var(--ease-out); font: 700 16px var(--font-display, system-ui, sans-serif); color: var(--ink); }
+.playlist-header-slot[data-collapsed] .playlist-header-strip { opacity: 1; pointer-events: auto; }
+.playlist-header-strip__cover { display: grid; place-items: center; width: 32px; height: 32px; flex: none; border-radius: 4px; overflow: hidden; }
+.playlist-header-strip__cover img { width: 100%; height: 100%; object-fit: cover; }
+/* the same key as the band's play (index.css .playlist-actions__play): size, corner, shadow, glyph */
+.playlist-header-strip button.playlist-header-strip__play { display: grid; place-items: center; flex: none; width: 36px; height: 36px; min-height: 0; padding: 0 0 0 2px; border: 2px solid var(--line); border-radius: var(--r-md); box-shadow: 3px 3px 0 var(--line); }
+@container (max-width: 540px) { .playlist-songs .retro-song-table__row { height: 52px; } }
+.playlist-table-tools[data-search-overlay] > :is(.playlist-table-tool, .song-table-columns) { visibility: hidden; pointer-events: none; }
+.playlist-table-tools[data-search-overlay] .collapsible-search[data-open] { position: absolute; right: 8px; --search-w: max(160px, calc(100cqi - 16px)); }
+
+/* Covers: the box owns its dimensions before any artwork loads. Keep the
+   cells in the DOM and collapse both the header and rows through the root. */
+.retro-song-table:not(.song-table--covers) .song-col--cover,
+.song-table--covers .song-col--artist { display: none !important; }
+.song-table--covers .song-grid { --sc-cover: calc(40px + 0.75rem); --sc-artist: 0px; }
+.song-table--covers .retro-song-table__row { height: 56px; min-height: 56px; max-height: 56px; box-sizing: border-box; }
+.song-row__cover { width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 4px; box-sizing: border-box; }
+.song-table--covers .song-col--title { white-space: nowrap; }
+.song-table--covers .song-row__title-text,
+.song-table--covers .song-row__sub { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; line-height: 18px; }
+.song-table--covers .song-row__sub { margin-top: 2px; font-size: 12px; color: var(--ink-3); font-weight: 400; }
+
+/* Removal labels and their per-action counts remain readable in narrow playlists. */
+.playlist-table-tools:has(.playlist-table-tools__removals) { height: auto; min-height: 40px; flex-wrap: wrap; padding-block: 4px; }
+.playlist-table-tools__removals { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+.playlist-table-tools__removals button.playlist-table-tool { width: auto; padding-inline: 8px; font-size: 12px; white-space: nowrap; }
+.playlist-table-tools__removals button.playlist-table-tool--danger { color: var(--rose); }
+.playlist-table-tools__rule { height: 20px; border-inline-start: 1px solid var(--line-soft); margin-inline: 4px; }
+
+/* Narrowed values stay inside their track; header handles remain unclipped. */
+.retro-song-table__row.song-grid > :is(.song-col--date, .song-col--key, .song-col--bpm, .song-col--lyrics, .song-col--duration) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Keep the focused analysis button's ring outside the clipped value. */
+.retro-song-table__row.song-grid > :is(.song-col--key, .song-col--bpm):focus-within {
+  overflow: visible;
+}
+
+/* The handle straddles the edge; its line alone fades, never its hit area. */
+.song-column-header { position: relative; }
+.song-column-header > [data-sort-header] { min-width: 0; }
+.song-column-header [data-column-label] { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.song-column-resize {
+  position: absolute;
+  inset-block: -6px;
+  right: -4px;
+  width: 8px;
+  cursor: col-resize;
+  touch-action: none;
+  z-index: var(--z-sticky);
+}
+.song-column-resize[data-resize-side="left"] { left: -4px; right: auto; }
+.song-column-resize[hidden] { display: none; }
+.song-column-resize::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 3px;
+  width: 2px;
+  background: var(--line);
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+.retro-song-table__header:hover .song-column-resize::after {
+  opacity: 1;
+  transition-delay: 300ms;
+}
+.retro-song-table__header .song-column-resize[data-resizing]::after {
+  background: var(--ink);
+  opacity: 1;
+  transition-delay: 0ms;
+}
+.song-column-resize:focus-visible { outline: 2px solid var(--ink); }
+html.song-column-resizing, html.song-column-resizing * { cursor: col-resize !important; user-select: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .song-column-resize::after { transition: none; }
+  .retro-song-table__header:hover .song-column-resize::after { transition-delay: 0ms; }
+}

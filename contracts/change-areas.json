@@ -1,0 +1,109 @@
+{
+  "version": 1,
+  "areas": {
+    "library": {
+      "wired": true,
+      "routes": [
+        {"method": "GET", "path": "/api/listar-albums-con-metadata"},
+        {"method": "GET", "path": "/api/library/summary"},
+        {"method": "GET", "path": "/api/analysis/summary"},
+        {"method": "GET", "path": "/api/me/library"},
+        {"method": "GET", "path": "/api/me/home"},
+        {"method": "GET", "path": "/api/playlists"},
+        {"method": "GET", "path": "/api/playlists/{name}"},
+        {"method": "GET", "path": "/api/lyrics/states"}
+      ],
+      "query_key_prefixes": [["library"], ["me", "home"], ["me", "library"], ["playlists"], ["lyrics"], ["stems"]]
+    },
+    "analysis": {
+      "wired": true,
+      "routes": [
+        {"method": "GET", "path": "/api/listar-albums-con-metadata"},
+        {"method": "GET", "path": "/api/library/summary"},
+        {"method": "GET", "path": "/api/analysis/summary"},
+        {"method": "GET", "path": "/api/me/library"},
+        {"method": "GET", "path": "/api/me/home"}
+      ],
+      "query_key_prefixes": [["analysis"], ["library"], ["me", "home"], ["me", "library"]]
+    },
+    "jobs": {
+      "wired": true,
+      "routes": [
+        {"method": "GET", "path": "/api/analysis/summary"},
+        {"method": "GET", "path": "/api/jobs"},
+        {"method": "GET", "path": "/api/me/home"},
+        {"method": "GET", "path": "/api/lyrics/states"},
+        {"method": "GET", "path": "/api/server/config"},
+        {"method": "GET", "path": "/api/compute/summary"}
+      ],
+      "query_key_prefixes": [["server", "providers"], ["jobs"], ["analysis", "summary"], ["compute", "summary"], ["me", "home"], ["lyrics"], ["server", "config"], ["me", "attention"], ["stems"]]
+    },
+    "lyrics": {
+      "wired": true,
+      "routes": [
+        {"method": "GET", "path": "/api/lyrics/states"}
+      ],
+      "query_key_prefixes": [["lyrics"]]
+    },
+    "playlists": {
+      "wired": true,
+      "routes": [
+        {"method": "GET", "path": "/api/me/home"},
+        {"method": "GET", "path": "/api/playlists"},
+        {"method": "GET", "path": "/api/playlists/{name}"}
+      ],
+      "query_key_prefixes": [["playlists"], ["me", "home"]]
+    },
+    "config": {
+      "wired": true,
+      "routes": [
+        {"method": "GET", "path": "/api/server/config"},
+        {"method": "GET", "path": "/api/compute/summary"}
+      ],
+      "query_key_prefixes": [["server", "config"], ["server", "providers"], ["compute", "summary"], ["me", "attention"]]
+    },
+    "helpers": {
+      "wired": true,
+      "routes": [
+        {"method": "GET", "path": "/api/analysis/summary"},
+        {"method": "GET", "path": "/api/jobs"},
+        {"method": "GET", "path": "/api/server/config"},
+        {"method": "GET", "path": "/api/compute/summary"}
+      ],
+      "query_key_prefixes": [["compute", "summary"], ["analysis", "summary"], ["jobs"], ["server", "config"], ["me", "attention"]]
+    },
+    "signin": {
+      "wired": true,
+      "routes": [
+        {"method": "GET", "path": "/api/me/sign-in-requests"}
+      ],
+      "query_key_prefixes": [["signin"]]
+    },
+    "me:<account>": {
+      "wired": true,
+      "routes": [
+        {"method": "GET", "path": "/api/listar-albums-con-metadata", "scope": "restricted"},
+        {"method": "GET", "path": "/api/me/library"},
+        {"method": "GET", "path": "/api/me/home"},
+        {"method": "GET", "path": "/api/playlists", "scope": "restricted"},
+        {"method": "GET", "path": "/api/playlists/{name}", "scope": "restricted"},
+        {"method": "GET", "path": "/api/lyrics/states", "scope": "restricted"}
+      ],
+      "query_key_prefixes": [["me"], ["library", "albums"], ["playlists"], ["lyrics"]]
+    }
+  },
+  "conditional_routes": [
+    {"method": "GET", "path": "/api/listar-albums-con-metadata", "areas": ["library", "analysis"], "scoped_areas": ["me:<account>"]},
+    {"method": "GET", "path": "/api/library/summary", "areas": ["library", "analysis"]},
+    {"method": "GET", "path": "/api/analysis/summary", "areas": ["analysis", "library", "jobs", "helpers"]},
+    {"method": "GET", "path": "/api/jobs", "areas": ["jobs", "helpers"]},
+    {"method": "GET", "path": "/api/me/library", "areas": ["me:<account>", "library", "analysis"]},
+    {"method": "GET", "path": "/api/me/home", "areas": ["me:<account>", "library", "analysis", "playlists", "jobs"]},
+    {"method": "GET", "path": "/api/playlists", "areas": ["playlists", "library"], "scoped_areas": ["me:<account>"]},
+    {"method": "GET", "path": "/api/playlists/{name}", "areas": ["playlists", "library"], "scoped_areas": ["me:<account>"]},
+    {"method": "GET", "path": "/api/lyrics/states", "areas": ["lyrics", "library", "jobs"], "scoped_areas": ["me:<account>"]},
+    {"method": "GET", "path": "/api/server/config", "areas": ["config", "jobs", "helpers"]},
+    {"method": "GET", "path": "/api/compute/summary", "areas": ["jobs", "helpers", "config"]},
+    {"method": "GET", "path": "/api/me/sign-in-requests", "areas": ["signin"]}
+  ]
+}

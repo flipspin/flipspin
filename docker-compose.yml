@@ -1,0 +1,137 @@
+# Flipspin server -- Docker Compose.
+#
+# Runs the published multi-arch image (ghcr.io/flipspin/flipspin-server, amd64 +
+# arm64). Put a .env next to this file:
+#
+#   KROBI_IMAGE=ghcr.io/flipspin/flipspin-server:latest # optional: another tag or fork
+#   KROBI_MUSIC_DIR=/path/to/music                     # your library on the host
+#   PUID=1000                                          # numeric owner of that
+#   PGID=1000                                          #   folder (ls -n)
+#
+#   docker compose up -d
+#   docker compose logs krobi | grep "setup token"     # the code that claims it
+#
+# To build from this checkout instead, uncomment `build:` below and run
+# `docker compose up -d --build`. Full guide: docs/deployment.md, Option B.
+#
+# The compose file sits at the repo root so `docker compose` works with no -f
+# flag. A local build uses the repo root as its context;
+# backend/Dockerfile.dockerignore limits it to server runtime inputs.
+
+services:
+  flipspin:
+    image: "${KROBI_IMAGE:-ghcr.io/flipspin/flipspin-server:latest}"
+    # build:
+    #   context: .
+    #   dockerfile: backend/Dockerfile
+    container_name: krobi
+    # An unnamed server calls itself "Nido de <hostname>"; without this the
+    # hostname is a random container id.
+    hostname: krobi
+    restart: unless-stopped
+
+    # Reachable from the LAN. Never port-forward it on your router: LAN or VPN
+    # only. Set KROBI_BIND_ADDR to one interface's address to narrow it.
+    ports:
+      - "${KROBI_BIND_ADDR:-0.0.0.0}:${KROBI_PORT:-8000}:8000"
+
+    volumes:
+      # The library, from the host. Mounted at /music by default; an install
+      # from before the published image used /data/Krobi/Music and its
+      # playlists store absolute paths, so it sets KROBI_CONTAINER_MUSIC_DIR
+      # to that and keeps working.
+      - "${KROBI_MUSIC_DIR:-./music}:${KROBI_CONTAINER_MUSIC_DIR:-/music}"
+      # Flipspin's home ($HOME=/data): accounts, playlists, logs, the persisted
+      # .env, caches, setup token. The volume keeps its old name so an
+      # existing install keeps its accounts.
+      - krobi-state:/data
+
+    environment:
+      # Exact trusted proxy peers; never trust arbitrary forwarded headers.
+      FORWARDED_ALLOW_IPS: "${FORWARDED_ALLOW_IPS:-127.0.0.1}"
+      # --- who the server runs as -------------------------------------------
+      # Numeric owner of the music folder on the host. The container takes
+      # this identity before starting the server (never runs it as root) and
+      # owns /data with it. KROBI_UID/KROBI_GID are the older names.
+      PUID: "${PUID:-${KROBI_UID:-1000}}"
+      PGID: "${PGID:-${KROBI_GID:-1000}}"
+
+      # --- paths (the image's defaults; see backend/Dockerfile for why HOME
+      # and the credentials dir must agree) ----------------------------------
+      KROBI_MUSIC_DIR: "${KROBI_CONTAINER_MUSIC_DIR:-/music}"
+
+      # --- network ----------------------------------------------------------
+      KROBI_BACKEND_PORT: "8000"
+      # Origins allowed to call the API from a browser. Comma-separated, no
+      # spaces. Keep the Tauri origins for packaged desktop webviews; `null`
+      # supports upgrades from an older desktop build. Do NOT use "*" -- the app sets
+      # allow_credentials=True, which
+      # browsers reject in combination with a wildcard origin.
+      KROBI_CORS_ORIGINS: "${KROBI_CORS_ORIGINS:-http://localhost:5173,http://127.0.0.1:5173,tauri://localhost,http://tauri.localhost,https://tauri.localhost,null}"
+
+      # --- authentication ---------------------------------------------------
+      # The first account created claims the server (the desktop app offers it
+      # on connect). The image requires the setup code for that, so nobody else
+      # on the network can claim it first: `docker compose logs krobi | grep
+      # "setup token"`, or /data/Krobi/setup-token inside the container. Set
+      # false only on a network where you trust everyone.
+      KROBI_REQUIRE_SETUP_TOKEN: "${KROBI_REQUIRE_SETUP_TOKEN:-true}"
+      # A claimed server announces itself on the LAN (mDNS). From a bridged
+      # container the announcement stays inside Docker; host networking or a
+      # typed address work. false turns it off.
+      # KROBI_ADVERTISE: "${KROBI_ADVERTISE:-true}"
+      # KROBI_API_TOKEN is an optional legacy shared secret, accepted as the
+      # owner (openssl rand -hex 32). Do not work around a 401 with the flag
+      # below.
+      KROBI_API_TOKEN: "${KROBI_API_TOKEN:-}"
+      # Restores the pre-auth wide-open behaviour. Anyone who can reach the
+      # published port then owns the music library.
+      KROBI_ALLOW_UNAUTHENTICATED_REMOTE: "${KROBI_ALLOW_UNAUTHENTICATED_REMOTE:-false}"
+      # open-file / set-basedir / reset-basedir / burn-audio-cd act on the host
+      # running the backend and refuse remote callers even with a valid token.
+      KROBI_ALLOW_REMOTE_LOCAL_ACTIONS: "${KROBI_ALLOW_REMOTE_LOCAL_ACTIONS:-false}"
+
+      # Behaviour is set from Ajustes → Configuración. Uncomment to pin a key.
+      # --- behaviour --------------------------------------------------------
+      # KROBI_LOG_LEVEL: "${KROBI_LOG_LEVEL:-INFO}"
+      TZ: "${TZ:-UTC}"
+      # KROBI_MAX_CONCURRENT_DOWNLOADS: "${KROBI_MAX_CONCURRENT_DOWNLOADS:-3}"
+      # KROBI_MAX_CONCURRENT_JOBS: "${KROBI_MAX_CONCURRENT_JOBS:-2}"
+      # KROBI_ANALYSIS_WORKERS: "${KROBI_ANALYSIS_WORKERS:-2}"
+      KROBI_EDITOR_RENDER_TIMEOUT: "${KROBI_EDITOR_RENDER_TIMEOUT:-300}"
+      # Opt-in: writes detected BPM/key into the user's own music files.
+      # KROBI_WRITE_ANALYSIS_TAGS: "${KROBI_WRITE_ANALYSIS_TAGS:-false}"
+
+      # --- yt-dlp -----------------------------------------------------------
+      # Pins yt-dlp's player client. Empty by default: a pin overrides yt-dlp's
+      # own maintained fallback chain, and a pin that worked once rots. If
+      # acquisition breaks, update yt-dlp first.
+      KROBI_YTDLP_PLAYER_CLIENT: "${KROBI_YTDLP_PLAYER_CLIENT:-}"
+      # --cookies-from-browser is useless in a container (no browser profile).
+      # Use KROBI_YTDLP_COOKIES_FILE with a mounted cookies.txt instead.
+      # KROBI_YTDLP_COOKIES_FILE: "${KROBI_YTDLP_COOKIES_FILE:-}"
+
+      # --- optional API keys ------------------------------------------------
+      KROBI_GENIUS_API_KEY: "${KROBI_GENIUS_API_KEY:-}"
+      # SPOTIFY_CLIENT_ID: "${SPOTIFY_CLIENT_ID:-}"
+      # SPOTIFY_CLIENT_SECRET: "${SPOTIFY_CLIENT_SECRET:-}"
+
+      # ffmpeg/ffprobe come from the image (Debian's, on PATH, which yt-dlp
+      # needs); KROBI_FFMPEG_PATH is set there.
+
+    # librosa/numba analysis is CPU-hungry and will happily saturate every
+    # core. Cap it so the rest of the host stays responsive.
+    deploy:
+      resources:
+        limits:
+          cpus: "${KROBI_CPUS:-4.0}"
+          memory: "${KROBI_MEMORY:-4g}"
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  krobi-state:

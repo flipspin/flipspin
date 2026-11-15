@@ -1,0 +1,78 @@
+/* Flipspin's account dialog. App colours beat all modern/calm light, dark and OS
+   blocks (specificity 0,6,0); geometry belongs to the modern profile. */
+:root .krobi-settings .krobi-modern.da-dialog[data-profile="modern"][data-tone="calm"] {
+  color-scheme: inherit;
+  --color-bg-surface-primary: var(--paper);
+  --color-bg-surface-secondary: var(--panel);
+  --color-bg-surface-tertiary: var(--panel);
+  --color-bg-surface-head: var(--panel-2);
+  --color-bg-surface-hover: var(--paper-2);
+  --color-bg-surface-rail: var(--paper);
+  --color-bg-surface-foot: var(--panel-2);
+  --color-bg-surface-dim: var(--paper-2);
+  --color-text-primary: var(--ink);
+  --color-text-secondary: var(--ink-2);
+  --color-text-tertiary: var(--ink-3);
+  --color-text-body: var(--ink);
+  --color-text-disabled: var(--ink-4);
+  --color-text-on-hue: var(--yellow-ink);
+  --color-text-on-fill: var(--chalk);
+  --color-text-accent: var(--fg-coral);
+  --color-border-primary: var(--line);
+  --color-border-bold: var(--line);
+  --color-border-soft: var(--line-soft);
+  --color-border-mid: var(--line-med);
+  --color-border-accent: var(--coral);
+  --color-shadow-offset: var(--line);
+  --color-bg-fill-primary: var(--coral);
+  --color-bg-fill-primary-hover: var(--coral-deep);
+  --color-bg-fill-secondary: var(--paper);
+  --color-bg-fill-secondary-hover: var(--panel-2);
+  --zm-ink-fill: var(--ink);
+  --zm-ink-fill-hover: var(--ink-2);
+  --zm-on-ink: var(--paper);
+  --zm-tint-1: var(--paper-2);
+  --zm-bad: var(--rose);
+  --zm-bad-soft: var(--rose-tint);
+  --zm-bad-fg: var(--fg-rose);
+  --status-danger: var(--rose);
+  --status-danger-tint: var(--rose-tint);
+  --status-danger-fg: var(--fg-rose);
+  --shadow-1: 0 1px 1px color-mix(in srgb, var(--ink) 4%, transparent);
+  --shadow-2: 0 1px 2px color-mix(in srgb, var(--ink) 5%, transparent);
+  --shadow-3: 0 12px 32px color-mix(in srgb, var(--ink) 14%, transparent);
+  --zm-shadow-av: none;
+  --focus-ring: 2px solid var(--coral);
+}
+
+.settings .z-scrim > .settings-modal.da-dialog {
+  width: min(600px, 100%); padding: var(--space-6); gap: var(--space-5);
+  border: 0; background: var(--color-bg-surface-secondary); box-shadow: var(--shadow-3);
+  font-family: var(--font-sans); font-size: var(--text-base); line-height: var(--leading-body);
+  color: var(--color-text-primary); letter-spacing: var(--tracking-body);
+}
+.da-head { display: flex; align-items: center; gap: var(--space-4); }
+.da-head__text { display: grid; gap: var(--space-1); flex: 1; min-width: 0; }
+.da-dialog .da-head h3 { font-size: var(--text-xl); font-weight: 600; line-height: var(--leading-tight); }
+.da-facts { font-size: var(--text-sm); color: var(--color-text-secondary); }
+.da-dialog b { font-family: var(--font-mono); font-weight: 500; color: var(--color-text-primary); }
+.da-close { align-self: flex-start; display: grid; place-items: center; width: 36px; height: 36px; flex: none; padding: 0; border: 0; border-radius: var(--radius-md); background: var(--color-bg-surface-head); color: var(--color-text-secondary); cursor: pointer; }
+.da-close svg { width: 18px; height: 18px; }
+.da-close:disabled { opacity: .5; cursor: not-allowed; }
+.da-options { display: grid; gap: var(--space-3); }
+.da-dialog .zm-option__icon svg { width: 20px; height: 20px; }
+.da-dialog .zm-progress { background: var(--color-border-mid); --_c: var(--zm-bad); }
+.da-dialog .zm-key .da-dot--removed { background: var(--zm-bad); }
+.da-dialog .zm-key .da-dot--kept { background: var(--color-border-mid); box-shadow: inset 0 0 0 1px var(--color-border-mid); }
+.da-choice { position: relative; border-radius: var(--radius-lg); }
+.da-tooltip { display: none; position: absolute; z-index: 1; left: var(--space-4); right: var(--space-4); bottom: calc(100% + var(--space-2)); padding: var(--space-3); border-radius: var(--radius-md); background: var(--zm-ink-fill); color: var(--zm-on-ink); font-size: var(--text-sm); box-shadow: var(--shadow-3); pointer-events: none; }
+/* opens from the (i), a keyboard focus, or hovering a card that can't be picked; never from a click, which would cover "Only the account" */
+.da-choice:has(.zm-info:hover) .da-tooltip, .da-choice:has(:focus-visible) .da-tooltip, .da-choice:focus-visible .da-tooltip, .da-choice:has(.zm-option:disabled):hover .da-tooltip { display: block; }
+.da-foot { display: flex; justify-content: flex-end; align-items: center; gap: var(--space-2); }
+.da-retry { margin-right: auto; }
+.da-dialog .da-foot .z-btn { min-height: 44px; padding-inline: var(--space-5); border-width: 1px; box-shadow: none; }
+.da-dialog .da-foot .z-btn:hover:not(:disabled) { background: var(--status-danger-tint); box-shadow: var(--shadow-2); transform: none; }
+.da-dialog .da-foot .z-btn:active:not(:disabled) { transform: none; }
+.da-reason { margin: 0; font-size: var(--text-sm); color: var(--color-text-secondary); }
+.da-reason--error { color: var(--zm-bad-fg); }
+.krobi-modern :focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-offset); }

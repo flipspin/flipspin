@@ -1,0 +1,215 @@
+{
+  "clock": "2026-11-09T12:00:00",
+  "cases": [
+    {
+      "name": "normal",
+      "policy": {},
+      "limits": {},
+      "worker": {},
+      "row": {
+        "lane": "new"
+      },
+      "pausedAll": false,
+      "reason": null
+    },
+    {
+      "name": "all paused",
+      "policy": {},
+      "limits": {},
+      "worker": {},
+      "row": {
+        "lane": "new"
+      },
+      "pausedAll": true,
+      "reason": "paused"
+    },
+    {
+      "name": "kind paused",
+      "policy": {
+        "paused": true
+      },
+      "limits": {},
+      "worker": {},
+      "row": {
+        "lane": "new"
+      },
+      "pausedAll": false,
+      "reason": "paused"
+    },
+    {
+      "name": "computer paused",
+      "policy": {},
+      "limits": {
+        "paused": true
+      },
+      "worker": {},
+      "row": {
+        "lane": "new"
+      },
+      "pausedAll": false,
+      "reason": "paused"
+    },
+    {
+      "name": "off",
+      "policy": {},
+      "limits": {
+        "pace": "off"
+      },
+      "worker": {},
+      "row": {
+        "lane": "new"
+      },
+      "pausedAll": false,
+      "reason": "off"
+    },
+    {
+      "name": "charging",
+      "policy": {},
+      "limits": {
+        "onlyCharging": true
+      },
+      "worker": {
+        "onBattery": true
+      },
+      "row": {
+        "lane": "new"
+      },
+      "pausedAll": false,
+      "reason": "battery"
+    },
+    {
+      "name": "power unknown",
+      "policy": {},
+      "limits": {
+        "onlyCharging": true
+      },
+      "worker": {
+        "onBattery": null
+      },
+      "row": {
+        "lane": "new"
+      },
+      "pausedAll": false,
+      "reason": "battery"
+    },
+    {
+      "name": "cooling",
+      "policy": {},
+      "limits": {},
+      "worker": {
+        "pausedReason": "thermal"
+      },
+      "row": {
+        "lane": "new"
+      },
+      "pausedAll": false,
+      "reason": "thermal"
+    },
+    {
+      "name": "helper only",
+      "policy": {
+        "placement": "helpers"
+      },
+      "limits": {},
+      "worker": {
+        "nest": true
+      },
+      "row": {
+        "lane": "new"
+      },
+      "pausedAll": false,
+      "reason": "helpers-only"
+    },
+    {
+      "name": "needs memory",
+      "policy": {
+        "requiredMemoryBytes": 8589934592
+      },
+      "limits": {},
+      "worker": {
+        "nest": true,
+        "memoryBytes": 4294967296
+      },
+      "row": {
+        "lane": "new"
+      },
+      "pausedAll": false,
+      "reason": "memory"
+    },
+    {
+      "name": "whole library helper",
+      "policy": {},
+      "limits": {},
+      "worker": {
+        "nest": true
+      },
+      "row": {
+        "lane": "library",
+        "nest": false
+      },
+      "pausedAll": false,
+      "reason": "helpers-only"
+    },
+    {
+      "name": "helper outside hours",
+      "policy": {},
+      "limits": {
+        "window": {
+          "days": [
+            0
+          ],
+          "startMinute": 60,
+          "endMinute": 420
+        }
+      },
+      "worker": {},
+      "row": {
+        "lane": "new"
+      },
+      "pausedAll": false,
+      "reason": "hours"
+    },
+    {
+      "name": "nest new any time",
+      "policy": {},
+      "limits": {
+        "window": {
+          "days": [
+            0
+          ],
+          "startMinute": 60,
+          "endMinute": 420
+        }
+      },
+      "worker": {
+        "nest": true
+      },
+      "row": {
+        "lane": "new"
+      },
+      "pausedAll": false,
+      "reason": null
+    },
+    {
+      "name": "nest library any time",
+      "policy": {},
+      "limits": {
+        "window": {
+          "days": [
+            0
+          ],
+          "startMinute": 60,
+          "endMinute": 420
+        }
+      },
+      "worker": {
+        "nest": true
+      },
+      "row": {
+        "lane": "library"
+      },
+      "pausedAll": false,
+      "reason": null
+    }
+  ]
+}

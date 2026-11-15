@@ -1,0 +1,23 @@
+/** One palette for actions on songs, selections and albums. */
+export const SONG_ACTION_COLOR = {
+  play: "var(--coral)",
+  playNext: "var(--green)",
+  queue: "var(--yellow)",
+  playlist: "var(--purple)",
+  move: "var(--teal)",
+  lyrics: "var(--purple)",
+  bpm: "var(--teal)",
+  openAlbum: "var(--blue)",
+  goToArtist: "var(--teal)",
+  download: "var(--blue)",
+  tags: "var(--teal)",
+  match: "var(--teal)",
+  plugin: "var(--teal)",
+  openFile: "var(--ink-4)",
+  sendTo: "var(--coral)",
+  remove: "var(--rose)",
+  playAlbum: "var(--blue)",
+  chooseSong: "var(--teal)",
+  moveToFront: "var(--yellow)",
+  removeFromHome: "var(--ink-4)",
+} as const;

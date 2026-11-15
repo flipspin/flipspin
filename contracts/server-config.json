@@ -1,0 +1,142 @@
+{
+  "about": "Server settings contract. Source: process env at boot > app dotenv > default. API owner only.",
+  "sources": [
+    {
+      "env": true,
+      "app": true,
+      "out": "env"
+    },
+    {
+      "env": true,
+      "app": false,
+      "out": "env"
+    },
+    {
+      "env": false,
+      "app": true,
+      "out": "app"
+    },
+    {
+      "env": false,
+      "app": false,
+      "out": "default"
+    }
+  ],
+  "validation": [
+    {
+      "key": "not-a-setting",
+      "value": 1,
+      "status": 422,
+      "code": "unknown-key"
+    },
+    {
+      "key": "KROBI_MAX_CONCURRENT_DOWNLOADS",
+      "value": 17,
+      "status": 422,
+      "code": "out-of-range"
+    },
+    {
+      "key": "KROBI_MAX_CONCURRENT_DOWNLOADS",
+      "value": true,
+      "status": 422,
+      "code": "bad-type"
+    },
+    {
+      "key": "KROBI_LYRICS_ENGINE",
+      "value": "other",
+      "status": 422,
+      "code": "not-a-choice"
+    },
+    {
+      "key": "KROBI_MUSIC_DIR",
+      "value": "/tmp",
+      "status": 409,
+      "code": "read-only"
+    },
+    {
+      "key": "KROBI_MAX_CONCURRENT_DOWNLOADS",
+      "value": 3,
+      "status": 409,
+      "code": "env-locked"
+    }
+  ],
+  "machines": [
+    {
+      "cores": 1,
+      "memoryBytes": 1000000000,
+      "preset": "light",
+      "suggestedMax": [
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "cores": 2,
+      "memoryBytes": 8000000000,
+      "preset": "light",
+      "suggestedMax": [
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "cores": 4,
+      "memoryBytes": 8000000000,
+      "preset": "normal",
+      "suggestedMax": [
+        4,
+        2,
+        3
+      ]
+    },
+    {
+      "cores": 8,
+      "memoryBytes": 8000000000,
+      "preset": "powerful",
+      "suggestedMax": [
+        8,
+        4,
+        7
+      ]
+    },
+    {
+      "cores": 8,
+      "memoryBytes": 2000000000,
+      "preset": "normal",
+      "suggestedMax": [
+        8,
+        4,
+        2
+      ]
+    },
+    {
+      "cores": 32,
+      "memoryBytes": 32000000000,
+      "preset": "powerful",
+      "suggestedMax": [
+        32,
+        16,
+        31
+      ]
+    }
+  ],
+  "presets": {
+    "light": [
+      1,
+      1,
+      1
+    ],
+    "normal": [
+      3,
+      2,
+      2
+    ],
+    "powerful": [
+      6,
+      3,
+      "max(1, cores - 1)"
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "arousal": 0.5,
+  "bpm": {
+    "estimated": true,
+    "source": "computed",
+    "value": 123.4
+  },
+  "bpmConfidence": 0.31,
+  "brightness": 0.25,
+  "computed": {
+    "bpm": 123.4,
+    "bpmEstimated": true,
+    "key": "5A",
+    "keyEstimated": false
+  },
+  "energy": 0.06,
+  "fixed": {
+    "bpm": null,
+    "key": "2A"
+  },
+  "key": {
+    "estimated": false,
+    "source": "fixed",
+    "value": "2A"
+  },
+  "keyConfidence": null,
+  "mood": "upbeat",
+  "pulse": 1.6,
+  "rev": 1,
+  "state": "analyzed"
+}

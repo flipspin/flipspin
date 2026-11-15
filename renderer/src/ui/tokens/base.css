@@ -1,0 +1,122 @@
+/* krobi-ui; base tokens. AGPL-3.0; see LICENSE.
+   Scoped to .krobi-setup / .krobi-settings. */
+:is(.krobi-setup, .krobi-settings) {
+  color-scheme: light;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --text-2xs: 10.5px;
+  --text-xs: 11.5px;
+  --text-sm: 12.5px;
+  --text-base: 14px;
+  --text-md: 15px;
+  --text-lg: 17px;
+  --text-xl: 22px;
+  --text-2xl: 28px;
+  --text-3xl: 32px;
+  --leading-tight: 1.2;
+  --tracking-body: -0.01em;
+  --tracking-eyebrow: 0.07em;
+  --tracking-hero: -0.03em;
+  --tracking-tight: -0.02em;
+  --tracking-label: 0.02em;
+  --tracking-wide: 0.04em;
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px; --space-5: 20px;
+  --space-6: 24px; --space-8: 32px; --space-10: 40px; --space-12: 48px; --space-16: 64px;
+  --space-0-5: 2px; --space-1-5: 6px; --space-2-5: 10px; --space-3-5: 14px; --space-4-5: 18px;
+  --border-w-bold: 2px;
+  --border-w-rail: 3px;
+  --size-control-sm: 28px;
+  --size-control: 32px;
+  --size-row: 36px;
+  --size-tap: 44px;
+  --size-row-touch: 48px;
+  --size-rail: 272px;
+  --size-modal: 480px;
+  --size-control-xs: 20px;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-press: 60ms;
+  --dur-fast: 140ms;
+  --dur-slow: 480ms;
+  --z-sticky: 10;
+  --z-modal: 40;
+  --z-toast: 50;
+  --accent-coral: #EF7E55;  --accent-coral-tint: #FCEEE5;  --accent-coral-fg: #993C1D;
+  --accent-yellow: #F1D86C; --accent-yellow-tint: #FBF4D8; --accent-yellow-fg: #854F0B;
+  --accent-amber: #B78624; --accent-amber-tint: #F6EACA; --accent-amber-fg: #72500E;
+  --accent-teal: #4F9C8B;   --accent-teal-tint: #DEEDE9;   --accent-teal-fg: #085041;
+  --accent-blue: #2E5BFF;   --accent-blue-tint: #DEE3FF;   --accent-blue-fg: #0C447C;
+  --accent-purple: #7B61FF; --accent-purple-tint: #E5E0FE; --accent-purple-fg: #3C3489;
+  --accent-rose: #D14B6A;   --accent-rose-tint: #F9DDE3;   --accent-rose-fg: #8B1A4A;
+  --accent-green: #5A9F5C;  --accent-green-tint: #E1EFDF;  --accent-green-fg: #1F4E22;
+  --viz-grid: var(--color-border-soft);
+  --status-success: var(--accent-green);   --status-success-tint: var(--accent-green-tint);   --status-success-fg: var(--accent-green-fg);
+  --status-warning: var(--accent-yellow);  --status-warning-tint: var(--accent-yellow-tint);  --status-warning-fg: var(--accent-yellow-fg);
+  --status-danger: var(--accent-rose);     --status-danger-tint: var(--accent-rose-tint);     --status-danger-fg: var(--accent-rose-fg);
+  --status-info: var(--accent-blue);       --status-info-tint: var(--accent-blue-tint);       --status-info-fg: var(--accent-blue-fg);
+  --status-active: var(--accent-coral);
+  --strip-bg: #15140E;
+  --strip-line: #3A3930;
+  --strip-hover: #2E2D25;
+  --strip-ink: #F4F2EA;
+  --strip-muted: #BFBCB1;
+  --strip-ok: #8FD09A;
+  --strip-warn: #F49B7C;
+  --strip-error: #F2879E;
+  --strip-off: #8B8A84;
+  --hatch: repeating-linear-gradient(135deg, transparent 0 6px, rgba(0, 0, 0, 0.08) 6px 8px);
+  --focus-ring: 2px solid var(--accent-blue);
+  --focus-offset: 2px;
+  --shadow-modal: 0 18px 48px rgba(21, 20, 14, 0.30);
+  --scrim: rgba(21, 20, 14, 0.45);
+  --glass-ink: var(--strip-ink);
+  --glass-ink-2: color-mix(in srgb, var(--strip-ink) 66%, transparent);
+  --glass-ink-3: color-mix(in srgb, var(--strip-ink) 42%, transparent);
+  --glass-ink-4: color-mix(in srgb, var(--strip-ink) 28%, transparent);
+  --glass-fill: color-mix(in srgb, var(--strip-ink) 10%, transparent);
+  --glass-fill-hi: color-mix(in srgb, var(--strip-ink) 22%, transparent);
+  --glass-line: color-mix(in srgb, var(--strip-ink) 16%, transparent);
+  --glass-hair: color-mix(in srgb, var(--strip-ink) 10%, transparent);
+  --glass-cell: color-mix(in srgb, var(--strip-ink) 18%, transparent);
+  --glass-pane: color-mix(in srgb, var(--strip-bg) 38%, transparent);
+  --glass-sheet: color-mix(in srgb, var(--strip-bg) 80%, transparent);
+  --glass-frost-blur: 28px;
+  --glass-frost-saturate: 150%;
+  --glass-frost: blur(var(--glass-frost-blur)) saturate(var(--glass-frost-saturate));
+  --glass-lift: 0 10px 24px color-mix(in srgb, var(--strip-bg) 45%, transparent);
+  --glass-accent: var(--accent-coral);
+  --glass-accent-2: var(--accent-green);
+}
+@media (prefers-color-scheme: dark) {
+  :is(.krobi-setup, .krobi-settings):not([data-theme="light"]) {
+    color-scheme: dark;
+    --accent-coral-tint: #3F2218;  --accent-coral-fg: #F6B79C;
+    --accent-yellow-tint: #3A3112; --accent-yellow-fg: #F1D86C;
+    --accent-amber: #D9AD52; --accent-amber-tint: #392D15; --accent-amber-fg: #EAC77F;
+    --accent-teal-tint: #14302A;   --accent-teal-fg: #8FD1C1;
+    --accent-blue-tint: #1A2450;   --accent-blue-fg: #B9C6FF;
+    --accent-purple-tint: #27204A; --accent-purple-fg: #C7BBFF;
+    --accent-rose-tint: #3E1A24;   --accent-rose-fg: #F2A0B4;
+    --accent-green-tint: #1B2E1C;  --accent-green-fg: #A9D8AA;
+    --shadow-modal: 0 18px 48px rgba(0, 0, 0, 0.55);
+    --scrim: rgba(0, 0, 0, 0.6);
+  }
+}
+:is(.krobi-setup, .krobi-settings)[data-theme="dark"] {
+  color-scheme: dark;
+  --accent-coral-tint: #3F2218;  --accent-coral-fg: #F6B79C;
+  --accent-yellow-tint: #3A3112; --accent-yellow-fg: #F1D86C;
+  --accent-amber: #D9AD52; --accent-amber-tint: #392D15; --accent-amber-fg: #EAC77F;
+  --accent-teal-tint: #14302A;   --accent-teal-fg: #8FD1C1;
+  --accent-blue-tint: #1A2450;   --accent-blue-fg: #B9C6FF;
+  --accent-purple-tint: #27204A; --accent-purple-fg: #C7BBFF;
+  --accent-rose-tint: #3E1A24;   --accent-rose-fg: #F2A0B4;
+  --accent-green-tint: #1B2E1C;  --accent-green-fg: #A9D8AA;
+  --shadow-modal: 0 18px 48px rgba(0, 0, 0, 0.55);
+  --scrim: rgba(0, 0, 0, 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is(.krobi-setup, .krobi-settings) { --dur-press: 0ms; --dur-fast: 0ms; --dur-slow: 0ms; }
+}

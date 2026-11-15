@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!--
+  Unraid Docker template for the Flipspin server.
+  Copy this file to /boot/config/plugins/dockerMan/templates-user/ on the flash drive,
+  then Docker -> Add Container -> Template: Flipspin.
+  Claim code after the first start: the container's log ("setup token").
+  LAN or VPN only: never forward port 8000 on your router.
+-->
+<Container version="2">
+  <Name>Flipspin</Name>
+  <Repository>ghcr.io/flipspin/flipspin-server:latest</Repository>
+  <Registry>https://github.com/orgs/flipspin/packages/container/package/flipspin-server</Registry>
+  <Network>bridge</Network>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/flipspin/flipspin/issues</Support>
+  <Project>https://github.com/flipspin/flipspin</Project>
+  <Overview>Flipspin's server: your music library, catalog browsing that marks what you already own, acquisition, household accounts with per-device tokens, and .lrc lyrics. Connect the Flipspin desktop app to http://[IP]:8000. The first account needs the setup code printed in this container's log ("setup token"). Keep it on your LAN or behind a VPN; never port-forward it.</Overview>
+  <Category>MediaServer:Music MediaApp:Music</Category>
+  <WebUI/>
+  <ExtraParams>--hostname=krobi</ExtraParams>
+  <Config Name="API port" Target="8000" Default="8000" Mode="tcp" Description="Port the desktop and phone apps connect to." Type="Port" Display="always" Required="true" Mask="false">8000</Config>
+  <Config Name="Music" Target="/music" Default="/mnt/user/music" Mode="rw" Description="Your music library. Acquisitions, tag edits and deletes write here." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/music</Config>
+  <Config Name="Data" Target="/data" Default="/mnt/user/appdata/krobi" Mode="rw" Description="Flipspin's home: accounts, playlists, logs, settings, caches, setup token." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/krobi</Config>
+  <Config Name="Install method" Target="KROBI_INSTALL_METHOD" Default="unraid" Type="Variable" Display="advanced" Required="true" Mask="false">unraid</Config>
+  <Config Name="PUID" Target="PUID" Default="99" Description="User id the server runs as; must be able to write the music share (99 = nobody)." Type="Variable" Display="advanced" Required="true" Mask="false">99</Config>
+  <Config Name="PGID" Target="PGID" Default="100" Description="Group id the server runs as (100 = users)." Type="Variable" Display="advanced" Required="true" Mask="false">100</Config>
+  <Config Name="Timezone" Target="TZ" Default="UTC" Description="Timezone for server log timestamps, for example Europe/Paris. Every timestamp includes its UTC offset." Type="Variable" Display="always" Required="false" Mask="false">UTC</Config>
+  <Config Name="Require setup token" Target="KROBI_REQUIRE_SETUP_TOKEN" Default="true" Description="Creating the first account needs the code from the log. Leave true." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
+  <Config Name="Genius API key" Target="KROBI_GENIUS_API_KEY" Default="" Description="Optional: plain-text lyrics from Genius." Type="Variable" Display="advanced" Required="false" Mask="true"/>
+</Container>

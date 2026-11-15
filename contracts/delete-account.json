@@ -1,0 +1,30 @@
+{
+  "about": "«Eliminar cuenta» (docs/features/delete-account.md): the dialog's facts line, the danger button's label, whether «La cuenta y sus canciones» can be picked, sizes and the success toast. Read by the renderer's delete-account tests, krobi-ios Tools/Checks and krobi-android ContratosTest. preview = GET /api/users/{id}/deletion-preview (null = it failed or is still loading).",
+  "facts": [
+    { "in": { "devices": 2, "songs": 212, "playlists": 3 }, "out": "2 dispositivos · 212 canciones · 3 listas" },
+    { "in": { "devices": 1, "songs": 1, "playlists": 1 }, "out": "1 dispositivo · 1 canción · 1 lista" },
+    { "in": { "devices": 0, "songs": 0, "playlists": 0 }, "out": "0 dispositivos · 0 canciones · 0 listas" },
+    { "in": { "devices": 3, "songs": 12345, "playlists": 0 }, "out": "3 dispositivos · 12.345 canciones · 0 listas" }
+  ],
+  "doLabel": [
+    { "case": "only the account", "choice": "account", "removable": 38, "out": "Eliminar cuenta" },
+    { "case": "with songs", "choice": "songs", "removable": 38, "out": "Eliminar cuenta y 38 canciones" },
+    { "case": "with one song", "choice": "songs", "removable": 1, "out": "Eliminar cuenta y 1 canción" }
+  ],
+  "optionB": [
+    { "case": "loading or failed", "preview": null, "enabled": false, "why": "error" },
+    { "case": "nothing only theirs", "preview": { "devices": 1, "songs": 4, "playlists": 0, "removable": { "count": 0, "bytes": 0 }, "kept": 4 }, "enabled": false, "why": "none" },
+    { "case": "some only theirs", "preview": { "devices": 2, "songs": 212, "playlists": 3, "removable": { "count": 38, "bytes": 1234567890 }, "kept": 174 }, "enabled": true, "why": null }
+  ],
+  "size": [
+    { "in": 1234567890, "out": "1,2 GB" },
+    { "in": 850000000, "out": "850 MB" },
+    { "in": 0, "out": "0 B" }
+  ],
+  "toast": [
+    { "case": "account only", "name": "Eduardo", "removedSongs": 0, "freedBytes": 0, "playlists": "transferred", "out": "Cuenta de Eduardo eliminada" },
+    { "case": "with songs", "name": "Eduardo", "removedSongs": 38, "freedBytes": 1234567890, "playlists": "deleted", "out": "Cuenta de Eduardo eliminada · 38 canciones borradas · 1,2 GB libres" },
+    { "case": "with one song", "name": "Eduardo", "removedSongs": 1, "freedBytes": 4200000, "playlists": "deleted", "out": "Cuenta de Eduardo eliminada · 1 canción borrada · 4,2 MB libres" },
+    { "case": "chose songs but none were left", "name": "Eduardo", "removedSongs": 0, "freedBytes": 0, "playlists": "deleted", "out": "Cuenta de Eduardo eliminada" }
+  ]
+}

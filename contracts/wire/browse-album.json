@@ -1,0 +1,51 @@
+{
+  "album": {
+    "artistName": "Daft Punk",
+    "artistRef": {
+      "id": "27",
+      "provider": "deezer",
+      "url": null
+    },
+    "coverUrl": "https://cdn.deezer.test/c.jpg",
+    "genres": [
+      "Electro"
+    ],
+    "kind": "album",
+    "label": "Daft Life Ltd.",
+    "recordType": "album",
+    "ref": {
+      "id": "302127",
+      "provider": "deezer",
+      "url": "https://www.deezer.com/album/302127"
+    },
+    "releaseDate": "2001-03-07",
+    "title": "Discovery",
+    "trackCount": 1
+  },
+  "tracks": [
+    {
+      "albumRef": {
+        "id": "302127",
+        "provider": "deezer",
+        "url": "https://www.deezer.com/album/302127"
+      },
+      "albumTitle": "Discovery",
+      "artistName": "Daft Punk",
+      "artistRef": null,
+      "coverUrl": "https://cdn.deezer.test/c.jpg",
+      "discNumber": 1,
+      "durationSeconds": 320.0,
+      "explicit": false,
+      "isrc": "GBDUW0000053",
+      "kind": "track",
+      "previewUrl": "https://cdn.deezer.test/p.mp3",
+      "ref": {
+        "id": "3135553",
+        "provider": "deezer",
+        "url": null
+      },
+      "title": "One More Time",
+      "trackPosition": 1
+    }
+  ]
+}

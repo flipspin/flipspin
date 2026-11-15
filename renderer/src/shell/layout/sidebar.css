@@ -1,0 +1,85 @@
+/* The sidebar (sidebar.tsx). Tokens only. */
+
+/* The playlist list scrolls (rows never shrink); a soft bottom edge says
+   there is more. */
+.sidebar-playlists-scroll { mask-image: linear-gradient(to bottom, black calc(100% - 18px), transparent); }
+
+/* Ising follows the sidebar's own height (a size container, sidebar.tsx) —
+   not the window's, which also holds the player bar and its draggable drawer.
+   It scales with every change: 16% of the sidebar's height, from 40px up to
+   its full 2:1 (104px), and steps aside below 420px so the playlists keep
+   their rows. The lattice redraws to the new box. */
+.sidebar-layout .sidebar-ising .ising__screen,
+.sidebar-layout .sidebar-ising button.ising__screen { aspect-ratio: auto; height: clamp(40px, 16cqh, 104px); }
+@container sidebar (max-height: 420px) { .sidebar-ising { display: none; } }
+
+/* Folding (sidebar.tsx): the shell's width springs 240 ↔ 76 px on Apple's
+   default spring (--ease-spring, --dur-sidebar) and clips the 240 px sidebar
+   inside, so the page reflows like a split view and nothing in the strip
+   moves. 76 px holds the window buttons. A faint hairline is the edge. */
+.sidebar-shell { position: relative; height: 100%; min-height: 0; width: 240px; flex: none; transition: width var(--dur-sidebar) var(--ease-spring); }
+.sidebar-shell[data-folded] { width: 76px; }
+.sidebar-shell__clip { height: 100%; overflow: hidden; border-right: 2px solid color-mix(in srgb, var(--line) 24%, transparent); background: var(--panel); }
+
+/* Labels: folding, they fade out first and the width follows; unfolding, the
+   width leads and they come back a third of the way in. */
+/* will-change keeps the labels on their own layer for good: WebKit draws text
+   on a fading layer with other anti-aliasing and dropped back to normal when
+   the fade ended, so the text blinked as the sidebar finished opening. */
+.sidebar-shell .sb-fade { will-change: opacity; transition: opacity var(--dur-fast) var(--ease-out) calc(var(--dur-sidebar) / 3); }
+.sidebar-shell[data-folded] .sb-fade { opacity: 0; pointer-events: none; transition-delay: 0s; }
+
+/* The tab: a cream nub on the strip's edge, covering the hairline where it
+   leaves it, with the arrow that opens the sidebar again. */
+.sidebar-shell button.sidebar-shell__tab {
+  position: absolute; top: 40px; left: calc(100% - 1px); z-index: var(--z-sticky);
+  display: grid; place-items: center; width: 20px; height: 44px; min-height: 0; padding: 0;
+  border: 1px solid color-mix(in srgb, var(--line) 22%, transparent); border-left: 0; border-radius: 0 6px 6px 0;
+  background: var(--panel); box-shadow: 1px 1px 3px color-mix(in srgb, var(--line) 12%, transparent);
+  color: var(--ink-3); cursor: pointer;
+  animation: sidebar-tab-in var(--dur-fast) var(--ease-out) calc(var(--dur-sidebar) / 2) backwards;
+}
+.sidebar-shell button.sidebar-shell__tab:hover { color: var(--ink); }
+@keyframes sidebar-tab-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* A drawer (narrow window, portrait) is always the full sidebar. */
+@media (max-width: 767px), (orientation: portrait) {
+  .sidebar-shell, .sidebar-shell[data-folded] { width: 240px; }
+  .sidebar-shell[data-folded] .sb-fade { opacity: 1; pointer-events: auto; }
+  .sidebar-shell .sidebar-shell__tab { display: none; }
+}
+
+/* A page change animates only <main> (ui/tokens/app.css): its snapshot is
+   drawn above the rest of the window, and the tab hangs over main's edge, so
+   it vanished for the length of every switch. While a transition runs the
+   tab gets a layer of its own, above the page and held still. */
+:root[data-page-transition] .sidebar-shell__tab { view-transition-name: sidebar-tab; }
+::view-transition-group(sidebar-tab) { z-index: var(--z-sticky); animation: none; }
+::view-transition-old(sidebar-tab), ::view-transition-new(sidebar-tab) { animation: none; }
+
+/* Folded, the logo slides to the strip's centre (x 16–44 → centred on 76 px,
+   with the covers and icons below), on the same spring as the width. */
+.sidebar-shell .sb-logo { transition: transform var(--dur-sidebar) var(--ease-spring); }
+.sidebar-shell[data-folded] .sb-logo { transform: translateX(8px); }
+@media (max-width: 767px), (orientation: portrait) {
+  .sidebar-shell[data-folded] .sb-logo { transform: none; }
+}
+
+/* A playlist's cover plays it on hover: a disc over the 48 px cover (row
+   padding 3 px), a sibling of the row button. While that playlist is the one
+   playing the disc stays and pauses. */
+.sidebar-layout .sb-playlist-row button.sb-cover-play {
+  position: absolute; left: 3px; top: 50%; width: 48px; height: 48px; min-height: 0; padding: 0; margin: 0;
+  transform: translateY(-50%); display: grid; place-items: center;
+  border: 0; border-radius: var(--radius-sm, 6px); cursor: pointer;
+  background: color-mix(in srgb, var(--ink) 38%, transparent); color: var(--panel);
+  opacity: 0; transition: opacity var(--dur-fast) var(--ease-out);
+}
+.sidebar-layout .sb-playlist-row button.sb-cover-play::before {
+  content: ""; position: absolute; width: 30px; height: 30px; border-radius: 999px; background: var(--ink);
+}
+.sidebar-layout .sb-playlist-row button.sb-cover-play > svg { position: relative; }
+.sidebar-layout .sb-playlist-row:hover button.sb-cover-play,
+.sidebar-layout .sb-playlist-row button.sb-cover-play:focus-visible,
+.sidebar-layout .sb-playlist-row[data-current] button.sb-cover-play { opacity: 1; }
+.sidebar-layout .sb-playlist-row button.sb-cover-play:hover { background: color-mix(in srgb, var(--ink) 50%, transparent); }

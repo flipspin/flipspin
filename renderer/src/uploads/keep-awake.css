@@ -1,0 +1,9 @@
+.music-awake { display: grid; gap: 8px; font-size: 13px; }
+.music-awake > label { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+.music-awake > label > span { flex: 1; }
+.music-toggle[role="switch"] { appearance: none; flex: none; width: 44px; height: 26px; margin: 0; padding: 3px; border: 1px solid var(--kob-line, var(--line)); border-radius: 13px; background: var(--kob-ground, var(--panel)); cursor: pointer; }
+.music-toggle[role="switch"]::before { content: ''; display: block; width: 18px; height: 18px; border-radius: 50%; background: var(--kob-ink-3, var(--ink-3)); }
+.music-toggle[role="switch"]:checked { background: var(--accent-yellow, var(--yellow)); border-color: var(--accent-yellow, var(--yellow)); }
+.music-toggle[role="switch"]:checked::before { margin-left: 18px; background: var(--yellow-ink); }
+.music-toggle[role="switch"]:focus-visible { outline: 2px solid var(--accent-yellow, var(--yellow)); outline-offset: 3px; }
+.music-toggle[role="switch"]:disabled { opacity: .5; cursor: default; }

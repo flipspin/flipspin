@@ -1,0 +1,41 @@
+{
+  "playlist": {
+    "description": null,
+    "kind": "playlist",
+    "owner": "Alex",
+    "pictureUrl": null,
+    "ref": {
+      "id": "908",
+      "provider": "deezer",
+      "url": "https://www.deezer.com/playlist/908"
+    },
+    "title": "En mode 60",
+    "trackCount": 1
+  },
+  "tracks": [
+    {
+      "albumRef": {
+        "id": "302127",
+        "provider": "deezer",
+        "url": "https://www.deezer.com/album/302127"
+      },
+      "albumTitle": "Discovery",
+      "artistName": "Daft Punk",
+      "artistRef": null,
+      "coverUrl": "https://cdn.deezer.test/c.jpg",
+      "discNumber": 1,
+      "durationSeconds": 320.0,
+      "explicit": false,
+      "isrc": "GBDUW0000053",
+      "kind": "track",
+      "previewUrl": "https://cdn.deezer.test/p.mp3",
+      "ref": {
+        "id": "3135553",
+        "provider": "deezer",
+        "url": null
+      },
+      "title": "One More Time",
+      "trackPosition": 1
+    }
+  ]
+}

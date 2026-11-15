@@ -1,0 +1,30 @@
+.du-results { display: grid; gap: 18px; min-width: 0; }
+.du-toolbar, .du-heading, .du-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.du-toolbar { justify-content: space-between; font-size: 13px; color: var(--color-text-secondary); }
+.du-status { margin: -8px 0 0; color: var(--color-text-secondary); font-size: 12px; }
+.du-group { border: 1px solid var(--color-border-mid); border-radius: 8px; overflow: hidden; min-width: 0; background: var(--color-bg-surface-primary); }
+.du-heading { padding: 16px; border-bottom: 1px solid var(--color-border-mid); }
+.du-heading h3 { margin: 0; font-size: 14px; font-weight: 700; }
+.du-heading h3 span { font-weight: 400; color: var(--color-text-secondary); }
+.du-basis { font-size: 11px; padding: 4px 8px; border-radius: 4px; color: var(--accent-amber-fg); background: var(--accent-amber-tint); white-space: nowrap; }
+.du-basis[data-basis="audio"] { color: var(--accent-green-fg); background: var(--accent-green-tint); }
+.du-count { margin-left: auto; font-size: 11px; color: var(--color-text-secondary); }
+.du-scroll { overflow-x: auto; }
+.du-scroll:focus-visible, .du-choice input:focus-visible { outline: 2px solid var(--accent-green); outline-offset: -2px; }
+.du-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+.du-table th { padding: 10px 12px; font-size: 10px; letter-spacing: .04em; text-transform: uppercase; color: var(--color-text-secondary); font-weight: 500; }
+.du-table td { padding: 12px; border-top: 1px solid var(--color-border-soft); vertical-align: top; }
+.du-table :is(th, td):nth-child(n+4) { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.du-table tr[data-keeper="true"] { background: var(--accent-green-tint); }
+.du-table tr[data-keeper="true"] .du-file { font-weight: 600; }
+.du-table td[data-different="true"], .du-difference { color: var(--accent-amber-fg); }
+.du-table small { font-size: 10px; color: var(--color-text-secondary); }
+.du-file { min-width: 200px; max-width: 420px; overflow-wrap: anywhere; }
+.du-keep { font-size: 11px; font-weight: 600; color: var(--accent-green-fg); }
+.du-copy { font-size: 11px; color: var(--color-text-secondary); }
+.du-choice { display: flex; align-items: center; gap: 6px; font-size: 11px; }
+.du-choice input { accent-color: var(--accent-green); }
+.du-unavailable { display: block; color: var(--color-text-tertiary); font-size: 10px; margin-top: 4px; }
+.du-difference { display: block; font-size: 10px; margin-top: 4px; }
+.du-actions { justify-content: flex-end; padding: 12px 16px; border-top: 1px solid var(--color-border-mid); }
+.du-empty { color: var(--color-text-secondary); padding-block: 32px; text-align: center; }

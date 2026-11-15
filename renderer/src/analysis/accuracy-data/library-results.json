@@ -1,0 +1,1435 @@
+{
+  "generated": "2026-11-12",
+  "cutoffs": {
+    "key_conf": 0.004,
+    "bpm_conf": 0.4,
+    "bpm_tolerance": 2.0
+  },
+  "coverage": {
+    "songs": 795,
+    "musicbrainz_asked": 795,
+    "musicbrainz_confident_match": 588,
+    "acousticbrainz_any": 278,
+    "acousticbrainz_from_best_mbid": 166,
+    "acousticbrainz_key_2plus_subs": 83,
+    "deezer_asked": 795,
+    "deezer_match": 600,
+    "deezer_match_via_isrc": 24,
+    "deezer_bpm_nonzero": 216,
+    "both_web_bpm": 167,
+    "bpm_label": {
+      "web-agree": 107,
+      "gold": 37,
+      "web-octave": 2
+    },
+    "bpm_web_disagree_no_label": 44,
+    "key_label": {
+      "ab-consistent": 58,
+      "gold": 38
+    },
+    "getsongbpm": "skipped: needs an API key we do not have",
+    "fixed_rows": 0
+  },
+  "key": {
+    "gold": {
+      "all": {
+        "exact": {
+          "n": 38,
+          "k": 24,
+          "rate": 0.632,
+          "ci95": [
+            0.473,
+            0.766
+          ]
+        },
+        "exact_or_relative": {
+          "n": 38,
+          "k": 28,
+          "rate": 0.737,
+          "ci95": [
+            0.58,
+            0.85
+          ]
+        }
+      },
+      "confident": {
+        "exact": {
+          "n": 24,
+          "k": 17,
+          "rate": 0.708,
+          "ci95": [
+            0.508,
+            0.851
+          ]
+        },
+        "exact_or_relative": {
+          "n": 24,
+          "k": 20,
+          "rate": 0.833,
+          "ci95": [
+            0.641,
+            0.933
+          ]
+        }
+      },
+      "estimated": {
+        "exact": {
+          "n": 14,
+          "k": 7,
+          "rate": 0.5,
+          "ci95": [
+            0.268,
+            0.732
+          ]
+        },
+        "exact_or_relative": {
+          "n": 14,
+          "k": 8,
+          "rate": 0.571,
+          "ci95": [
+            0.326,
+            0.786
+          ]
+        }
+      }
+    },
+    "gold_hooktheory": {
+      "all": {
+        "exact": {
+          "n": 31,
+          "k": 21,
+          "rate": 0.677,
+          "ci95": [
+            0.501,
+            0.814
+          ]
+        },
+        "exact_or_relative": {
+          "n": 31,
+          "k": 24,
+          "rate": 0.774,
+          "ci95": [
+            0.602,
+            0.886
+          ]
+        }
+      },
+      "confident": {
+        "exact": {
+          "n": 20,
+          "k": 15,
+          "rate": 0.75,
+          "ci95": [
+            0.531,
+            0.888
+          ]
+        },
+        "exact_or_relative": {
+          "n": 20,
+          "k": 17,
+          "rate": 0.85,
+          "ci95": [
+            0.64,
+            0.948
+          ]
+        }
+      },
+      "estimated": {
+        "exact": {
+          "n": 11,
+          "k": 6,
+          "rate": 0.545,
+          "ci95": [
+            0.28,
+            0.787
+          ]
+        },
+        "exact_or_relative": {
+          "n": 11,
+          "k": 7,
+          "rate": 0.636,
+          "ci95": [
+            0.354,
+            0.848
+          ]
+        }
+      }
+    },
+    "ab_consistent": {
+      "all": {
+        "exact": {
+          "n": 58,
+          "k": 23,
+          "rate": 0.397,
+          "ci95": [
+            0.281,
+            0.525
+          ]
+        },
+        "exact_or_relative": {
+          "n": 58,
+          "k": 31,
+          "rate": 0.534,
+          "ci95": [
+            0.408,
+            0.657
+          ]
+        }
+      },
+      "confident": {
+        "exact": {
+          "n": 46,
+          "k": 22,
+          "rate": 0.478,
+          "ci95": [
+            0.341,
+            0.619
+          ]
+        },
+        "exact_or_relative": {
+          "n": 46,
+          "k": 26,
+          "rate": 0.565,
+          "ci95": [
+            0.422,
+            0.698
+          ]
+        }
+      },
+      "estimated": {
+        "exact": {
+          "n": 12,
+          "k": 1,
+          "rate": 0.083,
+          "ci95": [
+            0.015,
+            0.354
+          ]
+        },
+        "exact_or_relative": {
+          "n": 12,
+          "k": 5,
+          "rate": 0.417,
+          "ci95": [
+            0.193,
+            0.68
+          ]
+        }
+      }
+    },
+    "all_labels": {
+      "all": {
+        "exact": {
+          "n": 96,
+          "k": 47,
+          "rate": 0.49,
+          "ci95": [
+            0.392,
+            0.588
+          ]
+        },
+        "exact_or_relative": {
+          "n": 96,
+          "k": 59,
+          "rate": 0.615,
+          "ci95": [
+            0.515,
+            0.706
+          ]
+        }
+      },
+      "confident": {
+        "exact": {
+          "n": 70,
+          "k": 39,
+          "rate": 0.557,
+          "ci95": [
+            0.441,
+            0.668
+          ]
+        },
+        "exact_or_relative": {
+          "n": 70,
+          "k": 46,
+          "rate": 0.657,
+          "ci95": [
+            0.54,
+            0.758
+          ]
+        }
+      },
+      "estimated": {
+        "exact": {
+          "n": 26,
+          "k": 8,
+          "rate": 0.308,
+          "ci95": [
+            0.165,
+            0.5
+          ]
+        },
+        "exact_or_relative": {
+          "n": 26,
+          "k": 13,
+          "rate": 0.5,
+          "ci95": [
+            0.321,
+            0.679
+          ]
+        }
+      }
+    }
+  },
+  "bpm": {
+    "gold": {
+      "all": {
+        "exact": {
+          "n": 37,
+          "k": 27,
+          "rate": 0.73,
+          "ci95": [
+            0.57,
+            0.846
+          ]
+        },
+        "exact_or_octave": {
+          "n": 37,
+          "k": 32,
+          "rate": 0.865,
+          "ci95": [
+            0.72,
+            0.941
+          ]
+        }
+      },
+      "confident": {
+        "exact": {
+          "n": 21,
+          "k": 16,
+          "rate": 0.762,
+          "ci95": [
+            0.549,
+            0.894
+          ]
+        },
+        "exact_or_octave": {
+          "n": 21,
+          "k": 19,
+          "rate": 0.905,
+          "ci95": [
+            0.711,
+            0.973
+          ]
+        }
+      },
+      "estimated": {
+        "exact": {
+          "n": 16,
+          "k": 11,
+          "rate": 0.688,
+          "ci95": [
+            0.444,
+            0.858
+          ]
+        },
+        "exact_or_octave": {
+          "n": 16,
+          "k": 13,
+          "rate": 0.812,
+          "ci95": [
+            0.57,
+            0.934
+          ]
+        }
+      }
+    },
+    "web_agree": {
+      "all": {
+        "exact": {
+          "n": 107,
+          "k": 99,
+          "rate": 0.925,
+          "ci95": [
+            0.859,
+            0.962
+          ]
+        },
+        "exact_or_octave": {
+          "n": 107,
+          "k": 106,
+          "rate": 0.991,
+          "ci95": [
+            0.949,
+            0.998
+          ]
+        }
+      },
+      "confident": {
+        "exact": {
+          "n": 56,
+          "k": 53,
+          "rate": 0.946,
+          "ci95": [
+            0.854,
+            0.982
+          ]
+        },
+        "exact_or_octave": {
+          "n": 56,
+          "k": 56,
+          "rate": 1.0,
+          "ci95": [
+            0.936,
+            1.0
+          ]
+        }
+      },
+      "estimated": {
+        "exact": {
+          "n": 51,
+          "k": 46,
+          "rate": 0.902,
+          "ci95": [
+            0.79,
+            0.957
+          ]
+        },
+        "exact_or_octave": {
+          "n": 51,
+          "k": 50,
+          "rate": 0.98,
+          "ci95": [
+            0.897,
+            0.997
+          ]
+        }
+      }
+    },
+    "web_octave": {
+      "all": {
+        "exact": {
+          "n": 2,
+          "k": 2,
+          "rate": 1.0,
+          "ci95": [
+            0.342,
+            1.0
+          ]
+        },
+        "exact_or_octave": {
+          "n": 2,
+          "k": 2,
+          "rate": 1.0,
+          "ci95": [
+            0.342,
+            1.0
+          ]
+        }
+      },
+      "confident": {
+        "exact": {
+          "n": 1,
+          "k": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.207,
+            1.0
+          ]
+        },
+        "exact_or_octave": {
+          "n": 1,
+          "k": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.207,
+            1.0
+          ]
+        }
+      },
+      "estimated": {
+        "exact": {
+          "n": 1,
+          "k": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.207,
+            1.0
+          ]
+        },
+        "exact_or_octave": {
+          "n": 1,
+          "k": 1,
+          "rate": 1.0,
+          "ci95": [
+            0.207,
+            1.0
+          ]
+        }
+      }
+    },
+    "all_labels": {
+      "all": {
+        "exact": {
+          "n": 146,
+          "k": 128,
+          "rate": 0.877,
+          "ci95": [
+            0.814,
+            0.921
+          ]
+        },
+        "exact_or_octave": {
+          "n": 146,
+          "k": 140,
+          "rate": 0.959,
+          "ci95": [
+            0.913,
+            0.981
+          ]
+        }
+      },
+      "confident": {
+        "exact": {
+          "n": 78,
+          "k": 70,
+          "rate": 0.897,
+          "ci95": [
+            0.81,
+            0.947
+          ]
+        },
+        "exact_or_octave": {
+          "n": 78,
+          "k": 76,
+          "rate": 0.974,
+          "ci95": [
+            0.911,
+            0.993
+          ]
+        }
+      },
+      "estimated": {
+        "exact": {
+          "n": 68,
+          "k": 58,
+          "rate": 0.853,
+          "ci95": [
+            0.75,
+            0.918
+          ]
+        },
+        "exact_or_octave": {
+          "n": 68,
+          "k": 64,
+          "rate": 0.941,
+          "ci95": [
+            0.858,
+            0.977
+          ]
+        }
+      }
+    }
+  },
+  "per_family": {
+    "classical": {
+      "songs": 5,
+      "mb_match": 1,
+      "ab": 0,
+      "deezer_bpm": 2,
+      "key_labels": 2,
+      "bpm_labels": 0,
+      "key_exact": {
+        "n": 2,
+        "k": 0,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.658
+        ]
+      },
+      "key_exact_or_relative": {
+        "n": 2,
+        "k": 0,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.658
+        ]
+      },
+      "bpm_exact": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "bpm_exact_or_octave": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "krobi_key_confident_share": {
+        "n": 5,
+        "k": 3,
+        "rate": 0.6,
+        "ci95": [
+          0.231,
+          0.882
+        ]
+      },
+      "krobi_bpm_confident_share": {
+        "n": 5,
+        "k": 0,
+        "rate": 0.0,
+        "ci95": [
+          -0.0,
+          0.434
+        ]
+      }
+    },
+    "country-folk": {
+      "songs": 9,
+      "mb_match": 9,
+      "ab": 6,
+      "deezer_bpm": 6,
+      "key_labels": 0,
+      "bpm_labels": 4,
+      "key_exact": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "key_exact_or_relative": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "bpm_exact": {
+        "n": 4,
+        "k": 4,
+        "rate": 1.0,
+        "ci95": [
+          0.51,
+          1.0
+        ]
+      },
+      "bpm_exact_or_octave": {
+        "n": 4,
+        "k": 4,
+        "rate": 1.0,
+        "ci95": [
+          0.51,
+          1.0
+        ]
+      },
+      "krobi_key_confident_share": {
+        "n": 9,
+        "k": 5,
+        "rate": 0.556,
+        "ci95": [
+          0.267,
+          0.811
+        ]
+      },
+      "krobi_bpm_confident_share": {
+        "n": 9,
+        "k": 6,
+        "rate": 0.667,
+        "ci95": [
+          0.354,
+          0.879
+        ]
+      }
+    },
+    "electronic": {
+      "songs": 54,
+      "mb_match": 43,
+      "ab": 18,
+      "deezer_bpm": 7,
+      "key_labels": 5,
+      "bpm_labels": 7,
+      "key_exact": {
+        "n": 5,
+        "k": 3,
+        "rate": 0.6,
+        "ci95": [
+          0.231,
+          0.882
+        ]
+      },
+      "key_exact_or_relative": {
+        "n": 5,
+        "k": 3,
+        "rate": 0.6,
+        "ci95": [
+          0.231,
+          0.882
+        ]
+      },
+      "bpm_exact": {
+        "n": 7,
+        "k": 6,
+        "rate": 0.857,
+        "ci95": [
+          0.487,
+          0.974
+        ]
+      },
+      "bpm_exact_or_octave": {
+        "n": 7,
+        "k": 6,
+        "rate": 0.857,
+        "ci95": [
+          0.487,
+          0.974
+        ]
+      },
+      "krobi_key_confident_share": {
+        "n": 54,
+        "k": 35,
+        "rate": 0.648,
+        "ci95": [
+          0.515,
+          0.762
+        ]
+      },
+      "krobi_bpm_confident_share": {
+        "n": 54,
+        "k": 42,
+        "rate": 0.778,
+        "ci95": [
+          0.651,
+          0.868
+        ]
+      }
+    },
+    "hip-hop": {
+      "songs": 50,
+      "mb_match": 27,
+      "ab": 7,
+      "deezer_bpm": 3,
+      "key_labels": 3,
+      "bpm_labels": 5,
+      "key_exact": {
+        "n": 3,
+        "k": 1,
+        "rate": 0.333,
+        "ci95": [
+          0.061,
+          0.792
+        ]
+      },
+      "key_exact_or_relative": {
+        "n": 3,
+        "k": 1,
+        "rate": 0.333,
+        "ci95": [
+          0.061,
+          0.792
+        ]
+      },
+      "bpm_exact": {
+        "n": 5,
+        "k": 3,
+        "rate": 0.6,
+        "ci95": [
+          0.231,
+          0.882
+        ]
+      },
+      "bpm_exact_or_octave": {
+        "n": 5,
+        "k": 5,
+        "rate": 1.0,
+        "ci95": [
+          0.566,
+          1.0
+        ]
+      },
+      "krobi_key_confident_share": {
+        "n": 50,
+        "k": 32,
+        "rate": 0.64,
+        "ci95": [
+          0.501,
+          0.759
+        ]
+      },
+      "krobi_bpm_confident_share": {
+        "n": 50,
+        "k": 40,
+        "rate": 0.8,
+        "ci95": [
+          0.67,
+          0.888
+        ]
+      }
+    },
+    "jazz-blues": {
+      "songs": 17,
+      "mb_match": 12,
+      "ab": 6,
+      "deezer_bpm": 7,
+      "key_labels": 3,
+      "bpm_labels": 5,
+      "key_exact": {
+        "n": 3,
+        "k": 2,
+        "rate": 0.667,
+        "ci95": [
+          0.208,
+          0.939
+        ]
+      },
+      "key_exact_or_relative": {
+        "n": 3,
+        "k": 2,
+        "rate": 0.667,
+        "ci95": [
+          0.208,
+          0.939
+        ]
+      },
+      "bpm_exact": {
+        "n": 5,
+        "k": 5,
+        "rate": 1.0,
+        "ci95": [
+          0.566,
+          1.0
+        ]
+      },
+      "bpm_exact_or_octave": {
+        "n": 5,
+        "k": 5,
+        "rate": 1.0,
+        "ci95": [
+          0.566,
+          1.0
+        ]
+      },
+      "krobi_key_confident_share": {
+        "n": 17,
+        "k": 11,
+        "rate": 0.647,
+        "ci95": [
+          0.413,
+          0.827
+        ]
+      },
+      "krobi_bpm_confident_share": {
+        "n": 17,
+        "k": 5,
+        "rate": 0.294,
+        "ci95": [
+          0.133,
+          0.531
+        ]
+      }
+    },
+    "latin-other": {
+      "songs": 125,
+      "mb_match": 95,
+      "ab": 43,
+      "deezer_bpm": 31,
+      "key_labels": 6,
+      "bpm_labels": 14,
+      "key_exact": {
+        "n": 6,
+        "k": 2,
+        "rate": 0.333,
+        "ci95": [
+          0.097,
+          0.7
+        ]
+      },
+      "key_exact_or_relative": {
+        "n": 6,
+        "k": 4,
+        "rate": 0.667,
+        "ci95": [
+          0.3,
+          0.903
+        ]
+      },
+      "bpm_exact": {
+        "n": 14,
+        "k": 13,
+        "rate": 0.929,
+        "ci95": [
+          0.685,
+          0.987
+        ]
+      },
+      "bpm_exact_or_octave": {
+        "n": 14,
+        "k": 13,
+        "rate": 0.929,
+        "ci95": [
+          0.685,
+          0.987
+        ]
+      },
+      "krobi_key_confident_share": {
+        "n": 125,
+        "k": 79,
+        "rate": 0.632,
+        "ci95": [
+          0.545,
+          0.711
+        ]
+      },
+      "krobi_bpm_confident_share": {
+        "n": 125,
+        "k": 67,
+        "rate": 0.536,
+        "ci95": [
+          0.449,
+          0.621
+        ]
+      }
+    },
+    "latin-urban": {
+      "songs": 54,
+      "mb_match": 38,
+      "ab": 5,
+      "deezer_bpm": 2,
+      "key_labels": 1,
+      "bpm_labels": 2,
+      "key_exact": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "ci95": [
+          0.207,
+          1.0
+        ]
+      },
+      "key_exact_or_relative": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "ci95": [
+          0.207,
+          1.0
+        ]
+      },
+      "bpm_exact": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "ci95": [
+          0.342,
+          1.0
+        ]
+      },
+      "bpm_exact_or_octave": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "ci95": [
+          0.342,
+          1.0
+        ]
+      },
+      "krobi_key_confident_share": {
+        "n": 54,
+        "k": 36,
+        "rate": 0.667,
+        "ci95": [
+          0.534,
+          0.778
+        ]
+      },
+      "krobi_bpm_confident_share": {
+        "n": 54,
+        "k": 40,
+        "rate": 0.741,
+        "ci95": [
+          0.611,
+          0.839
+        ]
+      }
+    },
+    "other": {
+      "songs": 6,
+      "mb_match": 3,
+      "ab": 2,
+      "deezer_bpm": 1,
+      "key_labels": 2,
+      "bpm_labels": 2,
+      "key_exact": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "ci95": [
+          0.342,
+          1.0
+        ]
+      },
+      "key_exact_or_relative": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "ci95": [
+          0.342,
+          1.0
+        ]
+      },
+      "bpm_exact": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "ci95": [
+          0.342,
+          1.0
+        ]
+      },
+      "bpm_exact_or_octave": {
+        "n": 2,
+        "k": 2,
+        "rate": 1.0,
+        "ci95": [
+          0.342,
+          1.0
+        ]
+      },
+      "krobi_key_confident_share": {
+        "n": 6,
+        "k": 0,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.39
+        ]
+      },
+      "krobi_bpm_confident_share": {
+        "n": 6,
+        "k": 4,
+        "rate": 0.667,
+        "ci95": [
+          0.3,
+          0.903
+        ]
+      }
+    },
+    "pop": {
+      "songs": 128,
+      "mb_match": 105,
+      "ab": 55,
+      "deezer_bpm": 44,
+      "key_labels": 21,
+      "bpm_labels": 32,
+      "key_exact": {
+        "n": 21,
+        "k": 8,
+        "rate": 0.381,
+        "ci95": [
+          0.208,
+          0.591
+        ]
+      },
+      "key_exact_or_relative": {
+        "n": 21,
+        "k": 12,
+        "rate": 0.571,
+        "ci95": [
+          0.365,
+          0.755
+        ]
+      },
+      "bpm_exact": {
+        "n": 32,
+        "k": 27,
+        "rate": 0.844,
+        "ci95": [
+          0.682,
+          0.931
+        ]
+      },
+      "bpm_exact_or_octave": {
+        "n": 32,
+        "k": 31,
+        "rate": 0.969,
+        "ci95": [
+          0.843,
+          0.994
+        ]
+      },
+      "krobi_key_confident_share": {
+        "n": 128,
+        "k": 79,
+        "rate": 0.617,
+        "ci95": [
+          0.531,
+          0.697
+        ]
+      },
+      "krobi_bpm_confident_share": {
+        "n": 128,
+        "k": 75,
+        "rate": 0.586,
+        "ci95": [
+          0.499,
+          0.668
+        ]
+      }
+    },
+    "regional-mexican": {
+      "songs": 67,
+      "mb_match": 47,
+      "ab": 10,
+      "deezer_bpm": 10,
+      "key_labels": 2,
+      "bpm_labels": 3,
+      "key_exact": {
+        "n": 2,
+        "k": 0,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.658
+        ]
+      },
+      "key_exact_or_relative": {
+        "n": 2,
+        "k": 0,
+        "rate": 0.0,
+        "ci95": [
+          0.0,
+          0.658
+        ]
+      },
+      "bpm_exact": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "ci95": [
+          0.438,
+          1.0
+        ]
+      },
+      "bpm_exact_or_octave": {
+        "n": 3,
+        "k": 3,
+        "rate": 1.0,
+        "ci95": [
+          0.438,
+          1.0
+        ]
+      },
+      "krobi_key_confident_share": {
+        "n": 67,
+        "k": 41,
+        "rate": 0.612,
+        "ci95": [
+          0.492,
+          0.72
+        ]
+      },
+      "krobi_bpm_confident_share": {
+        "n": 67,
+        "k": 39,
+        "rate": 0.582,
+        "ci95": [
+          0.463,
+          0.693
+        ]
+      }
+    },
+    "rnb-soul": {
+      "songs": 11,
+      "mb_match": 11,
+      "ab": 5,
+      "deezer_bpm": 6,
+      "key_labels": 1,
+      "bpm_labels": 4,
+      "key_exact": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "ci95": [
+          0.207,
+          1.0
+        ]
+      },
+      "key_exact_or_relative": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "ci95": [
+          0.207,
+          1.0
+        ]
+      },
+      "bpm_exact": {
+        "n": 4,
+        "k": 4,
+        "rate": 1.0,
+        "ci95": [
+          0.51,
+          1.0
+        ]
+      },
+      "bpm_exact_or_octave": {
+        "n": 4,
+        "k": 4,
+        "rate": 1.0,
+        "ci95": [
+          0.51,
+          1.0
+        ]
+      },
+      "krobi_key_confident_share": {
+        "n": 11,
+        "k": 8,
+        "rate": 0.727,
+        "ci95": [
+          0.434,
+          0.903
+        ]
+      },
+      "krobi_bpm_confident_share": {
+        "n": 11,
+        "k": 6,
+        "rate": 0.545,
+        "ci95": [
+          0.28,
+          0.787
+        ]
+      }
+    },
+    "rock-alt": {
+      "songs": 188,
+      "mb_match": 165,
+      "ab": 105,
+      "deezer_bpm": 80,
+      "key_labels": 43,
+      "bpm_labels": 63,
+      "key_exact": {
+        "n": 43,
+        "k": 24,
+        "rate": 0.558,
+        "ci95": [
+          0.411,
+          0.696
+        ]
+      },
+      "key_exact_or_relative": {
+        "n": 43,
+        "k": 27,
+        "rate": 0.628,
+        "ci95": [
+          0.479,
+          0.756
+        ]
+      },
+      "bpm_exact": {
+        "n": 63,
+        "k": 55,
+        "rate": 0.873,
+        "ci95": [
+          0.769,
+          0.934
+        ]
+      },
+      "bpm_exact_or_octave": {
+        "n": 63,
+        "k": 61,
+        "rate": 0.968,
+        "ci95": [
+          0.891,
+          0.991
+        ]
+      },
+      "krobi_key_confident_share": {
+        "n": 188,
+        "k": 136,
+        "rate": 0.723,
+        "ci95": [
+          0.655,
+          0.782
+        ]
+      },
+      "krobi_bpm_confident_share": {
+        "n": 188,
+        "k": 90,
+        "rate": 0.479,
+        "ci95": [
+          0.408,
+          0.55
+        ]
+      }
+    },
+    "salsa-tropical": {
+      "songs": 13,
+      "mb_match": 5,
+      "ab": 2,
+      "deezer_bpm": 2,
+      "key_labels": 0,
+      "bpm_labels": 0,
+      "key_exact": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "key_exact_or_relative": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "bpm_exact": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "bpm_exact_or_octave": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "krobi_key_confident_share": {
+        "n": 13,
+        "k": 7,
+        "rate": 0.538,
+        "ci95": [
+          0.291,
+          0.768
+        ]
+      },
+      "krobi_bpm_confident_share": {
+        "n": 13,
+        "k": 4,
+        "rate": 0.308,
+        "ci95": [
+          0.127,
+          0.576
+        ]
+      }
+    },
+    "soundtrack": {
+      "songs": 15,
+      "mb_match": 5,
+      "ab": 4,
+      "deezer_bpm": 14,
+      "key_labels": 0,
+      "bpm_labels": 1,
+      "key_exact": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "key_exact_or_relative": {
+        "n": 0,
+        "k": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "bpm_exact": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "ci95": [
+          0.207,
+          1.0
+        ]
+      },
+      "bpm_exact_or_octave": {
+        "n": 1,
+        "k": 1,
+        "rate": 1.0,
+        "ci95": [
+          0.207,
+          1.0
+        ]
+      },
+      "krobi_key_confident_share": {
+        "n": 15,
+        "k": 12,
+        "rate": 0.8,
+        "ci95": [
+          0.548,
+          0.93
+        ]
+      },
+      "krobi_bpm_confident_share": {
+        "n": 15,
+        "k": 3,
+        "rate": 0.2,
+        "ci95": [
+          0.07,
+          0.452
+        ]
+      }
+    },
+    "unknown": {
+      "songs": 53,
+      "mb_match": 22,
+      "ab": 10,
+      "deezer_bpm": 1,
+      "key_labels": 7,
+      "bpm_labels": 4,
+      "key_exact": {
+        "n": 7,
+        "k": 3,
+        "rate": 0.429,
+        "ci95": [
+          0.158,
+          0.75
+        ]
+      },
+      "key_exact_or_relative": {
+        "n": 7,
+        "k": 6,
+        "rate": 0.857,
+        "ci95": [
+          0.487,
+          0.974
+        ]
+      },
+      "bpm_exact": {
+        "n": 4,
+        "k": 3,
+        "rate": 0.75,
+        "ci95": [
+          0.301,
+          0.954
+        ]
+      },
+      "bpm_exact_or_octave": {
+        "n": 4,
+        "k": 3,
+        "rate": 0.75,
+        "ci95": [
+          0.301,
+          0.954
+        ]
+      },
+      "krobi_key_confident_share": {
+        "n": 53,
+        "k": 33,
+        "rate": 0.623,
+        "ci95": [
+          0.488,
+          0.741
+        ]
+      },
+      "krobi_bpm_confident_share": {
+        "n": 53,
+        "k": 26,
+        "rate": 0.491,
+        "ci95": [
+          0.361,
+          0.621
+        ]
+      }
+    }
+  }
+}

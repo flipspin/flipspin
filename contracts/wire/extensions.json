@@ -1,0 +1,158 @@
+{
+  "accepted": {
+    "helper": [
+      1
+    ],
+    "plugin_api": [
+      1
+    ],
+    "source": [
+      1
+    ]
+  },
+  "extensions": [
+    {
+      "adds": [
+        "engine:analysis"
+      ],
+      "entry": {
+        "command": null,
+        "extra": "analysis",
+        "module": null
+      },
+      "homepage": "https://github.com/flipspin/flipspin",
+      "id": "analysis",
+      "kind": "engine",
+      "license": "AGPL-3.0-or-later",
+      "name": "Analysis",
+      "protocol": {
+        "helper": [
+          1
+        ]
+      },
+      "reaches": [],
+      "reason": "Engine is not ready in the nest",
+      "runs": [
+        "helper",
+        "nest"
+      ],
+      "state": "off",
+      "version": "0.15.7"
+    },
+    {
+      "adds": [
+        "engine:lyrics"
+      ],
+      "entry": {
+        "command": null,
+        "extra": "engine",
+        "module": null
+      },
+      "homepage": "https://github.com/flipspin/flipspin",
+      "id": "lyrics",
+      "kind": "engine",
+      "license": "AGPL-3.0-or-later",
+      "name": "Lyrics",
+      "protocol": {
+        "helper": [
+          1
+        ]
+      },
+      "reaches": [],
+      "reason": null,
+      "runs": [
+        "helper",
+        "nest"
+      ],
+      "state": "on",
+      "version": "0.15.7"
+    },
+    {
+      "adds": [
+        "engine:stems"
+      ],
+      "entry": {
+        "command": null,
+        "extra": "stems",
+        "module": null
+      },
+      "homepage": "https://github.com/flipspin/flipspin",
+      "id": "stems",
+      "kind": "engine",
+      "license": "AGPL-3.0-or-later",
+      "name": "Stems",
+      "protocol": {
+        "helper": [
+          1
+        ]
+      },
+      "reaches": [],
+      "reason": "Engine installation failed; see server logs",
+      "runs": [
+        "helper",
+        "nest"
+      ],
+      "state": "failed:installation",
+      "version": "0.15.7"
+    },
+    {
+      "adds": [
+        "source:audio"
+      ],
+      "entry": {
+        "command": [
+          "{python}",
+          "-m",
+          "example"
+        ],
+        "extra": null,
+        "module": null
+      },
+      "homepage": "https://example.test",
+      "id": "example",
+      "kind": "source",
+      "license": "AGPL-3.0-or-later",
+      "name": "Example",
+      "protocol": {
+        "source": [
+          1
+        ]
+      },
+      "reaches": [],
+      "reason": null,
+      "runs": [
+        "nest"
+      ],
+      "state": "on",
+      "version": "1.0.0"
+    },
+    {
+      "adds": [
+        "page"
+      ],
+      "entry": {
+        "command": null,
+        "extra": null,
+        "module": "test_inventory_plugin.krobi_plugin"
+      },
+      "homepage": "https://example.test",
+      "id": "example-feature",
+      "kind": "feature",
+      "license": "AGPL-3.0-or-later",
+      "name": "Example",
+      "protocol": {
+        "plugin_api": [
+          1
+        ]
+      },
+      "reaches": [],
+      "reason": null,
+      "runs": [
+        "nest",
+        "desktop"
+      ],
+      "state": "on",
+      "version": "1.0.0"
+    }
+  ]
+}

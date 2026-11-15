@@ -1,0 +1,45 @@
+/* Flipspin UI; the modern primitives used by account deletion. AGPL-3.0. */
+.krobi-modern .zm-card { background: var(--color-bg-surface-secondary); border-radius: var(--radius-lg); box-shadow: var(--shadow-2); padding: 18px; display: grid; gap: 12px; align-content: start; border: 2px solid transparent; text-align: left; color: inherit; font: inherit; }
+.krobi-modern .zm-av { --_s: 42px; position: relative; flex: none; width: var(--_s); height: var(--_s); border-radius: var(--radius-full); display: grid; place-items: center;
+  border: 3px solid var(--color-bg-surface-secondary); box-shadow: var(--zm-shadow-av); background: var(--_t, var(--zm-tint-1)); color: var(--_c, var(--color-text-primary));
+  font-size: calc(var(--_s) * .32); font-weight: 600; line-height: 1; }
+.krobi-modern .zm-av--sm { --_s: 32px; border-width: 2px; }
+.krobi-modern .zm-av--lg { --_s: 72px; border-width: 0; }
+.krobi-modern .zm-act { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 14px; border-radius: var(--radius-md);
+  border: 1px solid var(--color-text-secondary); background: var(--color-bg-surface-secondary); color: var(--color-text-primary);
+  font: inherit; font-size: var(--text-sm); font-weight: 600; white-space: nowrap; cursor: pointer; transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease); }
+.krobi-modern .zm-act:hover:not(:disabled), .krobi-modern .zm-act:focus-visible { background: var(--zm-ink-fill); color: var(--zm-on-ink); border-color: var(--zm-ink-fill); outline: none; }
+.krobi-modern .zm-act:disabled { opacity: .45; cursor: not-allowed; }
+.krobi-modern .zm-ink { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 0 18px; border: 0; border-radius: var(--radius-md);
+  background: var(--zm-ink-fill); color: var(--zm-on-ink); font: inherit; font-size: var(--text-sm); font-weight: 600; cursor: pointer; }
+.krobi-modern .zm-ink:hover:not(:disabled) { background: var(--zm-ink-fill-hover); }
+
+.krobi-modern .zm-progress { display: flex; height: 10px; border-radius: 5px; overflow: hidden; background: var(--color-bg-surface-head); }
+.krobi-modern .zm-progress > i { display: block; width: var(--_v, 0%); background: var(--_c, var(--zm-bad)); }
+.krobi-modern .zm-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 12px; border-radius: var(--radius-md); }
+.krobi-modern .zm-row + .zm-row { box-shadow: 0 -1px 0 var(--color-border-soft); }
+.krobi-modern .zm-row:hover { background: var(--color-bg-surface-hover); }
+
+.krobi-modern .zm-option {display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--space-3) var(--space-4);padding:var(--space-4) var(--space-5);border-radius:var(--radius-lg);border:1.5px solid var(--color-border-primary);background:var(--color-bg-surface-secondary);text-align:left;font:inherit;color:inherit;cursor:pointer;width:100%;box-sizing:border-box;transition:border-color var(--dur-fast) var(--ease),box-shadow var(--dur-fast) var(--ease)}
+.krobi-modern .zm-option:hover {box-shadow:var(--shadow-3)}
+.krobi-modern .zm-option--sel {border-color:var(--color-text-primary);box-shadow:var(--shadow-2)}
+.krobi-modern .zm-option__icon {width:40px;height:40px;border-radius:var(--radius-md);display:grid;place-items:center;background:var(--color-bg-surface-head);color:var(--color-text-secondary)}
+.krobi-modern .zm-option--sel .zm-option__icon {background:var(--zm-ink-fill);color:var(--zm-on-ink)}
+.krobi-modern .zm-option__body {display:grid;gap:var(--space-2);min-width:0}
+.krobi-modern .zm-option__title {display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);font-weight:600;font-size:var(--text-md)}
+.krobi-modern .zm-option__check {width:20px;height:20px;border-radius:var(--radius-full);border:1.5px solid var(--color-border-primary);flex:none}
+.krobi-modern .zm-option--sel .zm-option__check {border:6px solid var(--color-text-primary)}
+.krobi-modern .zm-key {display:flex;flex-wrap:wrap;gap:var(--space-4);font-size:var(--text-sm);color:var(--color-text-secondary)}
+.krobi-modern .zm-key b {font-family:var(--font-mono);font-weight:500;font-size:var(--text-base);color:var(--color-text-primary)}
+.krobi-modern .zm-key i {display:inline-block;width:8px;height:8px;border-radius:var(--radius-full);margin-right:var(--space-1-5);vertical-align:1px}
+.krobi-modern .zm-info {width:18px;height:18px;border-radius:var(--radius-full);display:inline-grid;place-items:center;border:1px solid var(--color-border-primary);font-size:var(--text-2xs);color:var(--color-text-secondary);font-weight:600}
+
+.krobi-modern [class*="zm-"] { box-sizing: border-box; }
+.krobi-modern[data-tone="calm"] .zm-card { box-shadow: none; border: 1px solid var(--color-border-soft); }
+.krobi-modern[data-tone="calm"] .zm-av { border-width: 1px; border-color: var(--color-border-soft); }
+.krobi-modern[data-tone="calm"] .zm-av--lg { --_s: 48px; }
+.krobi-modern[data-tone="calm"] .zm-row { border-radius: var(--radius-sm); padding: 8px 10px; }
+.krobi-modern .zm-option:disabled { opacity: .5; cursor: not-allowed; }
+.krobi-modern .zm-option:disabled:hover { box-shadow: none; }
+.krobi-modern .zm-skel { display: inline-block; width: 75%; height: 10px; border-radius: var(--radius-sm); background: var(--color-bg-surface-head); }
+.krobi-modern .zm-option[data-choice="account"] .zm-skel { width: 60%; }

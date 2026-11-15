@@ -1,0 +1,25 @@
+{
+  "manifest": 1,
+  "id": "analysis",
+  "kind": "engine",
+  "name": "Analysis",
+  "version": "0.15.8",
+  "protocol": {
+    "helper": [
+      1
+    ]
+  },
+  "runs": [
+    "helper",
+    "nest"
+  ],
+  "adds": [
+    "engine:analysis"
+  ],
+  "reaches": [],
+  "entry": {
+    "extra": "analysis"
+  },
+  "license": "AGPL-3.0-or-later",
+  "homepage": "https://github.com/flipspin/flipspin"
+}

@@ -1,0 +1,56 @@
+name: Bug report
+description: Something behaves differently than it should.
+labels: ["bug"]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Shown by `GET /api/health` on the server, or in the desktop app's settings.
+      placeholder: "1.0.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install
+    attributes:
+      label: How is it installed?
+      options:
+        - Desktop app, macOS .dmg
+        - Desktop app, Windows installer
+        - Server from source (venv + uvicorn)
+        - Server with Docker Compose
+        - Server as a systemd service
+        - Running from a git checkout for development
+        - Other / not sure
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      description: Include the OS of the server too, if it is a different machine.
+      placeholder: "macOS 15.4 client, Debian 12 server"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, what you got instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Server logs
+      description: >-
+        From `KROBI_LOG_DIR` (default `~/Krobi/logs/`), or the desktop app's
+        settings panel. The lines around the failure are usually enough.
+        **Remove any API token before pasting.**
+      render: text
+    validations:
+      required: true

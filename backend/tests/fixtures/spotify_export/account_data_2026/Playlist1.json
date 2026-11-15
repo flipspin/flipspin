@@ -1,0 +1,81 @@
+{
+  "playlists" : [ {
+    "name" : "Rodada domingo",
+    "lastModifiedDate" : "2024-01-02",
+    "collaborators" : [ ],
+    "items" : [ {
+      "track" : {
+        "trackName" : "Get Lucky",
+        "artistName" : "Daft Punk",
+        "albumName" : "Random Access Memories",
+        "trackUri" : "spotify:track:69kOkLUCkxIZYexIgSG8rq"
+      },
+      "episode" : null,
+      "audiobook" : null,
+      "localTrack" : null,
+      "addedDate" : "2023-03-11"
+    }, {
+      "track" : {
+        "trackName" : "Instant Crush",
+        "artistName" : "Daft Punk",
+        "albumName" : "Random Access Memories",
+        "trackUri" : "spotify:track:2cGxRwrMyEAp8dEbuZaVv6"
+      },
+      "episode" : null,
+      "audiobook" : null,
+      "localTrack" : null,
+      "addedDate" : "2023-12-17"
+    }, {
+      "track" : null,
+      "episode" : {
+        "episodeName" : "El día que se cayó internet",
+        "showName" : "Kaixo",
+        "episodeUri" : "spotify:episode:3Cor4Gn3R0ruB5D2B420F7"
+      },
+      "audiobook" : null,
+      "localTrack" : null,
+      "addedDate" : "2024-02-10"
+    }, {
+      "track" : null,
+      "episode" : null,
+      "audiobook" : {
+        "audiobookTitle" : "Los detectives salvajes",
+        "audiobookUri" : "spotify:show:5FQ9wA1v1BSN0mvkQVAg4Y"
+      },
+      "localTrack" : null,
+      "addedDate" : "2024-02-11"
+    }, {
+      "track" : null,
+      "episode" : null,
+      "localTrack" : {
+        "uri" : "spotify:local:Manu+Chao:Cl%C3%A1ndestino:Bongo+Bong:204"
+      }
+    }, {
+      "track" : null,
+      "episode" : null,
+      "localTrack" : {
+        "uri" : "spotify:local:::Don+Poldon+-+Kosmokwachy:153"
+      }
+    } ],
+    "description" : null,
+    "numberOfFollowers" : 0
+  }, {
+    "name" : "Singalongs 2022",
+    "lastModifiedDate" : "2023-02-23",
+    "collaborators" : [ ],
+    "items" : [ {
+      "track" : {
+        "trackName" : "Fast Car",
+        "artistName" : "Tracy Chapman",
+        "albumName" : "Tracy Chapman",
+        "trackUri" : "spotify:track:1sBkRIssrMs1AbVkOJbc7a"
+      },
+      "episode" : null,
+      "audiobook" : null,
+      "localTrack" : null,
+      "addedDate" : "2022-07-04"
+    } ],
+    "description" : "Para cantar mal en el coche",
+    "numberOfFollowers" : 3
+  } ]
+}

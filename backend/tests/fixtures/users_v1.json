@@ -1,0 +1,21 @@
+{
+  "users": [
+    {
+      "created_at": "2026-08-20T11:02:31Z",
+      "id": "5f3c1a2b9d40",
+      "label": "Robin (iPhone)",
+      "last_seen_at": "2026-08-25T09:14:02Z",
+      "role": "owner",
+      "token_sha256": "10bc0f861e8adff09ca3c8e42fe6bde5dea4f146925b9e1e98df8b12a6d924b8"
+    },
+    {
+      "created_at": "2026-08-21T18:40:00Z",
+      "id": "a71e0c4488b6",
+      "label": "Ana (iPhone)",
+      "last_seen_at": null,
+      "role": "member",
+      "token_sha256": "41900b6a849133dcabd57be1d6cc33da440cc8fe57e486bc2b8bd7702ef5b917"
+    }
+  ],
+  "version": 1
+}

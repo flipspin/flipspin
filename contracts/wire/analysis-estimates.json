@@ -1,0 +1,20 @@
+{
+  "after": null,
+  "rows": [
+    {
+      "album": "Album",
+      "artist": "Unknown Artist",
+      "bpm": 123.4,
+      "bpmConfidence": 0.31,
+      "bpmEstimated": true,
+      "bpmSource": "computed",
+      "key": "5A",
+      "keyConfidence": 0.012,
+      "keyEstimated": false,
+      "keySource": "computed",
+      "relPath": "Album/song.mp3",
+      "rev": 0,
+      "title": "song"
+    }
+  ]
+}

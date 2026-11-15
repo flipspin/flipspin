@@ -1,0 +1,11 @@
+{
+  "createdAt": "2026-10-27T12:00:00Z",
+  "id": "<account-id>",
+  "isOwner": false,
+  "label": "Ana",
+  "lastSeenAt": "2026-10-27T12:00:00Z",
+  "onboarded": true,
+  "role": "member",
+  "source": "token",
+  "username": "ana"
+}

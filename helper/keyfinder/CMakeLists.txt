@@ -1,0 +1,36 @@
+cmake_minimum_required(VERSION 3.24)
+project(krobi_keyfinder LANGUAGES C CXX)
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+if(POLICY CMP0169)
+  cmake_policy(SET CMP0169 OLD)
+endif()
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+set(BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ENABLE_THREADS OFF CACHE BOOL "" FORCE)
+set(ENABLE_OPENMP OFF CACHE BOOL "" FORCE)
+include(FetchContent)
+FetchContent_Declare(fftw
+  URL https://www.fftw.org/fftw-3.3.10.tar.gz
+  URL_HASH SHA256=56c932549852cddcfafdab3820b0200c7742675be92179e59e6215b340e26467)
+FetchContent_MakeAvailable(fftw)
+FetchContent_Declare(keyfinder
+  GIT_REPOSITORY https://github.com/mixxxdj/libkeyfinder.git
+  GIT_TAG 941e517ebf853c2153a8b9d6efcc0c729199aa0b)
+FetchContent_GetProperties(keyfinder)
+if(NOT keyfinder_POPULATED)
+  FetchContent_Populate(keyfinder)
+endif()
+# Build the pinned library sources directly so the wheel always embeds FFTW,
+# regardless of libraries installed on the build host.
+file(GLOB keyfinder_sources "${keyfinder_SOURCE_DIR}/src/*.cpp")
+add_library(keyfinder_static STATIC ${keyfinder_sources})
+target_include_directories(keyfinder_static PUBLIC "${keyfinder_SOURCE_DIR}/src" "${fftw_SOURCE_DIR}/api")
+target_link_libraries(keyfinder_static PUBLIC fftw3)
+find_package(Python REQUIRED COMPONENTS Interpreter Development.Module)
+Python_add_library(_native MODULE native.cpp WITH_SOABI)
+target_link_libraries(_native PRIVATE keyfinder_static)
+install(TARGETS _native LIBRARY DESTINATION krobi_keyfinder COMPONENT python RUNTIME DESTINATION krobi_keyfinder COMPONENT python)
+install(FILES "${keyfinder_SOURCE_DIR}/LICENSE" DESTINATION krobi_keyfinder/licenses RENAME libkeyfinder.txt COMPONENT python)
+install(FILES "${fftw_SOURCE_DIR}/COPYING" DESTINATION krobi_keyfinder/licenses RENAME fftw.txt COMPONENT python)

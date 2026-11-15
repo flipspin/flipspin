@@ -1,0 +1,84 @@
+name: Contribution gate
+
+on:
+  pull_request_target:
+    types: [opened, edited, reopened, synchronize, labeled, unlabeled]
+
+permissions: {}
+
+# Serialize comment creation so simultaneous events cannot post duplicates.
+concurrency:
+  group: pr-gate-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  agreement:
+    name: Agreement, title and changelog label
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      pull-requests: write
+    steps:
+      # No checkout: only GitHub API metadata is read, never PR code.
+      - uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+        with:
+          script: |
+            const params = { ...context.repo, pull_number: context.payload.pull_request.number };
+            const { data: pr } = await github.rest.pulls.get(params);
+            const body = (pr.body ?? '').replace(/<!--[\s\S]*?-->/g, '').replace(/\r/g, '');
+            const sections = new Map();
+            let current;
+            let fence;
+            for (const line of body.split('\n')) {
+              const delimiter = line.match(/^\s*(`{3,}|~{3,})/);
+              if (delimiter) {
+                if (!fence) fence = delimiter[1][0];
+                else if (delimiter[1][0] === fence) fence = undefined;
+                continue;
+              }
+              if (!fence && /^#{1,6}\s/.test(line)) {
+                current = line.match(/^## (Agreement|How it was tested)\s*$/)?.[1];
+                if (current && !sections.has(current)) sections.set(current, []);
+              } else if (current) sections.get(current).push(line);
+            }
+            const missing = ['Agreement', 'How it was tested'].filter(heading =>
+              !sections.get(heading)?.some(line => line.trim() && !/^\s*- \[[ xX]\]/.test(line)));
+            const errors = [];
+            const fork = pr.head.repo?.full_name !== pr.base.repo.full_name;
+            if (fork && missing.length) {
+              errors.push(`Missing or empty required sections: ${missing.map(h => `## ${h}`).join(', ')}`);
+              const issue = { ...context.repo, issue_number: pr.number };
+              const marker = '<!-- krobi-contribution-gate -->';
+              const comments = await github.paginate(github.rest.issues.listComments, { ...issue, per_page: 100 });
+              if (!comments.some(comment => comment.user?.type === 'Bot' && comment.body?.includes(marker))) {
+                await github.rest.issues.createComment({ ...issue, body: `${marker}\nThis fork PR is missing content under: ${missing.map(h => `**${h}**`).join(', ')}. Fill both required sections from the PR template: **Agreement** needs the agreed issue/discussion link or "small fix: <evidence>"; **How it was tested** needs commands and results (or why checks do not apply). This PR is being closed; after correcting the description, it can be reopened.` });
+              }
+              if (pr.state === 'open') await github.rest.pulls.update({ ...params, state: 'closed' });
+            }
+            const areas = ['backend', 'renderer', 'shell', 'helper', 'contracts', 'docs', 'ci', 'deploy'];
+            if (!/^(backend|renderer|shell|helper|contracts|docs|ci|deploy)(, ?[a-z]+)*: .{1,}$/.test(pr.title) ||
+                pr.title.length > 72 || !pr.title.split(': ')[0].split(/, ?/).every(area => areas.includes(area))) {
+              errors.push('PR title must be at most 72 characters and read <area>: <imperative summary>, using lowercase areas from areas.yml (comma-separated areas are allowed).');
+            }
+            const labels = (await github.paginate(github.rest.issues.listLabelsOnIssue, {
+              ...context.repo, issue_number: pr.number, per_page: 100
+            })).map(label => label.name).filter(name => name.startsWith('changelog:'));
+            const allowed = ['changelog:feature', 'changelog:fix', 'changelog:docs', 'changelog:internal'];
+            if (labels.length !== 1 || !allowed.includes(labels[0])) {
+              errors.push(`Apply exactly one of ${allowed.join(', ')}; found: ${labels.join(', ') || 'none'}.`);
+            }
+            if (errors.length) core.setFailed(errors.join('\n'));
+
+  labels:
+    name: Label changed areas
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      # With no local file, labeler reads the config from the trusted base via API.
+      - uses: actions/labeler@634933edcd8ababfe52f92936142cc22ac488b1b # v6.0.1
+        with:
+          configuration-path: .github/labeler.yml
+          sync-labels: true

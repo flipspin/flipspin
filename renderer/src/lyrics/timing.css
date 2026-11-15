@@ -1,0 +1,15 @@
+.lyrics-timing {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+  padding: 12px 24px;
+  border-block: 1px solid var(--lyrics-glass-line, var(--line));
+}
+.lyrics-timing-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; }
+.lyrics-timing-label { font: 700 11px var(--font-mono, monospace); text-transform: uppercase; letter-spacing: .08em; }
+.lyrics-timing-state { font-size: 12px; opacity: .8; }
+.lyrics-timing .waveform-btn:disabled { opacity: .45; cursor: not-allowed; }
+.lyrics-timing-paste { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.lyrics-timing-paste textarea { flex: 1 0 100%; min-height: 110px; max-height: 25vh; background: var(--lyrics-glass, var(--paper)); color: inherit; border: 1px solid var(--lyrics-glass-line, var(--line)); border-radius: 8px; padding: 12px; }
+.lyrics-dlg .lyrics-timing { padding: 12px 0; }
+.lyrics-line:focus-visible { outline: 2px solid currentColor; outline-offset: -2px; }

@@ -1,0 +1,16 @@
+{
+  "sources": [
+    {
+      "facts": [
+        "Songs",
+        "AAC",
+        "m4a",
+        "official"
+      ],
+      "id": "youtube",
+      "installed": false,
+      "location": "https://github.com/flipspin/flipspin-source-youtube",
+      "name": "YouTube"
+    }
+  ]
+}

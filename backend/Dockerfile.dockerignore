@@ -1,0 +1,15 @@
+# Repo-root context, limited to the server runtime inputs.
+*
+
+!backend/app/
+!backend/requirements-server.txt
+!backend/ffmpeg-build.sh
+!backend/docker-entrypoint.sh
+
+**/__pycache__/
+**/*.py[cod]
+**/.DS_Store
+**/*.log
+**/.env
+**/.env.*
+**/cookies.txt

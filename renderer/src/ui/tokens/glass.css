@@ -1,0 +1,58 @@
+/* krobi-ui; glass tokens. AGPL-3.0; see LICENSE.
+   Scoped to .krobi-setup / .krobi-settings. */
+:is(.krobi-setup, .krobi-settings)[data-profile="glass"] {
+  color-scheme: dark;
+  --color-bg-surface-primary: var(--strip-bg);
+  --color-bg-surface-secondary: var(--glass-pane);
+  --color-bg-surface-tertiary: var(--glass-fill);
+  --color-bg-surface-head: var(--glass-fill);
+  --color-bg-surface-hover: var(--glass-fill-hi);
+  --color-bg-surface-rail: var(--glass-pane);
+  --color-bg-surface-foot: var(--glass-pane);
+  --color-bg-surface-dim: var(--glass-cell);
+  --color-text-primary: var(--glass-ink);
+  --color-text-secondary: var(--glass-ink-2);
+  --color-text-tertiary: var(--glass-ink-3);
+  --color-text-body: color-mix(in srgb, var(--strip-ink) 86%, transparent);
+  --color-text-disabled: var(--glass-ink-4);
+  --color-text-on-fill: #151515;
+  --color-text-on-hue: #151515;
+  --color-text-accent: var(--accent-coral-fg);
+  --color-border-primary: var(--glass-line);
+  --color-border-soft: var(--glass-hair);
+  --color-border-mid: var(--glass-line);
+  --color-border-bold: var(--glass-line);
+  --color-border-accent: var(--glass-accent);
+  --border-w: 1px;
+  --color-bg-fill-primary: var(--glass-accent);
+  --color-bg-fill-primary-hover: color-mix(in srgb, var(--glass-accent) 82%, var(--strip-ink));
+  --color-bg-fill-secondary: var(--glass-fill);
+  --color-bg-fill-secondary-hover: var(--glass-fill-hi);
+  --color-shadow-offset: transparent;
+  --shadow-1: none;
+  --shadow-2: none;
+  --shadow-3: none;
+  --shadow-raised: none;
+  --shadow-hover: none;
+  --shadow-seat: none;
+  --shadow-modal: var(--glass-lift);
+  --scrim: color-mix(in srgb, var(--strip-bg) 55%, transparent);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 14px;
+  --radius-pill: 999px;
+  --radius-full: 50%;
+  --text-body: 14px;
+  --leading-body: 1.5;
+  --gutter: 20px;
+
+  --focus-ring: 2px solid var(--glass-ink);
+  --accent-coral-tint: color-mix(in srgb, var(--accent-coral) 24%, transparent);   --accent-coral-fg: #F6B79C;
+  --accent-yellow-tint: color-mix(in srgb, var(--accent-yellow) 22%, transparent); --accent-yellow-fg: #F1D86C;
+  --accent-teal-tint: color-mix(in srgb, var(--accent-teal) 26%, transparent);     --accent-teal-fg: #8FD1C1;
+  --accent-blue-tint: color-mix(in srgb, var(--accent-blue) 26%, transparent);     --accent-blue-fg: #B9C6FF;
+  --accent-purple-tint: color-mix(in srgb, var(--accent-purple) 26%, transparent); --accent-purple-fg: #C7BBFF;
+  --accent-rose-tint: color-mix(in srgb, var(--accent-rose) 26%, transparent);     --accent-rose-fg: #F2A0B4;
+  --accent-green-tint: color-mix(in srgb, var(--accent-green) 26%, transparent);   --accent-green-fg: #A9D8AA;
+}

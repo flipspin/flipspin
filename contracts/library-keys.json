@@ -1,0 +1,46 @@
+{
+  "rootAlbumKey": "~krobi-root~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+  "rules": [
+    "Exactly two wire segments: <album key>/<file key>. Fold nested separators with U+2215.",
+    "Root files share rootAlbumKey. resolve_album maps that key to the music root.",
+    "rootAlbumKey is 256 ASCII bytes, beyond the 255-byte filename component limit on supported filesystems; no U+2215 means no folded folder key can collide.",
+    "Existing flat and nested keys remain unchanged. Display names use tags, falling back to Loose songs at the root."
+  ],
+  "cases": [
+    {
+      "path": "Loose Song.mp3",
+      "album": "~krobi-root~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+      "file": "Loose Song.mp3"
+    },
+    {
+      "path": "Flat/01.mp3",
+      "album": "Flat",
+      "file": "01.mp3"
+    },
+    {
+      "path": "Artist/Album/01.mp3",
+      "album": "Artist∕Album",
+      "file": "01.mp3"
+    },
+    {
+      "path": "Artist/Album/CD2/01.mp3",
+      "album": "Artist∕Album",
+      "file": "CD2∕01.mp3"
+    },
+    {
+      "path": "CD1/01.mp3",
+      "album": "CD1",
+      "file": "01.mp3"
+    },
+    {
+      "path": "~krobi-root~/01.mp3",
+      "album": "~krobi-root~",
+      "file": "01.mp3"
+    },
+    {
+      "path": "Literal∕Album/01.mp3",
+      "album": "Literal∕Album",
+      "file": "01.mp3"
+    }
+  ]
+}

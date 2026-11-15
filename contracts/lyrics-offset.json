@@ -1,0 +1,78 @@
+{
+  "playback": [
+    {
+      "name": "no offset before first",
+      "text": "[00:01.00]a\n[00:02.00]b\n",
+      "playheadSeconds": 0.5,
+      "currentLineIndex": -1
+    },
+    {
+      "name": "no offset on first",
+      "text": "[00:01.00]a\n[00:02.00]b\n",
+      "playheadSeconds": 1,
+      "currentLineIndex": 0
+    },
+    {
+      "name": "positive means sooner",
+      "text": "[offset:+500]\n[00:01.00]a\n[00:02.00]b\n",
+      "playheadSeconds": 0.5,
+      "currentLineIndex": 0
+    },
+    {
+      "name": "negative means later",
+      "text": "[offset:-500]\n[00:01.00]a\n[00:02.00]b\n",
+      "playheadSeconds": 1.4,
+      "currentLineIndex": -1
+    },
+    {
+      "name": "negative reaches second",
+      "text": "[offset:-500]\n[00:01.00]a\n[00:02.00]b\n",
+      "playheadSeconds": 2.5,
+      "currentLineIndex": 1
+    },
+    {
+      "name": "early lines clamp only in playback",
+      "text": "[offset:+1500]\n[00:00.50]a\n[00:01.00]b\n[00:02.00]c\n",
+      "playheadSeconds": 0,
+      "currentLineIndex": 1
+    }
+  ],
+  "setOffset": [
+    {
+      "name": "insert after headers",
+      "text": "[ti:Song]\n[ar:Artist]\n[00:00.50]a\n",
+      "offsetMs": 500,
+      "expected": "[ti:Song]\n[ar:Artist]\n[offset:+500]\n[00:00.50]a\n"
+    },
+    {
+      "name": "insert without headers",
+      "text": "[00:00.50]a",
+      "offsetMs": -500,
+      "expected": "[offset:-500]\n[00:00.50]a"
+    },
+    {
+      "name": "replace",
+      "text": "[ti:Song]\n[offset:+500]\n[00:00.50]<00:00.50>a\n",
+      "offsetMs": -250,
+      "expected": "[ti:Song]\n[offset:-250]\n[00:00.50]<00:00.50>a\n"
+    },
+    {
+      "name": "remove at zero",
+      "text": "[offset:-500]\n[00:00.50]a\n",
+      "offsetMs": 0,
+      "expected": "[00:00.50]a\n"
+    },
+    {
+      "name": "zero without tag preserves bytes",
+      "text": "[ti:Song]\r\n[00:00.50]a\r\n",
+      "offsetMs": 0,
+      "expected": "[ti:Song]\r\n[00:00.50]a\r\n"
+    },
+    {
+      "name": "preserve CRLF",
+      "text": "[ti:Song]\r\n[00:00.50]a\r\n",
+      "offsetMs": 500,
+      "expected": "[ti:Song]\r\n[offset:+500]\r\n[00:00.50]a\r\n"
+    }
+  ]
+}

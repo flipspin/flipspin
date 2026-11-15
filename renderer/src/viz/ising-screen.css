@@ -1,0 +1,46 @@
+/* The sidebar's Ising screen (IsingScreen.tsx). Tokens only. */
+
+.ising { display: grid; gap: 4px; width: 100%; }
+
+.ising__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font: 500 10.5px var(--font-mono, ui-monospace, monospace);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Paper in every mode: coral and pale-coral dots on the light paper, coral on
+   the deepest paper in dark and night. Selector doubled with .sidebar-layout
+   to beat its generic button rule. */
+.ising__screen,
+.sidebar-layout button.ising__screen {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 2;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--r-lg);
+  background: var(--paper);
+  cursor: pointer;
+  overflow: hidden;
+}
+.sidebar-layout button.ising__screen:hover { background: var(--paper); }
+.ising__screen:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
+
+/* Pinned inside the screen's margin, so its size never comes from its own
+   pixel buffer (which it sets from this size). */
+.ising__canvas { position: absolute; inset: 6px; display: block; width: calc(100% - 12px); height: calc(100% - 12px); }
+
+/* The fold: a bare icon after the temperature (the sidebar's playlists use the
+   same). Doubled with .sidebar-layout to beat its generic button frame. */
+.ising__head-end { display: flex; align-items: center; gap: 6px; }
+.ising__fold,
+.sidebar-layout button.ising__fold { display: grid; place-items: center; width: 20px; height: 20px; min-height: 0; padding: 0; border: 0; border-radius: 4px; background: transparent; box-shadow: none; color: var(--ink-3); cursor: pointer; }
+.sidebar-layout button.ising__fold:hover { background: transparent; color: var(--ink); }
+.ising__fold svg { transition: transform var(--dur-fast) var(--ease); }
+.ising__screen[hidden] { display: none; }

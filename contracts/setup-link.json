@@ -1,0 +1,23 @@
+{
+  "about": "The setup link: the one line a server install prints (install.sh, the setup-code log block, `krobi setup-link`) and the desktop's «Setup link» field reads. The code rides in the fragment so nothing that logs URLs keeps it. Decided 2026-11-10: a server install always hands its setup code over this way.",
+  "format": "krobi://<host>:<port>/setup#<code>",
+  "codePattern": "^[A-Za-z0-9_-]{20,128}$",
+  "redacted": "krobi://<host>:<port>/setup#…",
+  "make": [
+    { "address": "http://192.168.1.20:8000", "code": "Xq3vK9_bT2mLp8Rw4ZcN7yHd1JfU6sAeG0oVtYiWnQk", "link": "krobi://192.168.1.20:8000/setup#Xq3vK9_bT2mLp8Rw4ZcN7yHd1JfU6sAeG0oVtYiWnQk" },
+    { "address": "http://nest.local:8000", "code": "abcdefghijklmnopqrstuvwx", "link": "krobi://nest.local:8000/setup#abcdefghijklmnopqrstuvwx" }
+  ],
+  "parse": [
+    { "input": "krobi://192.168.1.20:8000/setup#Xq3vK9_bT2mLp8Rw4ZcN7yHd1JfU6sAeG0oVtYiWnQk", "address": "http://192.168.1.20:8000", "code": "Xq3vK9_bT2mLp8Rw4ZcN7yHd1JfU6sAeG0oVtYiWnQk", "redacted": "krobi://192.168.1.20:8000/setup#…" },
+    { "input": "  krobi://192.168.1.20:8000/setup#Xq3vK9_bT2mLp8Rw4ZcN7yHd1JfU6sAeG0oVtYiWnQk\n", "address": "http://192.168.1.20:8000", "code": "Xq3vK9_bT2mLp8Rw4ZcN7yHd1JfU6sAeG0oVtYiWnQk", "redacted": "krobi://192.168.1.20:8000/setup#…", "note": "pasted with surrounding whitespace" },
+    { "input": "KROBI://Nest.Local:8000/setup#abcdefghijklmnopqrstuvwx", "address": "http://nest.local:8000", "code": "abcdefghijklmnopqrstuvwx", "redacted": "krobi://nest.local:8000/setup#…", "note": "scheme and host are case-insensitive; the code is not" },
+    { "input": "krobi://192.168.1.20/setup#abcdefghijklmnopqrstuvwx", "address": "http://192.168.1.20:8000", "code": "abcdefghijklmnopqrstuvwx", "redacted": "krobi://192.168.1.20:8000/setup#…", "note": "no port means 8000" },
+    { "input": "krobi://192.168.1.20:8000/setup", "error": "no-code" },
+    { "input": "krobi://192.168.1.20:8000/setup#short", "error": "bad-code" },
+    { "input": "krobi://192.168.1.20:8000/setup#has space inside the code ok", "error": "bad-code" },
+    { "input": "krobi://user:pass@192.168.1.20:8000/setup#abcdefghijklmnopqrstuvwx", "error": "bad-host" },
+    { "input": "krobi://192.168.1.20:8000/other#abcdefghijklmnopqrstuvwx", "error": "not-setup" },
+    { "input": "http://192.168.1.20:8000", "error": "not-a-link", "note": "a bare address goes through «Enter an address instead», not this field" },
+    { "input": "", "error": "empty" }
+  ]
+}
