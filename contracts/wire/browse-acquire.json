@@ -1,0 +1,11 @@
+{
+  "alreadyPresent": [],
+  "destination": "<music>",
+  "linking": "skipped",
+  "progress_id": "<progress_id>",
+  "queued": 1,
+  "requested": 1,
+  "status": "started",
+  "success": true,
+  "total": 1
+}

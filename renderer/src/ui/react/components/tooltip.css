@@ -1,0 +1,5 @@
+.k-tooltip-trigger { display: inline-flex; align-items: center; cursor: help; }
+.k-tooltip-trigger:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; border-radius: 3px; }
+.k-tooltip { position: fixed; z-index: var(--z-popover); display: grid; gap: 5px; max-width: calc(100vw - 16px); padding: 10px 13px; border: 1px solid var(--line-med); border-radius: 8px; background: var(--panel); color: var(--ink); box-shadow: var(--shadow-md); font: 12px var(--font-sans); white-space: normal; overflow-wrap: anywhere; pointer-events: none; }
+.k-tooltip b { font-weight: 600; }
+.k-tooltip code { font: 11.5px var(--font-mono); }

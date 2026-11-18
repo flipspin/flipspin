@@ -1,0 +1,55 @@
+/* krobi-ui; AGPL-3.0; see LICENSE.
+   App motion and layer tokens live on :root so every surface shares them.
+   Choose motion tokens by role: press, state, enter, exit, move or settle.
+   Profile tokens repeat these values inside their scoped surfaces. */
+:root {
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-press: 60ms;
+  --dur-fast: 140ms;
+  --dur: 240ms;
+  --dur-slow: 480ms;
+  /* Use the sampled critically damped spring for sidebar folding without bounce. */
+  --dur-sidebar: 380ms;
+  --ease-spring: linear(0, .055 5%, .175 10%, .312 15%, .445 20%, .562 25%, .66 30%, .74 35%, .803 40%, .852 45%, .89 50%, .919 55%, .94 60%, .956 65%, .968 70%, .977 75%, .983 80%, .988 85%, .991 90%, .994 95%, 1 100%);
+
+  /* Layers, low to high. The legacy ladder (z-[60], z-[70], z-[80], 1100…)
+     is mapped onto these as files are touched. */
+  --z-sticky: 10;
+  --z-dropdown: 70;
+  --z-overlay: 80;
+  --z-modal: 1050;
+  --z-popover: 1100;   /* menus: above a dialog that opened them */
+  --z-toast: 1200;
+
+  --scrim: rgba(21, 20, 14, 0.45);
+}
+:root:is([data-mode="dark"], [data-mode="night"]) {
+  --scrim: rgba(0, 0, 0, 0.6);
+}
+
+/* Reduced motion, once for the whole app. The duration tokens go to zero (so
+   presence-driven exits unmount at once), and anything still running a raw
+   duration is cut to a frame. Animations that carry meaning without motion
+   (a progress bar's width) still land on their final value. */
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-press: 0ms; --dur-fast: 0ms; --dur: 0ms; --dur-slow: 0ms; --dur-sidebar: 0ms; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* Name the transition surface only while animating: a permanent name changes the containing block
+ * of fixed descendants in WebKit. Keep the sidebar and player outside the moving surface. */
+:root[data-page-transition] .k-page { view-transition-name: k-page; }
+::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+::view-transition-old(k-page) { animation: k-vt-out var(--dur-fast) var(--ease-out) both; }
+::view-transition-new(k-page) { animation: k-vt-in var(--dur) var(--ease-out) both; }
+@keyframes k-vt-out { to { opacity: 0; } }
+@keyframes k-vt-in { from { opacity: 0; translate: 0 6px; } }

@@ -1,0 +1,14 @@
+{
+  "path": "<music>/Artist/Album/song.mp3",
+  "playlistsUpdated": [
+    {
+      "name": "member",
+      "removed": 2
+    },
+    {
+      "name": "owner",
+      "removed": 2
+    }
+  ],
+  "success": true
+}

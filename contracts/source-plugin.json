@@ -1,0 +1,163 @@
+{
+  "protocol": 1,
+  "envelope": {
+    "request": [
+      "id",
+      "method",
+      "params"
+    ],
+    "terminal": [
+      "id",
+      "result|error"
+    ],
+    "progress": [
+      "id",
+      "progress"
+    ]
+  },
+  "deadlineUnit": "milliseconds-relative",
+  "retryAfterUnit": "seconds",
+  "cases": [
+    {
+      "name": "hello-refusal",
+      "helloProtocols": [
+        0
+      ],
+      "expectedState": "incompatible",
+      "searchCalled": false
+    },
+    {
+      "name": "hello-accepted",
+      "helloProtocols": [
+        1
+      ],
+      "expectedState": "on",
+      "kinds": [
+        "audio"
+      ]
+    },
+    {
+      "name": "typed-kinds",
+      "kinds": [
+        "not-found",
+        "auth-required",
+        "rate-limited",
+        "blocked",
+        "network",
+        "broken",
+        "bug"
+      ],
+      "retryAfter": 12
+    },
+    {
+      "name": "deadline-kill",
+      "method": "fetch",
+      "deadline": 100,
+      "kind": "broken",
+      "pendingKind": "broken",
+      "nextCall": "respawn"
+    },
+    {
+      "name": "progress",
+      "percentages": [
+        10,
+        80
+      ],
+      "minimumIntervalMs": 250
+    },
+    {
+      "name": "fetch-result",
+      "required": [
+        "path",
+        "bytes",
+        "duration",
+        "codec",
+        "bitrateKbps",
+        "transcoded"
+      ],
+      "format": "m4a-copy"
+    },
+    {
+      "name": "status-unsupported",
+      "kind": "bug",
+      "facts": [],
+      "healthChanged": false
+    },
+    {
+      "name": "revision-change",
+      "retryKinds": [
+        "broken",
+        "blocked"
+      ],
+      "sameSourceOnly": true
+    },
+    {
+      "name": "unknown-action",
+      "id": "unknown",
+      "kind": "bug",
+      "healthChanged": false
+    },
+    {
+      "name": "url-host-dispatch",
+      "url": "https://example.test/audio",
+      "urlHosts": [
+        "example.test"
+      ]
+    },
+    {
+      "name": "source-data",
+      "survivesUpdate": true,
+      "removedOnRemove": true
+    },
+    {
+      "name": "install-bad-manifest",
+      "kind": "invalid",
+      "sources": 0,
+      "reasonRequired": true,
+      "step": "verify",
+      "cause": "invalid-manifest"
+    },
+    {
+      "name": "install-failed-hello",
+      "kind": "incompatible",
+      "sources": 0,
+      "reasonRequired": true,
+      "step": "test",
+      "cause": "handshake"
+    },
+    {
+      "name": "install-update-failure",
+      "previousRestored": true
+    },
+    {
+      "name": "install-remove",
+      "dataExists": false
+    }
+  ],
+  "installFailureSteps": [
+    "download",
+    "unpack",
+    "verify",
+    "build",
+    "test",
+    "publish"
+  ],
+  "installFailureCauses": [
+    "no-network",
+    "not-found",
+    "too-large",
+    "bad-archive",
+    "tool-missing",
+    "tool-failed",
+    "timeout",
+    "build-failed",
+    "unsupported",
+    "invalid-manifest",
+    "id-in-use",
+    "handshake",
+    "test-failed",
+    "space",
+    "cancelled",
+    "unknown"
+  ]
+}

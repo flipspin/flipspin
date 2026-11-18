@@ -1,0 +1,204 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "krobi-backend"
+description = "The Flipspin music server: library, playlists, catalog browsing, downloads and lyrics over HTTP."
+license = "AGPL-3.0-or-later"
+requires-python = ">=3.12,<3.14"
+dynamic = ["version"]
+# Direct dependencies only, with the lowest versions the app is known to run
+# on. The exact, tested set lives in requirements.txt (dev/CI) and
+# requirements-runtime.txt (servers, Docker); tests/unit/test_dependency_pins.py
+# fails when a name here has no pin there.
+dependencies = [
+  "fastapi>=0.163.1",
+  "starlette>=1.10.0",
+  "anyio>=4.9",              # SSE cancellation groups and per-send deadlines
+  "uvicorn>=0.34",
+  "pydantic>=2.11",
+  "python-multipart>=0.0.20",  # UploadFile: the Spotify data-export upload
+  "requests>=2.32",
+  "urllib3>=2.4",              # address-pinned public HTTP fetches
+  "beautifulsoup4>=4.13",
+  "cryptography>=44",          # Fernet for stored credentials (app/infra/security.py)
+  "imageio-ffmpeg>=0.6",       # static fallback after configured/system ffmpeg
+  "numpy>=2.2",
+  "mutagen>=1.47",
+  "watchdog>=7.1",           # native library change hints (timer fallback on network mounts)
+  "zeroconf>=0.151",           # advertises the nest on the LAN (app/infra/discovery.py)
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3",
+  "pytest-asyncio>=0.24",
+  "pytest-cov>=6.0",
+  "pytest-mock>=3.14",
+  "hypothesis>=6.122",
+  "faker>=33.1",
+  "httpx>=0.28",               # FastAPI's TestClient
+  "ruff>=0.15",
+  "import-linter>=2.16",
+  "pyinstaller>=6.0",          # npm run build:backend
+]
+
+[project.scripts]
+krobi-backend = "app.__main__:main"
+
+[tool.setuptools.dynamic]
+version = { attr = "app.config.APP_VERSION" }
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
+
+[tool.ruff]
+# Lint the application package; tests follow looser conventions.
+target-version = "py312"
+line-length = 120
+
+[tool.ruff.lint]
+# Check correctness and dead code without requiring a repository-wide reformat.
+# B008 permits FastAPI Depends defaults. B904 awaits consistent HTTP error
+# chaining. UP042 would change existing enum formatting on the wire.
+# Broad-exception checks require narrowing recovery boundaries first.
+select = ["F", "E402", "E711", "E712", "E713", "E714", "E721", "E722", "E741", "W605", "UP", "B"]
+ignore = ["B008", "B904", "UP042"]
+
+[tool.ruff.lint.per-file-ignores]
+# main.py loads <root>/.env and configures stdout encoding BEFORE importing
+# domain modules that read config at import time — those imports must stay
+# below that setup, so E402 ("import not at top") legitimately doesn't apply.
+"app/main.py" = ["E402"]
+
+# Freeze existing exceptions to concrete edges. Remove entries as their follow-up
+# cards land; never broaden this baseline. Stale ignores are errors.
+[tool.importlinter]
+root_package = "app"
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "Feature domains never depend on the plugin surface"
+type = "forbidden"
+source_modules = ["app.domains"]
+forbidden_modules = ["app.plugin_api"]
+
+[[tool.importlinter.contracts]]
+name = "Only the secrets boundary accesses credential persistence"
+type = "protected"
+protected_modules = ["app.infra.secret_store"]
+allowed_importers = ["app.infra.secrets"]
+
+[[tool.importlinter.contracts]]
+name = "Composition > features and providers > infra > utils"
+type = "layers"
+layers = ["app.main", "app.domains : app.providers : app.dependencies", "app.infra", "app.utils"]
+ignore_imports = [
+  # replay still invokes acquisition linking.
+  "app.infra.jobs_runtime -> app.domains.user_library.acquisition_links",
+  # replay still constructs the private lyrics job value.
+  "app.infra.jobs_runtime -> app.domains.lyrics.services",
+  # replay still saves imported export playlists.
+  "app.infra.jobs_runtime -> app.domains.playlists.export_import",
+  # replay still saves imported playlists through a route helper.
+  "app.infra.jobs_runtime -> app.domains.downloads.routes",
+]
+
+[[tool.importlinter.contracts]]
+name = "No cycles between feature domains"
+type = "acyclic_siblings"
+ancestors = ["app.domains"]
+# Domain boundaries only; internal feature module organization is unchanged.
+depth = 0
+ignore_imports = [
+  # Existing download route saves imported playlists through PlaylistService.
+  "app.domains.downloads.routes -> app.domains.playlists.services",
+  # Existing metadata parsing returns the music domain's AudioMetadata value.
+  "app.domains.metadata.repositories -> app.domains.music.models",
+  # Existing metadata enrichment mutates the same AudioMetadata value.
+  "app.domains.metadata.services -> app.domains.music.models",
+  # Existing library scoping consumes music Album values; library merge is later.
+  "app.domains.user_library.scope -> app.domains.music.models",
+]
+
+[[tool.importlinter.contracts]]
+name = "Accounts internals are composed only by main and dependencies"
+type = "protected"
+protected_modules = ["app.domains.accounts"]
+allowed_importers = ["app.main", "app.dependencies"]
+
+[[tool.importlinter.contracts]]
+name = "No ML runtimes in the backend"
+type = "forbidden"
+source_modules = ["app"]
+forbidden_modules = [
+  "torch", "torchaudio", "mlx", "mlx_whisper", "demucs", "whisper", "keyfinder",
+  "librosa", "scipy", "numba", "llvmlite", "sklearn", "essentia", "madmom",
+  "onnxruntime", "krobi_keyfinder", "audioread", "resampy", "soundfile",
+]
+
+[[tool.importlinter.contracts]]
+name = "Loudness measurement stays in the helper"
+id = "helper-loudness"
+type = "forbidden"
+source_modules = ["app"]
+forbidden_modules = ["pyloudnorm", "ebur128", "pyebur128"]
+
+[[tool.importlinter.contracts]]
+name = "Backend code uses infra, never the compatibility namespace"
+type = "protected"
+protected_modules = ["app.core"]
+allowed_importers = ["app.core"]
+
+[[tool.importlinter.contracts]]
+name = "Only acquisition import publishes household files"
+type = "protected"
+protected_modules = ["app.domains.music.writer"]
+allowed_importers = ["app.domains.acquisition.import_stage"]
+
+[[tool.importlinter.contracts]]
+name = "Personal library never depends on acquisition"
+type = "forbidden"
+source_modules = ["app.domains.user_library"]
+forbidden_modules = ["app.domains.acquisition"]
+allow_indirect_imports = true
+
+[[tool.importlinter.contracts]]
+name = "Acquisition uses the public music and personal-library ports"
+type = "forbidden"
+source_modules = ["app.domains.acquisition"]
+forbidden_modules = [
+  "app.domains.music.models", "app.domains.music.repositories",
+  "app.domains.music.services", "app.domains.music.ownership",
+  "app.domains.music.relocation", "app.domains.music.analysis_repository",
+  "app.domains.music.analysis_legacy", "app.domains.music.analysis_precedence",
+  "app.domains.music.analysis_tags", "app.domains.music.analysis_mood", "app.domains.music.routes",
+  "app.domains.user_library.store", "app.domains.user_library.routes",
+  "app.domains.user_library.scope", "app.domains.user_library.schemas",
+  "app.domains.user_library.acquisition_links",
+]
+allow_indirect_imports = true
+
+[[tool.importlinter.contracts]]
+name = "infra.changes imports no domain"
+id = "changes-is-infra"
+type = "forbidden"
+source_modules = ["app.infra.changes"]
+forbidden_modules = ["app.domains"]
+
+[tool.setuptools.package-data]
+"app.infra" = ["engines/*/krobi-extension.json"]
+
+[[tool.importlinter.contracts]]
+name = "Source tools run as subprocesses only"
+type = "forbidden"
+source_modules = ["app"]
+forbidden_modules = ["yt_dlp"]
+
+[[tool.importlinter.contracts]]
+name = "infra.extensions imports no domain"
+type = "forbidden"
+source_modules = ["app.infra.extensions"]
+forbidden_modules = ["app.domains"]

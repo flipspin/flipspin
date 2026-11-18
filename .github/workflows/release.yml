@@ -1,0 +1,287 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  versions:
+    name: Check every version before building
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      version: ${{ steps.check.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+      - name: Tag matches all four version sources
+        id: check
+        run: |
+          version=$(node scripts/check-release-version.mjs "$GITHUB_REF_NAME")
+          printf 'version=%s\n' "$version" >> "$GITHUB_OUTPUT"
+
+  image:
+    needs: versions
+    permissions:
+      contents: read
+      packages: write
+    uses: ./.github/workflows/server-image.yml
+
+  installers:
+    needs: [versions, image]
+    strategy:
+      fail-fast: false
+      matrix:
+        # Private prereleases use the locally built Mac installer.
+        platform: ${{ fromJSON(github.event.repository.private && contains(github.ref_name, '-') && '["windows","linux"]' || '["macos","windows","linux"]') }}
+    uses: ./.github/workflows/build.yml
+    with:
+      platform: ${{ matrix.platform }}
+      release: true
+
+  keyfinder:
+    needs: versions
+    uses: ./.github/workflows/keyfinder-wheels.yml
+    with:
+      macos: ${{ !(github.event.repository.private && contains(github.ref_name, '-')) }}
+
+  windows-smoke:
+    # Keep checking a successful Windows artifact even if another installer fails.
+    if: ${{ !cancelled() && needs.installers.result != 'skipped' }}
+    needs: installers
+    runs-on: windows-latest
+    timeout-minutes: 10
+    env:
+      RELEASE_TAG: ${{ github.ref_name }}
+    steps:
+      - name: Download the Windows NSIS installer from this run
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: krobi-windows-*
+          path: installers
+      - name: Install, launch the desktop, and probe the bundled backend
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $version = $env:RELEASE_TAG.Substring(1)
+          $logs = Join-Path $env:RUNNER_TEMP 'windows-smoke-logs'
+          $installDir = Join-Path $env:RUNNER_TEMP 'krobi-smoke-install'
+          New-Item -ItemType Directory -Force $logs | Out-Null
+          $app = $null
+          $backend = $null
+          try {
+            $installers = @(Get-ChildItem installers -Recurse -Filter '*.exe')
+            if ($installers.Count -ne 1) { throw "Expected one NSIS installer, got $($installers.Count)" }
+            # NSIS requires /D to be last and its value must not be quoted.
+            $installer = Start-Process -FilePath $installers[0].FullName -ArgumentList "/S /D=$installDir" -Wait -PassThru
+            if ($installer.ExitCode -ne 0) { throw "Installer exited $($installer.ExitCode)" }
+            # Read the installed binary name: Tauri may use the Cargo name
+            # (krobi-desktop.exe) rather than the product name (Flipspin.exe).
+            $registration = Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\Flipspin'
+            $appExe = Join-Path $installDir $registration.MainBinaryName
+            # tauri.conf.json maps resources/backend to backend/; on Windows
+            # the resource directory is the directory containing the app exe.
+            $backendExe = Join-Path $installDir 'backend\krobi-backend.exe'
+            foreach ($exe in @($appExe, $backendExe)) {
+              if (!(Test-Path $exe -PathType Leaf)) { throw "Missing installed executable: $exe" }
+            }
+            $app = Start-Process -FilePath $appExe -WorkingDirectory $installDir -PassThru `
+              -RedirectStandardOutput "$logs\app.stdout.log" -RedirectStandardError "$logs\app.stderr.log"
+            Start-Sleep -Seconds 20
+            $app.Refresh()
+            if ($app.HasExited) { throw "Desktop exited $($app.ExitCode) during first-run startup" }
+            # A fresh desktop has no nest selected and must leave the port free.
+            $listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, 8000)
+            try { $listener.Start() } finally { $listener.Stop() }
+            $backend = Start-Process -FilePath $backendExe -WorkingDirectory (Split-Path $backendExe) `
+              -ArgumentList '--host 127.0.0.1 --port 8000' -PassThru `
+              -RedirectStandardOutput "$logs\backend.stdout.log" -RedirectStandardError "$logs\backend.stderr.log"
+            $deadline = [DateTime]::UtcNow.AddSeconds(120)
+            $status = $null
+            while ([DateTime]::UtcNow -lt $deadline) {
+              $backend.Refresh()
+              if ($backend.HasExited) { throw "Backend exited $($backend.ExitCode) before readiness" }
+              try { $status = Invoke-RestMethod 'http://127.0.0.1:8000/api/status' -TimeoutSec 3 } catch { $status = $null }
+              if ($null -ne $status) { break }
+              Start-Sleep -Seconds 2
+            }
+            if ($null -eq $status) { throw 'Backend did not become ready within 120 seconds' }
+            $status | ConvertTo-Json -Depth 10 | Set-Content "$logs\status.json"
+            if ($status.app -cne 'krobi' -or $status.version -cne $version) {
+              throw "Unexpected backend identity/version: $($status | ConvertTo-Json -Compress)"
+            }
+          } finally {
+            foreach ($process in @($backend, $app)) {
+              if ($null -ne $process -and !$process.HasExited) {
+                taskkill /PID $process.Id /T /F | Out-Null
+              }
+            }
+            $appLogs = Join-Path $env:LOCALAPPDATA 'app.flipspin.desktop\logs'
+            $backendLogs = Join-Path $env:USERPROFILE 'Krobi\logs'
+            if (Test-Path $appLogs) { Copy-Item $appLogs "$logs\app" -Recurse -Force }
+            if (Test-Path $backendLogs) { Copy-Item $backendLogs "$logs\backend" -Recurse -Force }
+          }
+      - name: Upload Windows smoke logs on failure
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: windows-smoke-logs
+          path: ${{ runner.temp }}/windows-smoke-logs
+          if-no-files-found: warn
+
+  ci-gate:
+    name: Require successful CI for the release commit
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    permissions:
+      actions: read
+    steps:
+      - name: Wait for CI on this commit
+        env:
+          SHA: ${{ github.sha }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          deadline=$((SECONDS + 2700))
+          while (( SECONDS < deadline )); do
+            # Ignore PR runs and inspect the newest push run, including reruns.
+            # Missing, pending, cancelled and skipped runs cannot authorize release.
+            run=$(gh run list --workflow ci.yml --commit "$SHA" --event push \
+              --limit 1 --json status,conclusion)
+            status=$(jq -r '.[0].status // "missing"' <<< "$run")
+            conclusion=$(jq -r '.[0].conclusion // ""' <<< "$run")
+            if [[ "$status" == 'completed' ]]; then
+              if [[ "$conclusion" == 'success' ]]; then exit 0; fi
+              echo "CI failed for $SHA: $conclusion" >&2
+              exit 1
+            fi
+            echo "Waiting for CI for $SHA ($status)"
+            sleep 15
+          done
+          echo "Timed out waiting for successful CI for $SHA" >&2
+          exit 1
+
+  # The nest reads releases/latest. Advertising the release before the image
+  # exists would tell owners to update to an image they cannot pull.
+  publish:
+    needs: [versions, image, installers, keyfinder, windows-smoke, ci-gate]
+    runs-on: ubuntu-latest
+    environment: release
+    concurrency:
+      group: release-publish
+      cancel-in-progress: false
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+      attestations: write
+    env:
+      VERSION: ${{ needs.versions.outputs.version }}
+      IMAGE_DIGEST: ${{ needs.image.outputs.digest }}
+      GH_TOKEN: ${{ github.token }}
+      SKIP_MACOS: ${{ github.event.repository.private && contains(github.ref_name, '-') }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+      - name: Download installers from this run
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: krobi-*-${{ env.VERSION }}
+          path: installers
+          merge-multiple: true
+      - name: Download KeyFinder wheels from this run
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          pattern: keyfinder-*
+          path: keyfinder
+      - name: Download macOS signing status
+        if: ${{ env.SKIP_MACOS != 'true' }}
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: release-macos-signing
+          path: signing
+      - name: Prepare release notes
+        run: |
+          signing=not-built
+          if [ "$SKIP_MACOS" != 'true' ]; then signing=$(cat signing/macos-signing.txt); fi
+          node scripts/release-notes.mjs "$VERSION" "$GITHUB_REPOSITORY_OWNER" \
+            "$signing" > "$RUNNER_TEMP/release-notes.md"
+      - name: Lowercase image name
+        run: echo "IMAGE=ghcr.io/flipspin/flipspin-server" >> "$GITHUB_ENV"
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
+        with:
+          cache-binary: false
+      - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+      - name: Find draft and upload every installer, wheel and SHA256SUMS
+        env:
+          RELEASE_NOTES: ${{ runner.temp }}/release-notes.md
+        run: node scripts/publish-release.mjs prepare
+      - name: Attest the uploaded assets
+        # Artifact attestations need a public repository (or a paid plan); private release candidates skip them.
+        if: ${{ !github.event.repository.private }}
+        uses: actions/attest-build-provenance@96278af6caaf10aea03fd8d33a09a777ca52d62f # v3.2.0
+        with:
+          subject-path: 'release-assets/*'
+      - name: Attest the multi-arch image digest
+        # Artifact attestations need a public repository (or a paid plan); private release candidates skip them.
+        if: ${{ !github.event.repository.private }}
+        uses: actions/attest-build-provenance@96278af6caaf10aea03fd8d33a09a777ca52d62f # v3.2.0
+        with:
+          subject-name: ${{ env.IMAGE }}
+          subject-digest: ${{ env.IMAGE_DIGEST }}
+          push-to-registry: true
+      - name: Promote the digest and publish the draft last
+        run: node scripts/publish-release.mjs finish
+
+  verify:
+    needs: [versions, publish]
+    # Checks what an anonymous user sees (provenance, anonymous image pull): only meaningful once the repository is public.
+    if: ${{ !github.event.repository.private }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      VERSION: ${{ needs.versions.outputs.version }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Verify public assets and provenance
+        run: |
+          gh release download "$GITHUB_REF_NAME" --dir verified
+          cd verified
+          sha256sum -c SHA256SUMS
+          asset=$(find . -maxdepth 1 -name '*.dmg' -print -quit)
+          test -n "$asset"
+          gh attestation verify "$asset" --repo "$GITHUB_REPOSITORY" \
+            --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/release.yml"
+      - name: Pull anonymously and boot the released version
+        run: |
+          # An isolated empty config proves that public installs need no login.
+          export DOCKER_CONFIG="$RUNNER_TEMP/anonymous-docker"
+          mkdir -p "$DOCKER_CONFIG" "$RUNNER_TEMP/music"
+          image="ghcr.io/flipspin/flipspin-server:$VERSION"
+          docker pull "$image"
+          trap 'docker logs krobi-verify 2>&1 | tail -n 20; docker rm -f krobi-verify' EXIT
+          docker run -d --name krobi-verify -p 8000:8000 \
+            -v krobi-verify-data:/data -v "$RUNNER_TEMP/music:/music" "$image"
+          body=''
+          for _ in $(seq 1 60); do
+            if body=$(curl -sf --max-time 3 http://127.0.0.1:8000/api/status); then break; fi
+            sleep 2
+          done
+          echo "$body" | python3 -c 'import json,os,sys; d=json.load(sys.stdin); assert d["version"] == os.environ["VERSION"], d; assert d["app"] == "krobi", d; assert d["setupTokenRequired"] is True, d'

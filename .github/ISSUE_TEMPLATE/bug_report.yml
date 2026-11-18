@@ -1,0 +1,83 @@
+name: Bug report
+description: Something behaves differently than it should.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Check [known issues](https://github.com/flipspin/flipspin/blob/main/docs/known-issues.md) first.
+        Problems with the YouTube source (downloads failing, blocked, outdated) go to
+        [flipspin-source-youtube](https://github.com/flipspin/flipspin-source-youtube/issues).
+
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      description: Settings → Status in the desktop app.
+      placeholder: "0.1.0"
+    validations:
+      required: true
+
+  - type: input
+    id: server-version
+    attributes:
+      label: Server version
+      description: Settings → Status, or `GET /api/status` on the server. Same as the app version if the app runs its own server.
+      placeholder: "0.1.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install
+    attributes:
+      label: How is it installed?
+      options:
+        - Desktop app, macOS .dmg
+        - Desktop app, Windows installer
+        - Desktop app, Linux .deb or AppImage
+        - Server with Docker Compose
+        - Server as a systemd service
+        - Server from source (venv + uvicorn)
+        - An OpenSubsonic client on a phone
+        - Running from a git checkout for development
+        - Other / not sure
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      description: Include the OS of the server too, if it is a different machine.
+      placeholder: "macOS 15.4 client, Debian 12 server"
+    validations:
+      required: true
+
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, what you got instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1.
+        2.
+        3.
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Server logs
+      description: >-
+        From `KROBI_LOG_DIR` (default `~/Krobi/logs/`), or Settings → Log in the
+        desktop app. The lines around the failure are usually enough.
+        **Remove any API token before pasting.**
+      render: text
+    validations:
+      required: true

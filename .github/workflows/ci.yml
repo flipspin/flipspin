@@ -1,0 +1,368 @@
+name: CI
+
+# Actions minutes are capped: pushes run only for the trunk and the integration
+# branch, a push touching only docs runs nothing (PRs still check them), and
+# PRs, main, tags and manual runs run every suite (scripts/changes.mjs).
+# Path filters are not evaluated for tag pushes, so a release tag always runs.
+on:
+  push:
+    branches: [main, feat/remote-backend]
+    tags: ['v*']
+    paths-ignore: ['docs/**', '**/*.md', 'internal/**']
+  pull_request:
+  workflow_dispatch:
+
+# A new push to the same branch supersedes the run already in flight.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    name: Detect changed areas
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      backend: ${{ steps.areas.outputs.backend }}
+      renderer: ${{ steps.areas.outputs.renderer }}
+      shell: ${{ steps.areas.outputs.shell }}
+      helper: ${{ steps.areas.outputs.helper }}
+      contracts: ${{ steps.areas.outputs.contracts }}
+      docs: ${{ steps.areas.outputs.docs }}
+      ci: ${{ steps.areas.outputs.ci }}
+      deploy: ${{ steps.areas.outputs.deploy }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .tool-versions
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - id: areas
+        run: node scripts/changes.mjs
+
+  backend:
+    needs: changes
+    if: needs.changes.outputs.backend == 'true' || needs.changes.outputs.contracts == 'true'
+    name: Backend — lint and tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install audio tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ffmpeg
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version-file: .tool-versions
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+
+      # A venv at the repo root, because that is where every documented command
+      # expects it (`../.venv/bin/python` from backend/, scripts/build-backend.cjs).
+      - name: Install dependencies
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/pip install -r backend/requirements.txt
+
+      - name: Lint and check import direction
+        run: make lint-backend
+
+      # pytest.ini supplies -v, coverage and --cov-fail-under=70.
+      - name: Tests
+        working-directory: backend
+        run: ../.venv/bin/python -m pytest
+
+  qa-install:
+    needs: changes
+    if: needs.changes.outputs.backend == 'true' || needs.changes.outputs.deploy == 'true'
+    name: Server — Docker clean install (amd64)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
+        id: buildx
+        with:
+          cache-binary: false
+
+      # Warm the same builder used by qa-install. Its mandatory working-tree
+      # build then reuses these layers. Neither step pushes an image.
+      - name: Cache and load the server image
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
+        with:
+          context: .
+          file: backend/Dockerfile
+          platforms: linux/amd64
+          builder: ${{ steps.buildx.outputs.name }}
+          push: false
+          load: true
+          tags: krobi:qa
+          cache-from: type=gha,scope=qa-install-amd64
+          cache-to: type=gha,mode=max,scope=qa-install-amd64
+
+      - name: Clean-install QA, English setup block and root songs
+        run: make qa-install QA_PLATFORM=linux/amd64 QA_BUILDER=${{ steps.buildx.outputs.name }}
+
+  desktop:
+    needs: changes
+    if: needs.changes.outputs.renderer == 'true' || needs.changes.outputs.contracts == 'true'
+    name: Desktop — lint, types, tests, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .tool-versions
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Test release tooling
+        run: node --test scripts/*.test.mjs scripts/*.test.cjs
+
+      - name: Install Chromium for computed theme tests
+        run: npx playwright install --with-deps chromium
+
+      - name: Tests
+        run: npm test
+
+      - name: Build renderer
+        run: npm run build
+
+  shell:
+    needs: changes
+    if: needs.changes.outputs.shell == 'true' || needs.changes.outputs.contracts == 'true'
+    name: Desktop shell — clippy and tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # What wry/webkit2gtk, the tray and rfd link against on Linux (Tauri 2's
+      # documented prerequisites). Debug builds never embed ../build, so no
+      # renderer build is needed first.
+      - name: Install the Tauri system libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev \
+            libssl-dev libxdo-dev build-essential
+
+      - uses: actions-rust-lang/setup-rust-toolchain@166cdcfd11aee3cb47222f9ddb555ce30ddb9659 # v1.17.0
+        with:
+          rustflags: ""
+          cache: false
+          components: clippy
+
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+        with:
+          workspaces: src-tauri
+
+      - name: Clippy
+        run: cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
+
+      - name: Tests
+        run: cargo test --manifest-path src-tauri/Cargo.toml
+
+  worker:
+    needs: changes
+    if: needs.changes.outputs.helper == 'true' || needs.changes.outputs.contracts == 'true'
+    name: Lyrics worker — tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install audio tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ffmpeg
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version-file: .tool-versions
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .tool-versions
+
+      - name: Check worker release fingerprint
+        run: node scripts/check-worker-release.cjs
+
+      # Not the package's own dependencies: mlx-whisper and demucs-mlx are
+      # Apple-Silicon only, and the worker imports every model library lazily.
+      # The pure tests need numpy; the one torch test skips itself.
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest numpy
+
+      - name: Tests
+        working-directory: helper
+        run: python -m pytest tests
+
+  smoke:
+    needs: changes
+    if: needs.changes.outputs.backend == 'true' || needs.changes.outputs.deploy == 'true'
+    name: Smoke — a fresh server install answers
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version-file: .tool-versions
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+
+      # requirements-runtime.txt — not requirements.txt — because that is the set
+      # a server deployment actually installs. Every time a runtime import has
+      # been filed under "testing dependencies", the app crashed on start for
+      # operators and for nobody else.
+      - name: Install the shippable dependency set
+        run: |
+          python -m venv .venv-runtime
+          .venv-runtime/bin/python -m pip install --upgrade pip
+          .venv-runtime/bin/pip install -r backend/requirements-runtime.txt
+
+      - name: Start it with an empty data directory and ask if it is alive
+        run: |
+          set -euo pipefail
+
+          DATA="$(mktemp -d)/krobi-smoke"
+          mkdir -p "$DATA/home"
+
+          export HOME="$DATA/home"
+          export FLIPSPIN_DATA_DIR="$DATA/state"
+          export KROBI_ADVERTISE=false
+          export KROBI_UPDATE_CHECK=false
+
+          # No token, no .env, no library: the zero-configuration first run.
+          cd "$GITHUB_WORKSPACE/backend"
+          "$GITHUB_WORKSPACE/.venv-runtime/bin/python" -m uvicorn app.main:app \
+            --host 127.0.0.1 --port 8000 > "$DATA/server.log" 2>&1 &
+          SERVER_PID=$!
+          cd "$GITHUB_WORKSPACE"
+
+          cleanup() { kill "$SERVER_PID" 2>/dev/null || true; wait "$SERVER_PID" 2>/dev/null || true; }
+          trap cleanup EXIT
+
+          code=000
+          for _ in $(seq 1 60); do
+            code=$(curl -s -m 3 -o "$DATA/health.json" -w '%{http_code}' \
+                     http://127.0.0.1:8000/api/health) || code=000
+            [ "$code" = "200" ] && break
+            if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+              echo "::error::The server exited before it answered."
+              cat "$DATA/server.log"
+              exit 1
+            fi
+            sleep 1
+          done
+
+          if [ "$code" != "200" ]; then
+            echo "::error::GET /api/health never returned 200 (last: $code)."
+            cat "$DATA/server.log"
+            exit 1
+          fi
+
+          echo "GET /api/health -> 200"
+          cat "$DATA/health.json"
+          echo
+
+          DATA="$DATA" python - <<'PY'
+          import json, os, pathlib, sys
+
+          data = os.environ["DATA"]
+          health = json.loads(pathlib.Path(data, "health.json").read_text())
+          problems = []
+
+          if health.get("status") != "ok":
+              problems.append(f"status is {health.get('status')!r}, expected 'ok'")
+          if not health.get("version"):
+              problems.append("no version reported")
+
+          # The load-bearing assertion: the server resolved the temp library, not
+          # a real one. If this ever passes on a path outside $DATA, the smoke test
+          # has been writing to somebody's music collection.
+          music = health.get("base_music_dir", "")
+          if not music.startswith(data):
+              problems.append(f"base_music_dir escaped the temp dir: {music!r}")
+          if not health.get("base_music_dir_exists"):
+              problems.append("the server did not create its music directory")
+
+          # A fresh install with no system packages must still have ffmpeg, or
+          # downloads and the audio editor fail later and far less legibly.
+          if not health.get("ffmpeg_available"):
+              problems.append(f"no usable ffmpeg at {health.get('ffmpeg_path')!r}")
+
+          for problem in problems:
+              print(f"::error::{problem}")
+          sys.exit(1 if problems else 0)
+          PY
+
+          if [ -n "$(find "$HOME" -mindepth 1 -print -quit)" ]; then
+            echo "::error::The server wrote into HOME despite an explicit data root."
+            exit 1
+          fi
+          echo "Health payload checks out, and HOME stayed empty."
+
+      - name: Check isolated dev startup with an empty home
+        run: |
+          DEV_HOME="$(mktemp -d)"
+          HOME="$DEV_HOME" make dev-check PYTHON="$GITHUB_WORKSPACE/.venv-runtime/bin/python"
+          test -z "$(find "$DEV_HOME" -mindepth 1 -print -quit)"
+
+  docs:
+    name: Docs — area coverage and contributor guides
+    needs: changes
+    if: needs.changes.outputs.docs == 'true' || needs.changes.outputs.ci == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .tool-versions
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: node scripts/check-areas.mjs
+
+  # The only CI check branch protection should require is conclusion.
+  # Every new job must be added to its needs, including routing/validation jobs.
+  conclusion:
+    name: conclusion
+    needs: [changes, backend, desktop, shell, worker, smoke, qa-install, docs]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require successful or skipped jobs
+        env:
+          NEEDS: ${{ toJSON(needs) }}
+        run: |
+          jq . <<< "$NEEDS"
+          jq --exit-status 'all(.[]; .result == "success" or .result == "skipped")' <<< "$NEEDS"

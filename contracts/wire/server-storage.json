@@ -1,0 +1,7 @@
+{
+  "dataRoot": "<root>",
+  "disk": {"total": 100000, "free": 40000},
+  "music": 1500,
+  "stems": 200,
+  "other": 58300
+}

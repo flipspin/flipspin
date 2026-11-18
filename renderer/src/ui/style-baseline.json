@@ -1,0 +1,125 @@
+{
+  "home/library-stories.css": {
+    "hex": 2
+  },
+  "player/player-transport.css": {
+    "hex": 5,
+    "zIndex": 1
+  },
+  "lyrics/timing.css": {
+    "zIndex": 1
+  },
+  "playlists/playlists.css": {
+    "zIndex": 2
+  },
+  "index.css": {
+    "hex": 146,
+    "zIndex": 15,
+    "lines": 3552
+  },
+  "settings/settings.css": {
+    "hex": 4,
+    "zIndex": 3
+  },
+  "settings/delete-account.css": {
+    "zIndex": 1
+  },
+  "auth/sign-in-request.css": {
+    "zIndex": 1
+  },
+  "settings/marked.css": {
+    "hex": 3,
+    "zIndex": 2
+  },
+  "stems/library-stems.css": {
+    "hex": 2
+  },
+  "stems/lyrics-voice.css": {
+    "hex": 6,
+    "zIndex": 1
+  },
+  "stems/stems.css": {
+    "hex": 8,
+    "zIndex": 3
+  },
+  "styles/retro-song-table.css": {
+    "hex": 15,
+    "zIndex": 1
+  },
+  "ui/primitives.css": {
+    "zIndex": 2
+  },
+  "ui/react/styles/components.css": {
+    "zIndex": 1
+  },
+  "shell/App.tsx": {
+    "zIndex": 5
+  },
+  "albums/AlbumList.tsx": {
+    "hex": 2
+  },
+  "albums/LibraryToolbar.tsx": {
+    "hex": 1
+  },
+  "browse/SearchPage.tsx": {
+    "zIndex": 1
+  },
+  "home/RecentPickerModal.tsx": {
+    "zIndex": 1
+  },
+  "player/FixedBottomPlayerBar.tsx": {
+    "hex": 2,
+    "zIndex": 2
+  },
+  "player/PlayerTransport.tsx": {
+    "hex": 21,
+    "zIndex": 1
+  },
+  "shell/layout/PortraitTabBar.tsx": {
+    "hex": 2
+  },
+  "player/QueueList.tsx": {
+    "hex": 1
+  },
+  "shell/layout/header.tsx": {
+    "hex": 4
+  },
+  "player/PlayerWindowRoot.tsx": {
+    "hex": 5,
+    "zIndex": 3
+  },
+  "playlists/PlaylistErrorBoundary.tsx": {
+    "hex": 2
+  },
+  "playlists/PlaylistView.tsx": {
+    "hex": 1
+  },
+  "settings/SpotifySection.tsx": {
+    "hex": 1
+  },
+  "viz/FrequencyAnalyzerPanel.tsx": {
+    "zIndex": 1
+  },
+  "ui/components/PillDropdown.tsx": {
+    "zIndex": 1
+  },
+  "viz/RealTimeWaveform.tsx": {
+    "zIndex": 1
+  },
+  "ui/components/joypad.tsx": {
+    "hex": 1,
+    "zIndex": 2
+  },
+  "pairing/QrCode.tsx": {
+    "hex": 2
+  },
+  "stems/StemsPage.tsx": {
+    "hex": 9
+  },
+  "ui/notifications.tsx": {
+    "hex": 1
+  },
+  "plugins/lineage/LineageGraph.tsx": {
+    "zIndex": 1
+  }
+}

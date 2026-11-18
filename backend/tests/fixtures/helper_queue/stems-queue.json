@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "jobs": [
+    {"id":"s-one", "album":"A", "file":"Split.mp3", "status":"leased", "lease":"old-stems", "leased_by":"old-helper", "leased_at":900, "last_heartbeat":950, "attempts":2, "requested_at":810, "updated_at":950},
+    {"id":"s-dead", "album":"A", "file":"Failed.mp3", "status":"failed", "error":"no result", "attempts":1, "requested_at":811, "updated_at":951}
+  ],
+  "receipts": {"finished-stems":{"identity":"helper", "response":{"accepted":true,"status":"ready"}, "row":{"kind":"stems"}}}
+}

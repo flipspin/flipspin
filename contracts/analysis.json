@@ -1,0 +1,477 @@
+{
+  "rules": [
+    "Per field: correction > foreign file tag > computed > none. Krobi-owned tags are ignored.",
+    "Confidence thresholds apply only to computed values; below the cutoff (key 0.004, BPM 0.4) a value is estimated.",
+    "Mood and energy come only from computed records.",
+    "Arousal is a nullable library-relative calm to intense rank from stored computed energy, pulse and BPM; tags and corrections do not replace it."
+  ],
+  "cases": [
+    {
+      "name": "fixed wins per field",
+      "in": {
+        "row": {
+          "fixed_bpm": 125,
+          "fixed_key": "2A",
+          "bpm": 120,
+          "key": "8A"
+        },
+        "tags": {
+          "bpm": 130,
+          "key": "C"
+        }
+      },
+      "out": {
+        "bpm": {
+          "value": 125,
+          "source": "fixed",
+          "estimated": false
+        },
+        "key": {
+          "value": "2A",
+          "source": "fixed",
+          "estimated": false
+        },
+        "mood": null,
+        "energy": null,
+        "brightness": null,
+        "pulse": null,
+        "arousal": null
+      }
+    },
+    {
+      "name": "foreign tags win",
+      "in": {
+        "row": {
+          "bpm": 120,
+          "key": "8A",
+          "mood": "calm",
+          "energy": 0.04
+        },
+        "tags": {
+          "bpm": 130,
+          "key": "C"
+        }
+      },
+      "out": {
+        "bpm": {
+          "value": 130,
+          "source": "tag",
+          "estimated": false
+        },
+        "key": {
+          "value": "C",
+          "source": "tag",
+          "estimated": false
+        },
+        "mood": "calm",
+        "energy": 0.04,
+        "brightness": null,
+        "pulse": null,
+        "arousal": null
+      }
+    },
+    {
+      "name": "computed confident",
+      "in": {
+        "row": {
+          "bpm": 120,
+          "key": "8A",
+          "bpm_conf": 0.9,
+          "key_conf": 0.9
+        },
+        "tags": {},
+        "bpm_threshold": 0.8,
+        "key_threshold": 0.8
+      },
+      "out": {
+        "bpm": {
+          "value": 120,
+          "source": "computed",
+          "estimated": false
+        },
+        "key": {
+          "value": "8A",
+          "source": "computed",
+          "estimated": false
+        },
+        "mood": null,
+        "energy": null,
+        "brightness": null,
+        "pulse": null,
+        "arousal": null
+      }
+    },
+    {
+      "name": "computed estimated",
+      "in": {
+        "row": {
+          "bpm": 120,
+          "key": "8A",
+          "bpm_conf": 0.2,
+          "key_conf": 0.2
+        },
+        "tags": {},
+        "bpm_threshold": 0.8,
+        "key_threshold": 0.8
+      },
+      "out": {
+        "bpm": {
+          "value": 120,
+          "source": "computed",
+          "estimated": true
+        },
+        "key": {
+          "value": "8A",
+          "source": "computed",
+          "estimated": true
+        },
+        "mood": null,
+        "energy": null,
+        "brightness": null,
+        "pulse": null,
+        "arousal": null
+      }
+    },
+    {
+      "name": "low confidence under the default cutoffs is estimated",
+      "in": {
+        "row": {
+          "bpm": 120,
+          "key": "8A",
+          "bpm_conf": 0,
+          "key_conf": 0
+        },
+        "tags": {}
+      },
+      "out": {
+        "bpm": {
+          "value": 120,
+          "source": "computed",
+          "estimated": true
+        },
+        "key": {
+          "value": "8A",
+          "source": "computed",
+          "estimated": true
+        },
+        "mood": null,
+        "energy": null,
+        "brightness": null,
+        "pulse": null,
+        "arousal": null
+      }
+    },
+    {
+      "name": "legacy Krobi tags ignored",
+      "in": {
+        "row": {
+          "tag_owner": "krobi"
+        },
+        "tags": {
+          "bpm": 120,
+          "key": "Am"
+        }
+      },
+      "out": {
+        "bpm": {
+          "value": null,
+          "source": null,
+          "estimated": false
+        },
+        "key": {
+          "value": null,
+          "source": null,
+          "estimated": false
+        },
+        "mood": null,
+        "energy": null,
+        "brightness": null,
+        "pulse": null,
+        "arousal": null
+      }
+    },
+    {
+      "name": "marker ignores tags and uses computed",
+      "in": {
+        "row": {
+          "bpm": 125,
+          "key": "2A",
+          "bpm_conf": 0.9,
+          "key_conf": 0.02
+        },
+        "tags": {
+          "tag_owner": "krobi",
+          "bpm": 120,
+          "key": "Am"
+        }
+      },
+      "out": {
+        "bpm": {
+          "value": 125,
+          "source": "computed",
+          "estimated": false
+        },
+        "key": {
+          "value": "2A",
+          "source": "computed",
+          "estimated": false
+        },
+        "mood": null,
+        "energy": null,
+        "brightness": null,
+        "pulse": null,
+        "arousal": null
+      }
+    },
+    {
+      "name": "each field has independent precedence",
+      "in": {
+        "row": {
+          "fixed_bpm": 125,
+          "key": "8A"
+        },
+        "tags": {
+          "bpm": 120,
+          "key": "C"
+        }
+      },
+      "out": {
+        "bpm": {
+          "value": 125,
+          "source": "fixed",
+          "estimated": false
+        },
+        "key": {
+          "value": "C",
+          "source": "tag",
+          "estimated": false
+        },
+        "mood": null,
+        "energy": null,
+        "brightness": null,
+        "pulse": null,
+        "arousal": null
+      }
+    },
+    {
+      "name": "mood and energy only from computed",
+      "in": {
+        "row": {},
+        "tags": {
+          "mood": "calm",
+          "energy": 1,
+          "arousal": 1
+        }
+      },
+      "out": {
+        "bpm": {
+          "value": null,
+          "source": null,
+          "estimated": false
+        },
+        "key": {
+          "value": null,
+          "source": null,
+          "estimated": false
+        },
+        "mood": null,
+        "energy": null,
+        "brightness": null,
+        "pulse": null,
+        "arousal": null
+      }
+    },
+    {
+      "name": "none",
+      "in": {
+        "row": {},
+        "tags": {}
+      },
+      "out": {
+        "bpm": {
+          "value": null,
+          "source": null,
+          "estimated": false
+        },
+        "key": {
+          "value": null,
+          "source": null,
+          "estimated": false
+        },
+        "mood": null,
+        "energy": null,
+        "brightness": null,
+        "pulse": null,
+        "arousal": null
+      }
+    },
+    {
+      "name": "confirm estimate fixes the same value",
+      "in": {
+        "row": {
+          "key": "5A",
+          "key_conf": 0,
+          "fixed_key": "5A",
+          "bpm": 66,
+          "bpm_conf": 0,
+          "fixed_bpm": 66
+        },
+        "tags": {
+          "key": "5A",
+          "bpm": 66,
+          "owned_fields": [
+            "key",
+            "bpm"
+          ]
+        }
+      },
+      "out": {
+        "key": {
+          "value": "5A",
+          "source": "fixed",
+          "estimated": false
+        },
+        "bpm": {
+          "value": 66,
+          "source": "fixed",
+          "estimated": false
+        },
+        "mood": null,
+        "energy": null,
+        "brightness": null,
+        "pulse": null,
+        "arousal": null
+      }
+    },
+    {
+      "name": "reset owned correction returns to estimated computed",
+      "in": {
+        "row": {
+          "key": "5A",
+          "key_conf": 0,
+          "bpm": 66,
+          "bpm_conf": 0
+        },
+        "tags": {
+          "owned_fields": []
+        }
+      },
+      "out": {
+        "key": {
+          "value": "5A",
+          "source": "computed",
+          "estimated": true
+        },
+        "bpm": {
+          "value": 66,
+          "source": "computed",
+          "estimated": true
+        },
+        "mood": null,
+        "energy": null,
+        "brightness": null,
+        "pulse": null,
+        "arousal": null
+      }
+    },
+    {
+      "name": "reset preserves original foreign tags",
+      "in": {
+        "row": {
+          "key": "5A",
+          "key_conf": 0,
+          "bpm": 66,
+          "bpm_conf": 0
+        },
+        "tags": {
+          "key": "2A",
+          "bpm": 132,
+          "owned_fields": []
+        }
+      },
+      "out": {
+        "key": {
+          "value": "2A",
+          "source": "tag",
+          "estimated": false
+        },
+        "bpm": {
+          "value": 132,
+          "source": "tag",
+          "estimated": false
+        },
+        "mood": null,
+        "energy": null,
+        "brightness": null,
+        "pulse": null,
+        "arousal": null
+      }
+    },
+    {
+      "name": "arousal is computed even when tempo is corrected or tagged",
+      "in": {
+        "row": {
+          "bpm": 120,
+          "fixed_bpm": 90,
+          "arousal": 0.75
+        },
+        "tags": {
+          "bpm": 80,
+          "arousal": 0.1
+        }
+      },
+      "out": {
+        "bpm": {
+          "value": 90,
+          "source": "fixed",
+          "estimated": false
+        },
+        "key": {
+          "value": null,
+          "source": null,
+          "estimated": false
+        },
+        "mood": null,
+        "energy": null,
+        "brightness": null,
+        "pulse": null,
+        "arousal": 0.75
+      }
+    }
+  ],
+  "confirmReset": [
+    {
+      "name": "estimate confirmed and reset",
+      "confidence": 0,
+      "foreign": null,
+      "resetSource": "computed",
+      "estimated": true,
+      "writtenAfterReset": null
+    },
+    {
+      "name": "confident correction reset rewrites computed marker",
+      "confidence": 1,
+      "foreign": null,
+      "resetSource": "computed",
+      "estimated": false,
+      "writtenAfterReset": {
+        "key": "5A",
+        "bpm": 66
+      }
+    },
+    {
+      "name": "foreign original restored after correction reset",
+      "confidence": 0,
+      "foreign": {
+        "key": "2A",
+        "bpm": 132
+      },
+      "resetSource": "tag",
+      "estimated": false,
+      "writtenAfterReset": {
+        "key": "2A",
+        "bpm": 132
+      }
+    }
+  ]
+}

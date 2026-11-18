@@ -1,0 +1,7 @@
+{
+  "description": "dateAdded is immutable catalog first-seen time in float seconds; Subsonic created represents the same instant.",
+  "cases": [
+    {"action": "tag-write", "before": 1234567890.5, "fileMtimeAfter": 1893456000.0, "expected": 1234567890.5},
+    {"action": "move", "before": 1234567890.5, "fileMtimeAfter": 1893456000.0, "expected": 1234567890.5}
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "files": 50000,
+  "folders": 500,
+  "cold": {
+    "seconds": 43.5467,
+    "tagReads": 50000,
+    "tracks": 50000
+  },
+  "warmNoChange": {
+    "seconds": 27.3284,
+    "tagReads": 0,
+    "tracks": 50000
+  },
+  "oneFolderChanged": {
+    "seconds": 32.7042,
+    "tagReads": 1,
+    "tracks": 50000
+  },
+  "restartNoChange": {
+    "seconds": 32.4813,
+    "tagReads": 50000,
+    "tracks": 50000
+  }
+}

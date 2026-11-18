@@ -1,0 +1,32 @@
+{
+  "album": "Discovery",
+  "albumId": "al-RGFmdCBQdW5r4oiVRGlzY292ZXJ5",
+  "artist": "Daft Punk",
+  "artistId": "ar-ZGFmdCBwdW5r",
+  "bitRate": 142,
+  "contentType": "audio/mpeg",
+  "coverArt": "al-RGFmdCBQdW5r4oiVRGlzY292ZXJ5",
+  "created": "2026-01-01T00:00:00+00:00",
+  "duration": 1,
+  "genre": "Electronic",
+  "id": "tr-RGFmdCBQdW5r4oiVRGlzY292ZXJ5LzAxLm1wMw",
+  "isDir": false,
+  "isVideo": false,
+  "mediaType": "song",
+  "parent": "al-RGFmdCBQdW5r4oiVRGlzY292ZXJ5",
+  "path": "Daft Punk/Discovery/01.mp3",
+  "playCount": 0,
+  "replayGain": {
+    "albumGain": -5.0,
+    "albumPeak": 0.95,
+    "baseGain": 0.0,
+    "trackGain": 3.0,
+    "trackPeak": 0.9
+  },
+  "size": 17869,
+  "suffix": "mp3",
+  "title": "One More Time",
+  "track": 1,
+  "type": "music",
+  "year": 2001
+}

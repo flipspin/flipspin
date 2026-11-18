@@ -1,0 +1,162 @@
+{
+  "checkedAt": "2026-11-01T12:00:00+00:00",
+  "checks": [
+    {
+      "albumKeys": [],
+      "bpms": null,
+      "count": 0,
+      "folders": 0,
+      "id": "missing",
+      "keys": null,
+      "reason": null,
+      "relPaths": [],
+      "sameAudio": null,
+      "sameTags": null,
+      "songs": null,
+      "source": {
+        "asOf": "2026-11-01T12:00:00+00:00",
+        "store": "music-scan.health / missing-files.known / absence"
+      },
+      "state": "ready",
+      "topFolder": null,
+      "tracks": []
+    },
+    {
+      "albumKeys": [],
+      "bpms": 0,
+      "count": 0,
+      "folders": null,
+      "id": "estimates",
+      "keys": 0,
+      "reason": null,
+      "relPaths": [],
+      "sameAudio": null,
+      "sameTags": null,
+      "songs": null,
+      "source": {
+        "asOf": "2026-11-01T12:00:00+00:00",
+        "store": "track_analysis / music-scan.tags (analysis precedence)"
+      },
+      "state": "ready",
+      "topFolder": null,
+      "tracks": []
+    },
+    {
+      "albumKeys": [],
+      "bpms": null,
+      "count": null,
+      "folders": null,
+      "id": "duplicates",
+      "keys": null,
+      "reason": "not-scanned",
+      "relPaths": [],
+      "sameAudio": null,
+      "sameTags": null,
+      "songs": null,
+      "source": {
+        "asOf": "2026-11-01T12:00:00+00:00",
+        "store": "duplicate_scan / duplicate_pair"
+      },
+      "state": "unavailable",
+      "topFolder": null,
+      "tracks": []
+    },
+    {
+      "albumKeys": [
+        "Album"
+      ],
+      "bpms": null,
+      "count": 1,
+      "folders": null,
+      "id": "unmatched",
+      "keys": null,
+      "reason": null,
+      "relPaths": [
+        "Album/song.mp3"
+      ],
+      "sameAudio": null,
+      "sameTags": null,
+      "songs": 1,
+      "source": {
+        "asOf": "2026-11-01T12:00:00+00:00",
+        "store": "music-scan.tags.recording_mbid / release_mbid"
+      },
+      "state": "ready",
+      "topFolder": null,
+      "tracks": []
+    },
+    {
+      "albumKeys": [],
+      "bpms": null,
+      "count": 1,
+      "folders": null,
+      "id": "remaster",
+      "keys": null,
+      "reason": null,
+      "relPaths": [],
+      "sameAudio": null,
+      "sameTags": null,
+      "songs": null,
+      "source": {
+        "asOf": "2026-11-01T12:00:00+00:00",
+        "store": "music-scan.tags.title / metadata.normalization"
+      },
+      "state": "ready",
+      "topFolder": null,
+      "tracks": [
+        {
+          "artist": "Artist",
+          "relPath": "Album/song.mp3",
+          "title": "Song (Remastered 2009)"
+        }
+      ]
+    }
+  ],
+  "stats": {
+    "addedThisWeek": {
+      "reason": null,
+      "source": {
+        "asOf": "2026-11-01T12:00:00+00:00",
+        "store": "music-scan.tags.first_seen"
+      },
+      "state": "ready",
+      "value": 2
+    },
+    "albums": {
+      "reason": null,
+      "source": {
+        "asOf": "2026-11-01T12:00:00+00:00",
+        "store": "music-scan.snapshots / tags"
+      },
+      "state": "ready",
+      "value": 1
+    },
+    "lastBackupAt": {
+      "reason": "not-checked",
+      "source": {
+        "asOf": "2026-11-01T12:00:00+00:00",
+        "store": "backups.latest"
+      },
+      "state": "unavailable",
+      "value": null
+    },
+    "lastScanAt": {
+      "reason": null,
+      "source": {
+        "asOf": "2026-11-01T12:00:00+00:00",
+        "store": "music-scan.snapshots.completed_at"
+      },
+      "state": "ready",
+      "value": "2026-11-01T12:00:00+00:00"
+    },
+    "songs": {
+      "reason": null,
+      "source": {
+        "asOf": "2026-11-01T12:00:00+00:00",
+        "store": "music-scan.snapshots / tags"
+      },
+      "state": "ready",
+      "value": 2
+    }
+  }
+}

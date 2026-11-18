@@ -1,0 +1,6 @@
+{
+  "code": "ABC234",
+  "expiresIn": 600,
+  "pollInterval": 2,
+  "secret": "<poll-secret>"
+}

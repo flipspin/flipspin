@@ -1,0 +1,331 @@
+/**
+ * Flipspin theme; restyled to the paper visual language.
+ * Warm cream "paper" surfaces, sharp 1px near-black borders, a hard 3px "pop"
+ * shadow, and bounded accent triads (accent + -tint + -fg).
+ * Surfaces, ink, outlines and hues share Flipspin's paper palette across modes.
+ */
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+}
+/* Tailwind's bare `transition` utilities run on the app's motion tokens
+   (ui/tokens/app.css), so reduced motion and any retune reach them too. */
+@theme inline {
+  --default-transition-duration: var(--dur-fast);
+  --default-transition-timing-function: var(--ease);
+}
+
+:root {
+  /*  Paper palette  */
+  --paper:       #EEEFE8;
+  --paper-2:     #E5E6DE;
+  --panel-2:      #F8F8F1;
+  --ink:         #151515;
+  --ink-2:       #4A4A45;
+  --ink-3:       #7C7C73;
+  --ink-4:       #ABA9A0;
+  --line:        #151515;
+  --line-soft:   rgba(21, 21, 21, 0.12);
+  --line-med:    rgba(21, 21, 21, 0.20);
+
+  --coral:       #EF7E55;  --coral-tint:  #FCEEE5;  --coral-deep:  #C5562F;
+  --coral-fill:  #F6B79C;
+  --analysis-estimate: #8F6400;
+  --analysis-source: var(--blue);
+  --amber:       #B78624; --amber-tint: #F6EACA; --fg-amber: #72500E;
+  --yellow:      #F1D86C;  --yellow-tint: #FBF4D8;
+  --teal:        #4F9C8B;  --teal-tint:   #DEEDE9;
+  --krobi-blue:  #2F6FE0;
+  --lyrics-surface: #FFFFFF;
+  --lyrics-sidebar: #F4F4F5;
+  --lyrics-muted: #A1A1AA;
+  --lyrics-faded: rgba(24, 24, 27, .30);
+  --lyrics-delete: #B4493A;
+  --blue:        #2E5BFF;  --blue-tint:   #DEE3FF;
+  --purple:      #7B61FF;  --purple-tint: #E5E0FE;
+  --rose:        #D14B6A;  --rose-tint:   #F9DDE3;
+  --green:       #5A9F5C;  --green-tint:  #E1EFDF;
+
+  --fg-teal:   #085041; --fg-blue:   #0C447C; --fg-purple: #3C3489; --fg-yellow: #854F0B;
+  --fg-coral:  #993C1D; --fg-rose:   #8B1A4A; --fg-green:  #1F4E22; --fg-neutral: #444441;
+  --prio-border: #DFB73C;
+
+  --r-sm: 6px; --r-control: 8px; --r-md: 10px; --r-lg: 14px;
+  --shadow-pop:    3px 3px 0 var(--ink);
+  --shadow-pop-sm: 2px 2px 0 var(--ink);
+  --viz-ising: var(--coral);
+  --shadow-pop-lg: 4px 4px 0 var(--ink);
+
+  /* App surfaces and ink that stay distinct across modes. */
+  --canvas: var(--paper);
+  --app-bg: #E9ECF4;  /* main area behind the panels */
+  --panel: #FFFEF7;
+  --chalk: #ffffff;
+  --lyrics-glass-ink: #FFFEF7;
+  --lyrics-glass-base: #151515;
+  --yellow-ink: var(--fg-yellow);
+  --rail: var(--paper);
+
+  /*  Compatibility aliases (legacy class names) → paper palette  */
+  --color-matcha-light: #F8F8F1;
+  --color-matcha: #EF7E55;
+  --color-matcha-dark: #C5562F;
+  --color-bamboo: #151515;
+  --color-charcoal: #151515;
+  --color-cream: #EEEFE8;
+  --color-washi: #FFFEF7;
+  --color-friendly-yellow: #F1D86C;
+  --color-salmoncito: #D14B6A;
+  --color-coolgreen: #5A9F5C;
+  --color-sakura: #F9DDE3;
+  --color-cloud: #E5E6DE;
+
+  /* Win95 control bevels; warmed into the cream family, kept 3D */
+  --win95-gray: #E5E6DE;
+  --win95-gray-dark: #D7D8CF;
+  --win95-gray-darker: #ABA9A0;
+  --win95-border: #ABA9A0;
+  --win95-highlight: #FFFEF7;
+
+  --header-bar-border: #151515;
+  --header-bar-shadow: rgba(21, 21, 21, 0.12);
+  --header-btn-bg: #E5E6DE;
+  --header-btn-border: #ABA9A0;
+  --header-btn-shadow: #D7D8CF;
+
+  --font-main: "Inter", system-ui, sans-serif;
+  --font-pixel: "Geist Mono", ui-monospace, monospace;
+  --font-display: "Inter", system-ui, sans-serif;
+}
+
+/* Paper dark mode: warm charcoal surfaces tinted toward the coral accent.
+   Black outlines and pop shadows stay; text and accent tints turn light. */
+:root[data-mode="dark"],
+:root[data-mode="night"] {
+  color-scheme: dark;
+  --krobi-blue: #2F6FE0;
+  --lyrics-surface: var(--panel);
+  --lyrics-sidebar: var(--paper);
+  --lyrics-muted: var(--ink-3);
+  --lyrics-faded: var(--ink-3);
+  --lyrics-delete: var(--rose);
+
+  --dm-night:    #15140F;
+  --canvas:  color-mix(in oklab, #161511 92%, var(--coral));
+  --paper:       color-mix(in oklab, #1A1915 92%, var(--coral));
+  --paper-2:     color-mix(in oklab, #24221D 92%, var(--coral));
+  --panel:        color-mix(in oklab, #282621 93%, var(--coral));
+  --panel-2:      color-mix(in oklab, #302D27 93%, var(--coral));
+
+  --ink:         #EFEADC;
+  --ink-2:       #CBC5B4;
+  --ink-3:       #9C9686;
+  --ink-4:       #6F6A5E;
+  --line:        #0A0907;
+  --line-soft:   rgba(255, 255, 255, 0.08);
+  --line-med:    rgba(255, 255, 255, 0.15);
+
+  --coral-tint:  color-mix(in oklab, var(--coral) 24%, var(--panel));
+  --coral-fill:  color-mix(in oklab, var(--coral) 55%, var(--panel));
+  --analysis-estimate: #E9BC52;
+  --analysis-source: var(--fg-blue);
+  --amber: #D9AD52; --amber-tint: color-mix(in oklab, var(--amber) 22%, var(--panel)); --fg-amber: #EAC77F;
+  --yellow-tint: color-mix(in oklab, var(--yellow) 22%, var(--panel));
+  --teal-tint:   color-mix(in oklab, var(--teal) 24%, var(--panel));
+  --blue-tint:   color-mix(in oklab, var(--blue) 24%, var(--panel));
+  --purple-tint: color-mix(in oklab, var(--purple) 24%, var(--panel));
+  --rose-tint:   color-mix(in oklab, var(--rose) 24%, var(--panel));
+  --green-tint:  color-mix(in oklab, var(--green) 24%, var(--panel));
+
+  --fg-teal:    color-mix(in oklab, var(--teal) 50%, #fff);
+  --fg-blue:    color-mix(in oklab, var(--blue) 50%, #fff);
+  --fg-purple:  color-mix(in oklab, var(--purple) 50%, #fff);
+  --fg-yellow:  color-mix(in oklab, var(--yellow) 55%, #fff);
+  --fg-coral:   color-mix(in oklab, var(--coral) 50%, #fff);
+  --fg-rose:    color-mix(in oklab, var(--rose) 50%, #fff);
+  --fg-green:   color-mix(in oklab, var(--green) 50%, #fff);
+  --fg-neutral: var(--ink-2);
+
+  --shadow-pop:    3px 3px 0 #000;
+  --shadow-pop-sm: 2px 2px 0 #000;
+  --viz-ising: var(--coral);
+  --shadow-pop-lg: 4px 4px 0 #000;
+
+  --yellow-ink: #151515;
+
+  --rail: color-mix(in oklab, #1D1B17 92%, var(--coral));
+
+  --color-matcha-light: var(--panel-2);
+  --color-bamboo: var(--ink);
+  --color-charcoal: var(--ink);
+  --color-cream: var(--paper);
+  --color-washi: var(--panel);
+  --color-sakura: var(--rose-tint);
+  --color-cloud: var(--paper-2);
+
+  --win95-gray: var(--paper-2);
+  --win95-gray-dark: color-mix(in oklab, var(--paper-2) 80%, #000);
+  --win95-gray-darker: var(--ink-4);
+  --win95-border: var(--ink-4);
+  --win95-highlight: var(--panel-2);
+
+  --header-bar-border: var(--line);
+  --header-bar-shadow: rgba(0, 0, 0, 0.4);
+  --header-btn-bg: var(--paper-2);
+  --header-btn-border: var(--ink-4);
+  --header-btn-shadow: #000;
+
+  /* Opt-in hooks for colours written as literals (see the header). */
+  --dm-ink: var(--ink);
+  --dm-ink-2: var(--ink-2);
+  --dm-ink-3: var(--ink-3);
+  --dm-card: var(--panel);
+  --dm-card-2: var(--panel-2);
+  --dm-paper: var(--paper);
+  --app-bg: var(--paper);
+  --dm-paper-2: var(--paper-2);
+  --dm-line: #000;
+  /* `color-mix(in oklab, <light tint> calc(100% - var(--dm-amt, 0%)), var(--dm-card, transparent))`
+     is the literal tint in light and mostly card at night. */
+  --dm-amt: 78%;
+  --dm-error: #FF8A7A;
+  --dm-warn: #F2C24C;
+  /* Panels that are meant to be dark in every mode (they were built from
+     --ink, which turns light at night). */
+  --dm-overlay: #0E0E0C;
+}
+
+/* The song tables' column header is a band in the outline colour with
+   card-coloured text; dark on dark at night. A raised grey band instead.
+   An open playlist sets its own band colour inline, which still wins. */
+:root:is([data-mode="dark"], [data-mode="night"]) .retro-song-table {
+  --song-table-head: var(--paper-2);
+  --song-table-head-ink: var(--ink-2);
+}
+
+/* The playing row stays yellow at night, so it takes day ink back: every
+   column inside reads its colour from these, dark on yellow. */
+:root:is([data-mode="dark"], [data-mode="night"]) :is(.retro-song-table__row--active, .retro-song-table__row[aria-current="true"]) {
+  --ink: #151515;
+  --ink-2: #33332F;
+  --ink-3: #4A4A45;
+  --ink-4: #6A6A62;
+  --dm-ink: #151515;
+  --dm-ink-2: #33332F;
+  --dm-ink-3: #4A4A45;
+  --song-table-ink: #151515;
+  color: #151515;
+}
+
+/* ============================================================
+   Night; the other night look, and theme-independent: a clean
+   near-black with grey surfaces, hairline borders instead of
+   black outlines, no hard shadows, and ALL of Flipspin's colours as
+   accents (bright enough to sing on black). It inherits the dark
+   block above for everything it does not set; later declarations win.
+   ============================================================ */
+:root[data-mode="night"] {
+  --coral:   #FF7A59;  --coral-deep: #E85A38;
+  --yellow:  #FFD452;
+  --teal:    #2BD4B4;
+  --blue:    #5B8CFF;
+  --purple:  #A98BFF;
+  --rose:    #FF6B9A;
+  --green:   #1ED760;
+  --color-matcha: var(--coral);
+  --color-matcha-dark: var(--coral-deep);
+  --color-friendly-yellow: var(--yellow);
+  --color-salmoncito: var(--rose);
+  --color-coolgreen: var(--green);
+  --prio-border: var(--yellow);
+
+  --canvas: #121212;
+  --paper:      #121212;
+  --paper-2:    #1F1F1F;
+  --panel:       #181818;
+  --panel-2:     #232323;
+  --rail:    #000000;
+
+  --ink:   #FFFFFF;
+  --ink-2: #D1D1D1;
+  --ink-3: #A7A7A7;
+  --ink-4: #6A6A6A;
+  --line:  #2E2E2E;
+  --line-soft: rgba(255, 255, 255, 0.07);
+  --line-med:  rgba(255, 255, 255, 0.12);
+
+  --shadow-pop: none;
+  --shadow-pop-sm: none;
+  --viz-ising: var(--coral);
+  --shadow-pop-lg: none;
+  --header-bar-shadow: transparent;
+  --header-btn-shadow: transparent;
+
+  --dm-line: #2E2E2E;
+  --dm-amt: 84%;
+}
+:root[data-mode="night"] :is(.waveform-panel, .panel-tint-a, .panel-tint-b, .panel-tint-c) {
+  --panel: #181818; --paper-2: #1F1F1F; --panel-2: #232323;
+}
+
+/*  Tailwind's named colours, written straight into hundreds of class
+   lists, follow the mode here rather than in every component. Dark text on
+   an accent (a yellow hover, a coral chip) stays dark: those are listed
+   back after the general rule.  */
+:root:is([data-mode="dark"], [data-mode="night"]) {
+  & .text-black, & .text-gray-900, & .text-gray-800 { color: var(--ink); }
+  & .text-gray-700, & .text-gray-600 { color: var(--ink-2); }
+  & .text-gray-500, & .text-gray-400 { color: var(--ink-3); }
+  & .bg-white, & .bg-gray-50, & .bg-gray-100 { background-color: var(--panel); }
+  & .bg-gray-200, & .bg-gray-300 { background-color: var(--paper-2); }
+  & .border-gray-200, & .border-gray-300 { border-color: var(--line-med); }
+  & body { background: var(--canvas); color: var(--ink); }
+
+  /* `~=` matches a whole class, so `hover:bg-[var(--yellow)]` is not taken
+     for `bg-[var(--yellow)]` (that read every hover-yellow button as yellow
+     and drew its icon dark on a dark card). */
+  & :is(
+      [class~="bg-[var(--yellow)]"], [class~="bg-[var(--coral)]"], [class~="bg-[var(--teal)]"],
+      [class~="bg-[var(--green)]"], [class~="bg-[var(--blue)]"], [class~="bg-[var(--purple)]"],
+      [class~="bg-[var(--rose)]"], [class~="bg-[var(--color-friendly-yellow)]"]
+    ).text-black,
+  & :is(
+      [class~="hover:bg-[var(--yellow)]"], [class~="hover:bg-[var(--coral)]"], [class~="hover:bg-[var(--teal)]"],
+      [class~="hover:bg-[var(--green)]"]
+    ):hover { color: #151515; }
+}
+/* Night trades the black outlines and offset shadows for hairlines. */
+:root[data-mode="night"] {
+  /* Side by side, so a coloured side (a panel's `border-t-[var(--yellow)]`
+     accent bar, a `border-l-…` stripe) keeps its colour. */
+  & :is(.border-black, [class*="border-black"]) {
+    &:not([class*="border-t-["], [class*="border-y-["]) { border-top-color: var(--line); }
+    &:not([class*="border-b-["], [class*="border-y-["]) { border-bottom-color: var(--line); }
+    &:not([class*="border-l-["], [class*="border-x-["]) { border-left-color: var(--line); }
+    &:not([class*="border-r-["], [class*="border-x-["]) { border-right-color: var(--line); }
+  }
+  & [class*="shadow-["] { --tw-shadow: 0 0 #0000; box-shadow: none; }
+}
+
+/* Flipspin's Tailwind vocabulary follows the same mode-aware palette. */
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-coral: var(--coral);
+  --color-chalk: var(--chalk);
+  --color-yellow: var(--yellow);
+  --color-yellow-ink: var(--yellow-ink);
+  --color-rose: var(--rose);
+  --color-line: var(--line);
+  --color-rail: var(--rail);
+  --radius-tight: var(--r-sm);
+  --radius-control: var(--r-control);
+  --radius-panel: var(--r-md);
+}

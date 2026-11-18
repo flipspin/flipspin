@@ -1,0 +1,463 @@
+{
+  "machine": {
+    "cores": 4,
+    "memoryBytes": 8000000000,
+    "arch": "test",
+    "container": null,
+    "cpuLimit": null,
+    "memoryLimitBytes": null,
+    "suggestedPreset": "normal",
+    "presets": {
+      "light": [
+        1,
+        1,
+        1
+      ],
+      "normal": [
+        3,
+        2,
+        2
+      ],
+      "powerful": [
+        6,
+        3,
+        3
+      ]
+    },
+    "capacityPresets": {
+      "light": {
+        "KROBI_MAX_CONCURRENT_DOWNLOADS": 1,
+        "KROBI_MAX_CONCURRENT_JOBS": 1
+      },
+      "normal": {
+        "KROBI_MAX_CONCURRENT_DOWNLOADS": 2,
+        "KROBI_MAX_CONCURRENT_JOBS": 2
+      }
+    }
+  },
+  "restart": {
+    "pending": [],
+    "supported": true,
+    "how": "systemd"
+  },
+  "activity": {
+    "downloads": 0,
+    "jobs": 0,
+    "devicesSeen5min": 1
+  },
+  "groups": [
+    {
+      "id": "capacity",
+      "settings": [
+        {
+          "key": "KROBI_MAX_CONCURRENT_DOWNLOADS",
+          "value": 3,
+          "default": 2,
+          "source": "default",
+          "editable": true,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "int",
+          "min": 1,
+          "max": 4,
+          "suggestedMax": 4,
+          "unit": "downloads"
+        },
+        {
+          "key": "KROBI_MAX_CONCURRENT_JOBS",
+          "value": 2,
+          "default": 2,
+          "source": "default",
+          "editable": true,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "int",
+          "min": 1,
+          "max": 8,
+          "suggestedMax": 2,
+          "unit": "jobs"
+        },
+        {
+          "key": "KROBI_ANALYSIS_WORKERS",
+          "value": 2,
+          "default": 2,
+          "source": "default",
+          "editable": true,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "int",
+          "min": 1,
+          "max": 4,
+          "suggestedMax": 3,
+          "unit": "workers"
+        }
+      ]
+    },
+    {
+      "id": "network",
+      "settings": [
+        {
+          "key": "KROBI_UPDATE_CHECK",
+          "value": true,
+          "default": true,
+          "source": "default",
+          "editable": true,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "bool"
+        },
+        {
+          "key": "KROBI_ADVERTISE",
+          "value": true,
+          "default": true,
+          "source": "default",
+          "editable": true,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "bool"
+        },
+        {
+          "key": "KROBI_BACKEND_PORT",
+          "value": 8000,
+          "default": 8000,
+          "source": "default",
+          "editable": false,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "int",
+          "min": 1,
+          "max": 65535,
+          "suggestedMax": 65535
+        },
+        {
+          "key": "KROBI_BACKEND_HOST",
+          "value": "0.0.0.0",
+          "default": "0.0.0.0",
+          "source": "default",
+          "editable": false,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "text"
+        },
+        {
+          "key": "KROBI_CORS_ORIGINS",
+          "value": [
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            "tauri://localhost",
+            "http://tauri.localhost",
+            "https://tauri.localhost"
+          ],
+          "default": [
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            "tauri://localhost",
+            "http://tauri.localhost",
+            "https://tauri.localhost"
+          ],
+          "source": "default",
+          "editable": false,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "list"
+        }
+      ]
+    },
+    {
+      "id": "security",
+      "settings": [
+        {
+          "key": "KROBI_REQUIRE_SETUP_TOKEN",
+          "value": false,
+          "default": false,
+          "source": "default",
+          "editable": false,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "bool"
+        },
+        {
+          "key": "KROBI_API_TOKEN",
+          "value": null,
+          "default": null,
+          "source": "default",
+          "editable": false,
+          "needsRestart": false,
+          "secret": true,
+          "kind": "text",
+          "configured": false
+        },
+        {
+          "key": "KROBI_ALLOW_UNAUTHENTICATED_REMOTE",
+          "value": false,
+          "default": false,
+          "source": "default",
+          "editable": false,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "bool"
+        },
+        {
+          "key": "KROBI_ALLOW_REMOTE_LOCAL_ACTIONS",
+          "value": false,
+          "default": false,
+          "source": "default",
+          "editable": false,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "bool"
+        }
+      ]
+    },
+    {
+      "id": "library",
+      "settings": [
+        {
+          "key": "KROBI_SOURCE_LOCATION_YOUTUBE",
+          "value": "",
+          "default": "",
+          "source": "default",
+          "editable": true,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "text"
+        },
+        {
+          "key": "KROBI_ENABLE_WAVEFORM_CACHE",
+          "value": true,
+          "default": true,
+          "source": "default",
+          "editable": true,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "bool"
+        },
+        {
+          "key": "KROBI_ANALYSIS_AUTO",
+          "value": true,
+          "default": true,
+          "source": "default",
+          "editable": true,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "bool"
+        },
+        {
+          "key": "KROBI_ANALYSIS_AUTO_LIBRARY",
+          "value": false,
+          "default": false,
+          "source": "default",
+          "editable": false,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "bool"
+        },
+        {
+          "key": "KROBI_ANALYSIS_AUTO_UPGRADE",
+          "value": false,
+          "default": false,
+          "source": "default",
+          "editable": false,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "bool"
+        },
+        {
+          "key": "KROBI_FFMPEG_PATH",
+          "value": "/usr/bin/ffmpeg",
+          "default": null,
+          "source": "default",
+          "editable": true,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "path",
+          "version": "7.1",
+          "binarySource": "system"
+        }
+      ]
+    },
+    {
+      "id": "logging",
+      "settings": [
+        {
+          "key": "KROBI_LOG_LEVEL",
+          "value": "INFO",
+          "default": "INFO",
+          "source": "default",
+          "editable": true,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "choice",
+          "choices": [
+            "DEBUG",
+            "INFO",
+            "WARNING",
+            "ERROR"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lyrics",
+      "settings": [
+        {
+          "disabledReason": "no-engine",
+          "disabledMessage": "Falta el motor del nido",
+          "key": "KROBI_NEST_PROCESSES",
+          "value": false,
+          "default": false,
+          "source": "default",
+          "editable": true,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "bool"
+        },
+        {
+          "key": "KROBI_NEST_CPU_PERCENT",
+          "value": 50,
+          "default": 50,
+          "source": "default",
+          "editable": true,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "int",
+          "min": 1,
+          "max": 100,
+          "suggestedMax": 100,
+          "unit": "percent of one core"
+        },
+        {
+          "key": "KROBI_NEST_MAX_TEMP_C",
+          "value": 85,
+          "default": 85,
+          "source": "default",
+          "editable": true,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "int",
+          "min": 40,
+          "max": 100,
+          "suggestedMax": 100,
+          "unit": "\u00b0C"
+        },
+        {
+          "key": "KROBI_NEST_RESUME_TEMP_C",
+          "value": 75,
+          "default": 75,
+          "source": "default",
+          "editable": true,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "int",
+          "min": 30,
+          "max": 99,
+          "suggestedMax": 99,
+          "unit": "\u00b0C"
+        },
+        {
+          "key": "KROBI_NEST_LIBRARY_START_HOUR",
+          "value": 0,
+          "default": 0,
+          "source": "default",
+          "editable": false,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "int",
+          "min": 0,
+          "max": 23,
+          "suggestedMax": 23,
+          "unit": "local hour"
+        },
+        {
+          "key": "KROBI_NEST_LIBRARY_END_HOUR",
+          "value": 0,
+          "default": 0,
+          "source": "default",
+          "editable": false,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "int",
+          "min": 0,
+          "max": 23,
+          "suggestedMax": 23,
+          "unit": "local hour"
+        },
+        {
+          "key": "KROBI_LYRICS_ENGINE",
+          "value": "auto",
+          "default": "auto",
+          "source": "default",
+          "editable": true,
+          "needsRestart": true,
+          "secret": false,
+          "kind": "choice",
+          "choices": [
+            "auto",
+            "local",
+            "agent"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stems",
+      "settings": [
+        {
+          "key": "KROBI_STEMS_BACKGROUND",
+          "value": false,
+          "default": false,
+          "source": "default",
+          "editable": true,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "bool"
+        }
+      ]
+    },
+    {
+      "id": "folders",
+      "settings": [
+        {
+          "key": "KROBI_MUSIC_DIR",
+          "value": "/data/Music",
+          "default": "/data/Music",
+          "source": "default",
+          "editable": false,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "path"
+        },
+        {
+          "key": "KROBI_PLAYLIST_DIR",
+          "value": "/data/playlists",
+          "default": "/data/playlists",
+          "source": "default",
+          "editable": false,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "path"
+        },
+        {
+          "key": "KROBI_STEMS_DIR",
+          "value": "/data/stems",
+          "default": "/data/stems",
+          "source": "default",
+          "editable": false,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "path"
+        },
+        {
+          "key": "KROBI_LOG_DIR",
+          "value": "/data/logs",
+          "default": "/data/logs",
+          "source": "default",
+          "editable": false,
+          "needsRestart": false,
+          "secret": false,
+          "kind": "path"
+        }
+      ]
+    }
+  ]
+}

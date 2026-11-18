@@ -1,0 +1,132 @@
+# Dependencies
+node_modules/
+.venv/
+venv/
+
+# Build artifacts
+dist/
+build/
+# The rebuilt interface's output, beside the current one's.
+build-next/
+build-temp/
+*.spec
+
+# Cache
+.cache/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Coverage
+.coverage
+.coverage.*
+htmlcov/
+coverage/
+
+# Environment files (secrets, do not commit)
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+
+# System files
+.DS_Store
+*.log
+
+# Runtime data
+backend/sent_files.json
+backend/cookies.txt
+.krobi-dev/
+
+# Kiro project specs
+.kiro/
+
+# Local planning docs (not committed)
+docs/SRS_NEXT_FEATURES.md
+docs/FRONTEND_CLEANUP_PLAN.md
+docs/FRONTEND_REFACTOR_PLAN.md
+
+# Redesign reference assets (kept locally, not part of the deliverable)
+Frontend Redesign Brief.zip
+_redesign_reference/
+
+# Local assistant configuration (not part of the project)
+.claude/
+
+# Local task board tooling (not part of the project)
+tasks.json
+inbox.json
+
+# A real Spotify data export, when one finally arrives. It is somebody's
+# listening history plus their email, birth date and postal code — the layout
+# notes next to it are tracked, the file never is.
+backend/tests/fixtures/spotify_export/real/
+icon-review/
+CLAUDE.md
+AGENTS.md
+!/AGENTS.md
+!/backend/AGENTS.md
+!/renderer/AGENTS.md
+!/src-tauri/AGENTS.md
+!/helper/AGENTS.md
+!/contracts/AGENTS.md
+!/.github/AGENTS.md
+!/deploy/AGENTS.md
+!/resources/AGENTS.md
+!/scripts/AGENTS.md
+
+# Maintainer notes, plans, research and personal tooling. Kept on disk next to
+# the code they describe, never published.
+internal/
+
+# Local renderer extensions (including symlinks).
+renderer/src/plugins/*
+!renderer/src/plugins/*.ts
+!renderer/src/plugins/*.tsx
+!renderer/src/plugins/README.md
+
+# Ignore dependency/venv symlinks as well as directories in worktrees.
+node_modules
+.venv
+venv
+env/
+virtualenv/
+/src-tauri/target*/
+/src-tauri/resources/backend/*
+!/src-tauri/resources/backend/README.md
+playwright-report/
+playwright/.cache/
+test-results/
+*.cookies
+cookies.txt
+.env*
+credentials/
+/Krobi*/
+/krobi-data*/
+/data/
+.worktrees/
+worktrees/
+*.code-workspace
+.fleet/
+.history/
+evidence/
+*-evidence/
+.ruff_cache/
+.mypy_cache/
+.hypothesis/
+.tox/
+.nox/
+.venv*
+venv*/
+*.swp
+*.swo
+*~
+
+# Optional private design-system snapshot; the public kit lives in src/ui.
+renderer/src/vendor/[z]aguan/
+
+# Isolated development server state
+/.dev-data/

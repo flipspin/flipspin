@@ -1,0 +1,25 @@
+{
+  "manifest": 1,
+  "id": "lyrics",
+  "kind": "engine",
+  "name": "Lyrics",
+  "version": "0.15.10",
+  "protocol": {
+    "helper": [
+      1
+    ]
+  },
+  "runs": [
+    "helper",
+    "nest"
+  ],
+  "adds": [
+    "engine:lyrics"
+  ],
+  "reaches": [],
+  "entry": {
+    "extra": "engine"
+  },
+  "license": "AGPL-3.0-or-later",
+  "homepage": "https://github.com/flipspin/flipspin"
+}

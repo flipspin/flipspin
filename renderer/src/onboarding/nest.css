@@ -1,0 +1,67 @@
+/* Nest details stay local; onboarding.css owns the frame and shared controls. */
+.kob-nest-form .kob-row > svg { width: 22px; height: 22px; flex: none; color: var(--kob-ink-2); }
+.kob-nest-name { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.kob-nest-name b { font-size: 15px; }
+.kob-nest-name > span { font-size: 12px; overflow-wrap: anywhere; }
+.kob-nest-status { margin-left: auto; white-space: nowrap; font-size: 13px; }
+.kob-nest-form .kob-btn { flex-shrink: 0; white-space: nowrap; }
+.kob-nest-address { display: flex; gap: 8px; }
+.kob-nest-address input { flex: 1; min-width: 0; }
+.kob-nest-install { border: 1px solid var(--kob-line); border-radius: 12px; padding: 16px; background: var(--kob-ground); }
+.kob-nest-install__toggle { display: inline-flex; gap: 8px; align-items: center; }
+.kob-nest-install__toggle svg { width: 16px; height: 16px; }
+.kob-nest-install .kob-nest-install__toggle { padding: 0; height: auto; min-height: 0; border: 0; font-size: 15px; font-weight: 700; }
+.kob-nest-install__body { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; font-size: 14px; color: var(--kob-ink-2); }
+.kob-nest-install__facts { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px 18px; font-size: 12px; }
+.kob-nest-install__facts summary { cursor: pointer; }
+.kob-nest-install__facts details { min-width: 0; }
+.kob-nest-install__facts details[open] { flex-basis: 100%; }
+.kob-nest-install__facts details .kob-code { margin-top: 10px; }
+.kob-nest-install__facts code { white-space: pre-wrap; overflow-wrap: anywhere; }
+.kob-nest-figure { display: flex; align-items: center; justify-content: center; width: 100%; min-width: 0; font-size: 14px; }
+.kob-nest-figure__device { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 150px; min-width: 0; }
+.kob-nest-figure__device > .kob-mono { font-size: 11px; overflow-wrap: anywhere; text-align: center; }
+.kob-nest-figure__device .kob-status { font-size: 12px; }
+.kob-nest-figure__mac { width: 84px; height: 60px; border: 2px solid var(--kob-ink-2); border-radius: 8px; }
+.kob-nest-figure__server { width: 64px; height: 80px; border: 2px solid var(--kob-hue); border-radius: 8px; background: var(--kob-raised); }
+.kob-nest-figure__link { width: 110px; min-width: 24px; border-top: 2px dashed var(--kob-hue); margin-bottom: 48px; }
+.kob-account-passwords { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.kob-account-card { width: min(300px, 100%); box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; padding: 22px; border: 1px solid var(--kob-line); border-radius: 12px; background: var(--kob-panel); text-align: left; }
+.kob-account-card__identity { display: flex; align-items: center; gap: 12px; }
+.kob-account-card__initial { width: 44px; height: 44px; flex: none; border-radius: 10px; background: var(--kob-hue); color: var(--kob-on-hue); display: grid; place-items: center; font-weight: 800; }
+.kob-account-card__name { display: flex; flex-direction: column; gap: 3px; min-width: 0; overflow-wrap: anywhere; }
+.kob-account-card__name b { font-size: 16px; }
+.kob-account-card__name > span { font-size: 13px; color: var(--kob-ink-2); }
+.kob-account-card dl { display: grid; gap: 14px; margin: 0; padding-top: 14px; border-top: 1px solid var(--kob-line); }
+.kob-account-card dl > div { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; }
+.kob-account-card dt { color: var(--kob-ink-3); }
+.kob-account-card dd { margin: 0; text-align: right; overflow-wrap: anywhere; }
+.kob-setup-code { max-width: 200px; font-size: 16px; font-weight: 600; letter-spacing: .12em; }
+.kob-password-sign-in { max-width: 480px; }
+.krobi-onboarding .kob-forgot-password { align-self: flex-start; padding: 0; border: 0; background: transparent; color: var(--kob-ink-2); font: inherit; font-size: 14px; text-decoration: underline; cursor: help; }
+.kob-code-sign-in { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: 24px; width: 100%; min-width: 0; height: 100%; box-sizing: border-box; color: var(--kob-ink-2); text-align: left; font-size: 14px; }
+.kob-code-sign-in h2 { font-size: 17px; font-weight: 800; margin: 0; color: var(--kob-ink); }
+.kob-code-sign-in h3 { margin: 0; font-size: 17px; }
+.kob-code-sign-in__code { font-size: clamp(28px, 3.1vw, 44px); font-weight: 800; letter-spacing: .14em; white-space: nowrap; color: var(--kob-ink); }
+.kob-code-sign-in > .kob-mono { font-size: 13px; }
+.kob-code-sign-in > .kob-code-sign-in__code { font-size: clamp(28px, 3.1vw, 44px); }
+.kob-code-sign-in__waiting { margin-top: auto; font-size: 13px; }
+.kob-code-sign-in__result { display: grid; gap: 14px; }
+.kob-code-sign-in .kob-code-sign-in__back { font-size: 13px; }
+@media (max-width: 700px) {
+  .kob-nest-form .kob-row { flex-wrap: wrap; }
+  .kob-nest-status { margin-left: 0; }
+  .kob-account-passwords { grid-template-columns: 1fr; }
+}
+
+.kob-figure:has(.kob-nest-figure, .kob-account-card, .kob-code-sign-in) { align-self: stretch; }
+.kob-figure:has(.kob-code-sign-in) { padding: 0; }
+.kob-figure:has(.kob-code-sign-in) > .kob-show__inner { height: 100%; }
+.kob-nest-form .kob-row > svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* "Enter an address instead" and "Use a setup link" stay visually secondary beneath the field. */
+.krobi-onboarding .kob-nest-form .kob-field > .kob-link { justify-self: start; align-self: flex-start; min-height: 0; padding: 2px 0; font-size: 13px; font-weight: 500; color: var(--kob-ink-3); }
+.krobi-onboarding .kob-nest-form .kob-field > .kob-link:hover { color: var(--kob-ink); }
+
+.kob-change-nest { width: min(1280px, 96vw); max-height: 94dvh; overflow: auto; }
+.kob-change-nest > .krobi-onboarding { min-height: 0; }

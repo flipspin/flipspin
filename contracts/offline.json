@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "resolve": [
+    {"local": true, "cache": true, "connection": "unreachable", "out": "Local"},
+    {"local": false, "cache": true, "connection": "unreachable", "out": "Cache"},
+    {"local": false, "cache": false, "connection": "unreachable", "out": "Unavailable"},
+    {"local": false, "cache": false, "connection": "connected", "out": "Remote"},
+    {"local": false, "cache": false, "connection": "needs-auth", "out": "Remote"},
+    {"local": false, "cache": false, "connection": "connecting", "out": "Remote"},
+    {"local": false, "cache": false, "connection": "wrong-nest", "out": "Remote"}
+  ],
+  "expansion": [
+    {"kind": "song", "ref": "A/one.mp3", "tracks": ["A/one.mp3"], "out": 1},
+    {"kind": "album", "ref": "A", "tracks": ["A/one.mp3", "A/two.mp3", "A/one.mp3"], "out": 2},
+    {"kind": "playlist", "ref": "favorites", "tracks": ["A/one.mp3", "B/three.mp3"], "out": 2},
+    {"kind": "library", "ref": "all", "tracks": ["A/one.mp3", "B/three.mp3"], "out": 2}
+  ],
+  "refcounts": [
+    {"pins": ["playlist:one", "playlist:two"], "remove": ["playlist:one"], "remaining": 1},
+    {"pins": ["playlist:one", "playlist:two"], "remove": ["playlist:one", "playlist:two"], "remaining": 0}
+  ],
+  "offlineActions": [
+    {"action": "library-add", "out": "queue"},
+    {"action": "library-remove", "out": "queue"},
+    {"action": "playlist-edit", "out": "queue"},
+    {"action": "play", "out": "queue"},
+    {"action": "pin", "out": "local"},
+    {"action": "unpin", "out": "local"},
+    {"action": "catalog-acquire", "out": "refuse"},
+    {"action": "household-delete", "out": "refuse"},
+    {"action": "move", "out": "refuse"},
+    {"action": "retag", "out": "refuse"},
+    {"action": "accounts", "out": "refuse"},
+    {"action": "devices", "out": "refuse"}
+  ],
+  "missingFiles": {
+    "state": "ya no está en el nido",
+    "retrySeconds": [30, 120, 600, 3600, 21600],
+    "cases": [
+      {"present": true, "missingFromNest": true, "out": "ya no está en el nido"},
+      {"present": false, "missingFromNest": false, "out": "ya no está en el nido"},
+      {"present": true, "missingFromNest": false, "out": "en fila"}
+    ]
+  },
+  "pinMembership": "signed-in account; add missing library rows online; queue membership when offline; downloads wait for replay",
+  "snapshotKinds": ["listing", "library", "playlists", "playlist:favorites", "home"],
+  "outboxRetryCap": 5,
+  "playBatchLimit": 50,
+  "snapshotIsolation": ["instanceId", "accountId"],
+  "importedFiles": "exact individual-file grants; no copy; no backup flag on user's folder; unpin never deletes exported documents"
+}

@@ -1,0 +1,7 @@
+.import-panel .z-say { margin: 0; }
+.import-panel .z-tabs { flex-shrink: 0; }
+.import-panel .z-input { width: 100%; min-width: 0; }
+.import-panel [role="tabpanel"] { min-width: 0; }
+
+/* Playlist tab without the nest's Spotify keys: the state, then the door. */
+.import-panel__missing { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 12px 0; }

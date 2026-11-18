@@ -1,0 +1,183 @@
+{
+  "providers": [
+    {
+      "available": true,
+      "capabilities": [],
+      "description": "Audio source",
+      "enabled": true,
+      "format": null,
+      "health": {
+        "firstFailureAt": null,
+        "kind": null,
+        "lastFailureAt": null,
+        "level": null,
+        "since": null,
+        "state": "ok",
+        "until": null
+      },
+      "id": "ready",
+      "kind": "streaming",
+      "name": "Ready",
+      "position": 0,
+      "requiresCredentials": false,
+      "status": {
+        "actions": [],
+        "facts": [],
+        "revision": null,
+        "toggles": [],
+        "warning": null
+      },
+      "unavailableReason": null
+    },
+    {
+      "available": true,
+      "capabilities": [],
+      "description": "Audio source",
+      "enabled": true,
+      "format": null,
+      "health": {
+        "firstFailureAt": 10000.0,
+        "kind": "rate-limited",
+        "lastFailureAt": 10000.0,
+        "level": 1,
+        "since": 10000.0,
+        "state": "busy",
+        "until": 10060.0
+      },
+      "id": "busy",
+      "kind": "streaming",
+      "name": "Busy",
+      "position": 1,
+      "requiresCredentials": false,
+      "status": {
+        "actions": [],
+        "facts": [],
+        "revision": null,
+        "toggles": [],
+        "warning": null
+      },
+      "unavailableReason": null
+    },
+    {
+      "available": true,
+      "capabilities": [],
+      "description": "Audio source",
+      "enabled": true,
+      "format": null,
+      "health": {
+        "firstFailureAt": 10000.0,
+        "kind": "blocked",
+        "lastFailureAt": 10000.0,
+        "level": 1,
+        "since": 10000.0,
+        "state": "broken",
+        "until": 10060.0
+      },
+      "id": "blocked",
+      "kind": "streaming",
+      "name": "Blocked",
+      "position": 2,
+      "requiresCredentials": false,
+      "status": {
+        "actions": [],
+        "facts": [],
+        "revision": null,
+        "toggles": [],
+        "warning": null
+      },
+      "unavailableReason": null
+    },
+    {
+      "available": true,
+      "capabilities": [],
+      "description": "Audio source",
+      "enabled": true,
+      "format": null,
+      "health": {
+        "firstFailureAt": 10000.0,
+        "kind": "broken",
+        "lastFailureAt": 10000.0,
+        "level": 1,
+        "since": 10000.0,
+        "state": "broken",
+        "until": 10060.0
+      },
+      "id": "broken",
+      "kind": "streaming",
+      "name": "Broken",
+      "position": 3,
+      "requiresCredentials": false,
+      "status": {
+        "actions": [],
+        "facts": [],
+        "revision": null,
+        "toggles": [],
+        "warning": null
+      },
+      "unavailableReason": null
+    },
+    {
+      "available": true,
+      "capabilities": [],
+      "description": "Audio source",
+      "enabled": true,
+      "format": null,
+      "health": {
+        "firstFailureAt": 10000.0,
+        "kind": "auth-required",
+        "lastFailureAt": 10000.0,
+        "level": 0,
+        "since": 10000.0,
+        "state": "broken",
+        "until": null
+      },
+      "id": "signin",
+      "kind": "streaming",
+      "name": "Signin",
+      "position": 4,
+      "requiresCredentials": false,
+      "status": {
+        "actions": [],
+        "facts": [],
+        "revision": null,
+        "toggles": [],
+        "warning": null
+      },
+      "unavailableReason": null
+    },
+    {
+      "available": true,
+      "capabilities": [],
+      "description": "Audio source",
+      "enabled": true,
+      "format": {
+        "bitrateKbps": 256.0,
+        "codec": "aac",
+        "container": "m4a",
+        "transcoded": false
+      },
+      "health": {
+        "firstFailureAt": null,
+        "kind": null,
+        "lastFailureAt": null,
+        "level": 0,
+        "since": null,
+        "state": "ok",
+        "until": null
+      },
+      "id": "youtube",
+      "kind": "streaming",
+      "name": "Youtube",
+      "position": 5,
+      "requiresCredentials": false,
+      "status": {
+        "actions": [],
+        "facts": [],
+        "revision": null,
+        "toggles": [],
+        "warning": null
+      },
+      "unavailableReason": null
+    }
+  ]
+}

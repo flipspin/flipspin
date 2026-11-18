@@ -1,0 +1,910 @@
+{
+  "about": "Remote access (docs/features/remote-access.md). `externalUrl`: what a typed domain becomes, or the reason code it is refused with — the server's PUT /api/server/external-url answers 422 with that code, and clients pre-check with the same rule. `probe`: a /api/status answer (null = no answer) against the nest's instanceId → verdict. `pick`: the address a client uses — candidates in order (primary, every lan, tailscale, external; duplicates dropped), first whose answer carries the nest's instanceId; `answers` maps an address to the instanceId it answered with (absent = no answer). Read by the server's tests/unit/test_remote_access.py, the renderer's next/remote tests, krobi-ios Tools/Checks and krobi-android ContratosTest. `reach`: the chosen route (null = infer: Tailscale detected → tailscale, a stored domain → domain, else local), the last proof from outside (`outside`: via + seconds ago, or null), whether Tailscale is detected and a domain stored, and the probe verdicts of the Tailscale and domain rows (null = not probed) → the status line's reach and detail and the chain's two links (state + word). `ago`: seconds → the words. `outsideVia` (server only): a request's client address against the nest's own networks and gateway → how it came in. Words are the rule's Spanish strings; a client may render the brand in «no es un nido de Krobi» through its own app-name constant.",
+  "externalUrl": [
+    {
+      "case": "a bare domain gets https",
+      "in": "musica.ejemplo.com",
+      "out": "https://musica.ejemplo.com"
+    },
+    {
+      "case": "trailing slash dropped",
+      "in": "https://musica.ejemplo.com/",
+      "out": "https://musica.ejemplo.com"
+    },
+    {
+      "case": "spaces trimmed, host lowercased",
+      "in": "  https://Musica.Ejemplo.com  ",
+      "out": "https://musica.ejemplo.com"
+    },
+    {
+      "case": "a port is kept",
+      "in": "https://musica.ejemplo.com:8443",
+      "out": "https://musica.ejemplo.com:8443"
+    },
+    {
+      "case": "empty clears it",
+      "in": "",
+      "out": null
+    },
+    {
+      "case": "plain http is refused",
+      "in": "http://musica.ejemplo.com",
+      "error": "needs-https"
+    },
+    {
+      "case": "a path is refused",
+      "in": "https://ejemplo.com/krobi",
+      "error": "has-path"
+    },
+    {
+      "case": "a query is refused",
+      "in": "https://ejemplo.com/?a=1",
+      "error": "has-path"
+    },
+    {
+      "case": "credentials are refused",
+      "in": "https://yo:clave@ejemplo.com",
+      "error": "has-credentials"
+    },
+    {
+      "case": "not a host",
+      "in": "https://",
+      "error": "not-a-url"
+    },
+    {
+      "case": "spaces inside",
+      "in": "musica ejemplo.com",
+      "error": "not-a-url"
+    },
+    {
+      "case": "other schemes",
+      "in": "ftp://ejemplo.com",
+      "error": "needs-https"
+    }
+  ],
+  "probe": [
+    {
+      "case": "this nest",
+      "instanceId": "abc",
+      "answer": {
+        "app": "krobi",
+        "instanceId": "abc"
+      },
+      "out": "same-nest"
+    },
+    {
+      "case": "another nest",
+      "instanceId": "abc",
+      "answer": {
+        "app": "krobi",
+        "instanceId": "xyz"
+      },
+      "out": "other-nest"
+    },
+    {
+      "case": "something that is not krobi",
+      "instanceId": "abc",
+      "answer": {
+        "app": "other-service"
+      },
+      "out": "not-krobi"
+    },
+    {
+      "case": "a page with no app key",
+      "instanceId": "abc",
+      "answer": {},
+      "out": "not-krobi"
+    },
+    {
+      "case": "no answer",
+      "instanceId": "abc",
+      "answer": null,
+      "out": "unreachable"
+    }
+  ],
+  "pick": [
+    {
+      "case": "at home the setup address answers",
+      "instanceId": "abc",
+      "primary": "http://192.168.1.20:8000",
+      "network": {
+        "lan": [
+          "http://192.168.1.20:8000"
+        ],
+        "tailscale": "http://100.101.1.2:8000",
+        "externalUrl": "https://musica.ejemplo.com"
+      },
+      "answers": {
+        "http://192.168.1.20:8000": "abc",
+        "http://100.101.1.2:8000": "abc",
+        "https://musica.ejemplo.com": "abc"
+      },
+      "out": "http://192.168.1.20:8000"
+    },
+    {
+      "case": "away, tailscale before the domain",
+      "instanceId": "abc",
+      "primary": "http://192.168.1.20:8000",
+      "network": {
+        "lan": [
+          "http://192.168.1.20:8000"
+        ],
+        "tailscale": "http://100.101.1.2:8000",
+        "externalUrl": "https://musica.ejemplo.com"
+      },
+      "answers": {
+        "http://100.101.1.2:8000": "abc",
+        "https://musica.ejemplo.com": "abc"
+      },
+      "out": "http://100.101.1.2:8000"
+    },
+    {
+      "case": "away, only the domain",
+      "instanceId": "abc",
+      "primary": "http://192.168.1.20:8000",
+      "network": {
+        "lan": [
+          "http://192.168.1.20:8000"
+        ],
+        "tailscale": null,
+        "externalUrl": "https://musica.ejemplo.com"
+      },
+      "answers": {
+        "https://musica.ejemplo.com": "abc"
+      },
+      "out": "https://musica.ejemplo.com"
+    },
+    {
+      "case": "another nest on the same local address is skipped",
+      "instanceId": "abc",
+      "primary": "http://192.168.1.10:8000",
+      "network": {
+        "lan": [
+          "http://192.168.1.10:8000"
+        ],
+        "tailscale": "http://100.101.1.2:8000",
+        "externalUrl": null
+      },
+      "answers": {
+        "http://192.168.1.10:8000": "xyz",
+        "http://100.101.1.2:8000": "abc"
+      },
+      "out": "http://100.101.1.2:8000"
+    },
+    {
+      "case": "a second lan address is tried before tailscale",
+      "instanceId": "abc",
+      "primary": "http://192.168.1.20:8000",
+      "network": {
+        "lan": [
+          "http://192.168.1.20:8000",
+          "http://10.0.0.5:8000"
+        ],
+        "tailscale": "http://100.101.1.2:8000",
+        "externalUrl": null
+      },
+      "answers": {
+        "http://10.0.0.5:8000": "abc",
+        "http://100.101.1.2:8000": "abc"
+      },
+      "out": "http://10.0.0.5:8000"
+    },
+    {
+      "case": "set up through the domain, the domain first",
+      "instanceId": "abc",
+      "primary": "https://musica.ejemplo.com",
+      "network": {
+        "lan": [
+          "http://192.168.1.20:8000"
+        ],
+        "tailscale": null,
+        "externalUrl": "https://musica.ejemplo.com"
+      },
+      "answers": {
+        "https://musica.ejemplo.com": "abc",
+        "http://192.168.1.20:8000": "abc"
+      },
+      "out": "https://musica.ejemplo.com"
+    },
+    {
+      "case": "nothing answers",
+      "instanceId": "abc",
+      "primary": "http://192.168.1.20:8000",
+      "network": {
+        "lan": [
+          "http://192.168.1.20:8000"
+        ],
+        "tailscale": null,
+        "externalUrl": null
+      },
+      "answers": {},
+      "out": null
+    },
+    {
+      "case": "no network known yet, only the primary",
+      "instanceId": "abc",
+      "primary": "http://192.168.1.20:8000",
+      "network": null,
+      "answers": {
+        "http://192.168.1.20:8000": "abc"
+      },
+      "out": "http://192.168.1.20:8000"
+    }
+  ],
+  "reach": [
+    {
+      "case": "wireguard proven by a visit through the vpn",
+      "in": {
+        "route": "wireguard",
+        "outside": {
+          "via": "vpn",
+          "ago": 7200
+        },
+        "tailscale": false,
+        "domain": false,
+        "verdicts": {
+          "tailscale": null,
+          "domain": null
+        }
+      },
+      "out": {
+        "reach": "ok",
+        "detail": "hace 2 h",
+        "links": [
+          {
+            "state": "ok",
+            "word": "hace 2 h"
+          },
+          {
+            "state": "ok",
+            "word": "red local"
+          }
+        ]
+      }
+    },
+    {
+      "case": "wireguard never used from outside",
+      "in": {
+        "route": "wireguard",
+        "outside": null,
+        "tailscale": false,
+        "domain": false,
+        "verdicts": {
+          "tailscale": null,
+          "domain": null
+        }
+      },
+      "out": {
+        "reach": "none",
+        "detail": "sin uso aún",
+        "links": [
+          {
+            "state": "none",
+            "word": "sin uso aún"
+          },
+          {
+            "state": "ok",
+            "word": "red local"
+          }
+        ]
+      }
+    },
+    {
+      "case": "wireguard ignores a tailscale visit",
+      "in": {
+        "route": "wireguard",
+        "outside": {
+          "via": "tailscale",
+          "ago": 60
+        },
+        "tailscale": false,
+        "domain": false,
+        "verdicts": {
+          "tailscale": null,
+          "domain": null
+        }
+      },
+      "out": {
+        "reach": "none",
+        "detail": "sin uso aún",
+        "links": [
+          {
+            "state": "none",
+            "word": "sin uso aún"
+          },
+          {
+            "state": "ok",
+            "word": "red local"
+          }
+        ]
+      }
+    },
+    {
+      "case": "tailscale checked",
+      "in": {
+        "route": "tailscale",
+        "outside": null,
+        "tailscale": true,
+        "domain": false,
+        "verdicts": {
+          "tailscale": "same-nest",
+          "domain": null
+        }
+      },
+      "out": {
+        "reach": "ok",
+        "detail": "conectado",
+        "links": [
+          {
+            "state": "ok",
+            "word": "conectado"
+          },
+          {
+            "state": "ok",
+            "word": "conectado"
+          }
+        ]
+      }
+    },
+    {
+      "case": "tailscale not probed but used from outside",
+      "in": {
+        "route": "tailscale",
+        "outside": {
+          "via": "tailscale",
+          "ago": 300
+        },
+        "tailscale": true,
+        "domain": false,
+        "verdicts": {
+          "tailscale": null,
+          "domain": null
+        }
+      },
+      "out": {
+        "reach": "ok",
+        "detail": "hace 5 min",
+        "links": [
+          {
+            "state": "ok",
+            "word": "hace 5 min"
+          },
+          {
+            "state": "ok",
+            "word": "conectado"
+          }
+        ]
+      }
+    },
+    {
+      "case": "a probe beats the visit",
+      "in": {
+        "route": "tailscale",
+        "outside": {
+          "via": "tailscale",
+          "ago": 300
+        },
+        "tailscale": true,
+        "domain": false,
+        "verdicts": {
+          "tailscale": "unreachable",
+          "domain": null
+        }
+      },
+      "out": {
+        "reach": "bad",
+        "detail": "sin respuesta",
+        "links": [
+          {
+            "state": "bad",
+            "word": "sin respuesta"
+          },
+          {
+            "state": "none",
+            "word": "sin comprobar"
+          }
+        ]
+      }
+    },
+    {
+      "case": "tailscale not probed, never used",
+      "in": {
+        "route": "tailscale",
+        "outside": null,
+        "tailscale": true,
+        "domain": false,
+        "verdicts": {
+          "tailscale": null,
+          "domain": null
+        }
+      },
+      "out": {
+        "reach": "none",
+        "detail": "sin comprobar",
+        "links": [
+          {
+            "state": "none",
+            "word": "sin comprobar"
+          },
+          {
+            "state": "none",
+            "word": "sin comprobar"
+          }
+        ]
+      }
+    },
+    {
+      "case": "tailscale chosen but not detected",
+      "in": {
+        "route": "tailscale",
+        "outside": null,
+        "tailscale": false,
+        "domain": false,
+        "verdicts": {
+          "tailscale": null,
+          "domain": null
+        }
+      },
+      "out": {
+        "reach": "bad",
+        "detail": "no detectado",
+        "links": [
+          {
+            "state": "off",
+            "word": "sin acceso"
+          },
+          {
+            "state": "off",
+            "word": ""
+          }
+        ]
+      }
+    },
+    {
+      "case": "tailscale answered by another nest",
+      "in": {
+        "route": "tailscale",
+        "outside": null,
+        "tailscale": true,
+        "domain": false,
+        "verdicts": {
+          "tailscale": "other-nest",
+          "domain": null
+        }
+      },
+      "out": {
+        "reach": "bad",
+        "detail": "responde otro nido",
+        "links": [
+          {
+            "state": "bad",
+            "word": "responde otro nido"
+          },
+          {
+            "state": "none",
+            "word": "sin comprobar"
+          }
+        ]
+      }
+    },
+    {
+      "case": "domain answered by something that is not krobi",
+      "in": {
+        "route": "domain",
+        "outside": null,
+        "tailscale": false,
+        "domain": true,
+        "verdicts": {
+          "tailscale": null,
+          "domain": "not-krobi"
+        }
+      },
+      "out": {
+        "reach": "bad",
+        "detail": "no es un nido de Krobi",
+        "links": [
+          {
+            "state": "bad",
+            "word": "no es un nido de Krobi"
+          },
+          {
+            "state": "none",
+            "word": "sin comprobar"
+          }
+        ]
+      }
+    },
+    {
+      "case": "domain checked",
+      "in": {
+        "route": "domain",
+        "outside": null,
+        "tailscale": false,
+        "domain": true,
+        "verdicts": {
+          "tailscale": null,
+          "domain": "same-nest"
+        }
+      },
+      "out": {
+        "reach": "ok",
+        "detail": "conectado",
+        "links": [
+          {
+            "state": "ok",
+            "word": "conectado"
+          },
+          {
+            "state": "ok",
+            "word": "conectado"
+          }
+        ]
+      }
+    },
+    {
+      "case": "domain proven by a visit through the proxy",
+      "in": {
+        "route": "domain",
+        "outside": {
+          "via": "proxy",
+          "ago": 90000
+        },
+        "tailscale": false,
+        "domain": true,
+        "verdicts": {
+          "tailscale": null,
+          "domain": null
+        }
+      },
+      "out": {
+        "reach": "ok",
+        "detail": "hace 1 d",
+        "links": [
+          {
+            "state": "ok",
+            "word": "hace 1 d"
+          },
+          {
+            "state": "ok",
+            "word": "conectado"
+          }
+        ]
+      }
+    },
+    {
+      "case": "domain does not answer",
+      "in": {
+        "route": "domain",
+        "outside": null,
+        "tailscale": false,
+        "domain": true,
+        "verdicts": {
+          "tailscale": null,
+          "domain": "unreachable"
+        }
+      },
+      "out": {
+        "reach": "bad",
+        "detail": "sin respuesta",
+        "links": [
+          {
+            "state": "bad",
+            "word": "sin respuesta"
+          },
+          {
+            "state": "none",
+            "word": "sin comprobar"
+          }
+        ]
+      }
+    },
+    {
+      "case": "domain chosen, none stored",
+      "in": {
+        "route": "domain",
+        "outside": null,
+        "tailscale": false,
+        "domain": false,
+        "verdicts": {
+          "tailscale": null,
+          "domain": null
+        }
+      },
+      "out": {
+        "reach": "none",
+        "detail": "sin dominio",
+        "links": [
+          {
+            "state": "none",
+            "word": "sin dominio"
+          },
+          {
+            "state": "none",
+            "word": "sin comprobar"
+          }
+        ]
+      }
+    },
+    {
+      "case": "local only",
+      "in": {
+        "route": "local",
+        "outside": {
+          "via": "vpn",
+          "ago": 60
+        },
+        "tailscale": true,
+        "domain": false,
+        "verdicts": {
+          "tailscale": null,
+          "domain": null
+        }
+      },
+      "out": {
+        "reach": "local",
+        "detail": null,
+        "links": [
+          {
+            "state": "off",
+            "word": "sin acceso"
+          },
+          {
+            "state": "off",
+            "word": ""
+          }
+        ]
+      }
+    },
+    {
+      "case": "no route: tailscale detected",
+      "in": {
+        "route": null,
+        "outside": null,
+        "tailscale": true,
+        "domain": false,
+        "verdicts": {
+          "tailscale": "same-nest",
+          "domain": null
+        }
+      },
+      "out": {
+        "route": "tailscale",
+        "reach": "ok",
+        "detail": "conectado",
+        "links": [
+          {
+            "state": "ok",
+            "word": "conectado"
+          },
+          {
+            "state": "ok",
+            "word": "conectado"
+          }
+        ]
+      }
+    },
+    {
+      "case": "no route: a stored domain",
+      "in": {
+        "route": null,
+        "outside": null,
+        "tailscale": false,
+        "domain": true,
+        "verdicts": {
+          "tailscale": null,
+          "domain": null
+        }
+      },
+      "out": {
+        "route": "domain",
+        "reach": "none",
+        "detail": "sin comprobar",
+        "links": [
+          {
+            "state": "none",
+            "word": "sin comprobar"
+          },
+          {
+            "state": "none",
+            "word": "sin comprobar"
+          }
+        ]
+      }
+    },
+    {
+      "case": "no route, nothing set up",
+      "in": {
+        "route": null,
+        "outside": {
+          "via": "vpn",
+          "ago": 60
+        },
+        "tailscale": false,
+        "domain": false,
+        "verdicts": {
+          "tailscale": null,
+          "domain": null
+        }
+      },
+      "out": {
+        "route": "local",
+        "reach": "local",
+        "detail": null,
+        "links": [
+          {
+            "state": "off",
+            "word": "sin acceso"
+          },
+          {
+            "state": "off",
+            "word": ""
+          }
+        ]
+      }
+    }
+  ],
+  "ago": [
+    {
+      "case": "under a minute",
+      "in": 0,
+      "out": "ahora"
+    },
+    {
+      "case": "59 s",
+      "in": 59,
+      "out": "ahora"
+    },
+    {
+      "case": "1 min",
+      "in": 60,
+      "out": "hace 1 min"
+    },
+    {
+      "case": "59 min",
+      "in": 3599,
+      "out": "hace 59 min"
+    },
+    {
+      "case": "1 h",
+      "in": 3600,
+      "out": "hace 1 h"
+    },
+    {
+      "case": "23 h",
+      "in": 86399,
+      "out": "hace 23 h"
+    },
+    {
+      "case": "1 d",
+      "in": 86400,
+      "out": "hace 1 d"
+    },
+    {
+      "case": "40 d",
+      "in": 3456000,
+      "out": "hace 40 d"
+    }
+  ],
+  "outsideVia": [
+    {
+      "case": "loopback",
+      "in": {
+        "networks": [
+          "192.168.1.0/24"
+        ],
+        "gateway": "192.168.1.1",
+        "client": "127.0.0.1",
+        "forwarded": false
+      },
+      "out": "local"
+    },
+    {
+      "case": "a device at home",
+      "in": {
+        "networks": [
+          "192.168.1.0/24"
+        ],
+        "gateway": "192.168.1.1",
+        "client": "192.168.1.114",
+        "forwarded": false
+      },
+      "out": "local"
+    },
+    {
+      "case": "a device at home through the proxy",
+      "in": {
+        "networks": [
+          "192.168.1.0/24"
+        ],
+        "gateway": "192.168.1.1",
+        "client": "192.168.1.114",
+        "forwarded": true
+      },
+      "out": "local"
+    },
+    {
+      "case": "the router (a masquerading vpn)",
+      "in": {
+        "networks": [
+          "192.168.1.0/24"
+        ],
+        "gateway": "192.168.1.1",
+        "client": "192.168.1.1",
+        "forwarded": false
+      },
+      "out": "vpn"
+    },
+    {
+      "case": "a wireguard client routed as itself",
+      "in": {
+        "networks": [
+          "192.168.1.0/24"
+        ],
+        "gateway": "192.168.1.1",
+        "client": "10.1.0.4",
+        "forwarded": false
+      },
+      "out": "vpn"
+    },
+    {
+      "case": "another private network",
+      "in": {
+        "networks": [
+          "192.168.1.0/24"
+        ],
+        "gateway": "192.168.1.1",
+        "client": "192.168.5.30",
+        "forwarded": false
+      },
+      "out": "vpn"
+    },
+    {
+      "case": "tailscale",
+      "in": {
+        "networks": [
+          "192.168.1.0/24"
+        ],
+        "gateway": "192.168.1.1",
+        "client": "100.101.1.2",
+        "forwarded": false
+      },
+      "out": "tailscale"
+    },
+    {
+      "case": "the internet through the proxy",
+      "in": {
+        "networks": [
+          "192.168.1.0/24"
+        ],
+        "gateway": "192.168.1.1",
+        "client": "203.0.113.9",
+        "forwarded": true
+      },
+      "out": "proxy"
+    },
+    {
+      "case": "the internet straight to port 8000",
+      "in": {
+        "networks": [
+          "192.168.1.0/24"
+        ],
+        "gateway": "192.168.1.1",
+        "client": "203.0.113.9",
+        "forwarded": false
+      },
+      "out": "open-port"
+    },
+    {
+      "case": "not an address",
+      "in": {
+        "networks": [
+          "192.168.1.0/24"
+        ],
+        "gateway": "192.168.1.1",
+        "client": "unknown",
+        "forwarded": false
+      },
+      "out": "local"
+    }
+  ]
+}

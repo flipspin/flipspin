@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "route": "/api/events",
+  "media_type": "text/event-stream",
+  "reconnect": "Always resync displayed data using hello; Last-Event-ID is not replayed. Revisions are opaque tokens compared by equality: integer counters or SHA-256 strings for composite provider revisions. A changed bootId invalidates all cached revisions.",
+  "shared_areas": [
+    "library",
+    "analysis",
+    "jobs",
+    "lyrics",
+    "playlists",
+    "config",
+    "helpers",
+    "signin"
+  ],
+  "scope_cases": [
+    {
+      "role": "member",
+      "user_id": "account-a",
+      "area": "library",
+      "visible": true
+    },
+    {
+      "role": "member",
+      "user_id": "account-a",
+      "area": "me:account-a",
+      "visible": true
+    },
+    {
+      "role": "member",
+      "user_id": "account-a",
+      "area": "me:account-b",
+      "visible": false
+    },
+    {
+      "role": "owner",
+      "user_id": "account-a",
+      "area": "me:account-b",
+      "visible": true
+    }
+  ],
+  "hello": {
+    "event": "hello",
+    "data": {
+      "bootId": "boot-example",
+      "revisions": {
+        "library": "b777b15e5130d772ead4c6a9be499e711d67600d45d5ef43026ebf418304330b",
+        "playlists": 4,
+        "me:account-a": 3
+      }
+    }
+  },
+  "change": {
+    "event": "change",
+    "id": 1,
+    "data": {
+      "area": "playlists",
+      "rev": 5,
+      "ids": [
+        "playlist-key"
+      ]
+    }
+  },
+  "change_without_ids": {
+    "event": "change",
+    "id": 2,
+    "data": {
+      "area": "library",
+      "rev": "6ca4cc0830388718cf6bf6bd02405e4494b5a40f0476d3788de85942b55ff2e9"
+    }
+  },
+  "limits": {
+    "debounce_seconds": 0.5,
+    "id_cap": 128,
+    "client_queue": 64,
+    "streams_per_principal": 4,
+    "streams_total": 32,
+    "heartbeat_seconds": 15,
+    "send_timeout_seconds": 20
+  }
+}

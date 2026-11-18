@@ -1,0 +1,4 @@
+# Standalone/LXC runtime: shared server dependencies plus a bundled fallback.
+# Docker installs requirements-server.txt and supplies ffmpeg/ffprobe on PATH.
+-r requirements-server.txt
+imageio-ffmpeg==0.6.0

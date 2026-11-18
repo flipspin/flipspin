@@ -1,0 +1,25 @@
+{
+  "manifest": 1,
+  "id": "stems",
+  "kind": "engine",
+  "name": "Stems",
+  "version": "0.15.10",
+  "protocol": {
+    "helper": [
+      1
+    ]
+  },
+  "runs": [
+    "helper",
+    "nest"
+  ],
+  "adds": [
+    "engine:stems"
+  ],
+  "reaches": [],
+  "entry": {
+    "extra": "stems"
+  },
+  "license": "AGPL-3.0-or-later",
+  "homepage": "https://github.com/flipspin/flipspin"
+}

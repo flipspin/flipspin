@@ -1,0 +1,46 @@
+.krobi-sign-in { color: var(--color-text-primary); font-family: var(--font-sans); font-size: var(--text-base); }
+.krobi-sign-in--page { min-height: 100dvh; display: grid; grid-template-rows: auto 1fr; background: var(--color-bg-surface-primary); padding: var(--space-6); }
+.ksr-top { display: flex; align-items: center; gap: var(--space-4); color: var(--color-text-secondary); }
+.ksr-top .kob-brand { color: var(--color-text-primary); }
+.ksr-card { align-self: center; justify-self: center; width: min(100%, 800px); padding: var(--space-8); border: 2px solid var(--color-border-bold); border-radius: var(--radius-lg); background: var(--color-bg-surface-secondary); box-shadow: var(--shadow-2); display: grid; gap: var(--space-5); }
+.ksr-card h1, .ksr-card h2, .ksr-sheet h2 { margin: 0; font-size: var(--text-2xl); font-weight: 700; line-height: var(--leading-tight); }
+.ksr-wait { display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: var(--space-6); }
+.ksr-main { display: grid; gap: var(--space-3); justify-items: start; min-width: 0; }
+.ksr-ping { display: inline-flex; align-items: center; gap: var(--space-2); font-weight: 600; }
+.ksr-ping i { width: var(--space-2-5); height: var(--space-2-5); flex: none; border-radius: var(--radius-full); background: var(--status-info); }
+.ksr-code { font-family: var(--font-mono); font-size: clamp(28px, 4vw, 51px); font-weight: 700; letter-spacing: var(--tracking-wide); white-space: nowrap; }
+.ksr-code span { color: var(--color-text-tertiary); }
+.ksr-back { border: 0; background: none; color: var(--color-text-secondary); text-decoration: underline; padding: var(--space-2) 0; cursor: pointer; font: inherit; min-height: var(--size-tap); }
+.ksr-muted { color: var(--color-text-secondary); }
+.ksr-mono { font-family: var(--font-mono); }
+.ksr-ok { display: grid; justify-items: start; gap: var(--space-3); }
+.ksr-okmark { display: grid; place-items: center; width: var(--space-10); height: var(--space-10); border-radius: var(--radius-full); background: var(--status-success); color: var(--color-text-on-fill); font-weight: 800; }
+.ksr-dialog { padding: 0; border: 2px solid var(--color-border-bold); border-radius: var(--radius-lg); width: min(480px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); background: var(--color-bg-surface-secondary); box-shadow: var(--shadow-modal); overflow: auto; }
+.ksr-dialog::backdrop { background: var(--scrim); backdrop-filter: blur(4px); }
+.ksr-sheet { display: grid; gap: var(--space-4); padding: var(--space-5); }
+.ksr-close { justify-self: end; margin-bottom: calc(-1 * var(--space-3)); }
+.ksr-device { display: flex; align-items: center; gap: var(--space-3); }
+.ksr-device > div { display: grid; gap: var(--space-1); min-width: 0; }
+.ksr-device h2 { font-size: var(--text-xl); overflow-wrap: anywhere; }
+.ksr-device-icon { display: grid; place-items: center; width: var(--space-12); height: var(--space-12); flex: none; border-radius: var(--radius-md); background: var(--accent-blue-tint); color: var(--accent-blue); }
+.ksr-device-icon svg { width: var(--space-6); height: var(--space-6); }
+.ksr-kv { margin: 0; }
+.ksr-kv > div { display: grid; grid-template-columns: 6rem minmax(0, 1fr); align-items: baseline; gap: var(--space-2); padding: var(--space-2) 0; border-top: 1px solid var(--color-border-soft); }
+.ksr-kv dt { color: var(--color-text-secondary); font-size: var(--text-sm); }
+.ksr-kv dd { margin: 0; overflow-wrap: anywhere; }
+.ksr-kv .ksr-code { font-size: var(--text-xl); }
+.ksr-actions { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+.ksr-actions .z-btn { justify-content: center; min-height: var(--size-tap); }
+@media (max-width: 650px) {
+  .krobi-sign-in--page { padding: var(--space-4); gap: var(--space-6); }
+  .ksr-card { padding: var(--space-5); }
+  .ksr-wait { grid-template-columns: minmax(0, 1fr); }
+  .ksr-top { flex-wrap: wrap; }
+}
+
+.ksr-link-error { position: fixed; z-index: 100; bottom: 24px; left: 50%; transform: translateX(-50%); width: min(440px, calc(100vw - 32px)); padding: 20px; background: var(--paper); color: var(--ink); border: 2px solid currentColor; border-radius: 14px; display: grid; gap: 12px; }
+/* Tailwind resets the UA dialog margin; restore top-layer centering explicitly. */
+.ksr-dialog { position: fixed; inset: 0; margin: auto; }
+.ksr-top .kob-language button { color: var(--color-text-secondary); }
+.ksr-top .kob-language button[aria-pressed="true"] { color: var(--color-text-primary); border-color: var(--color-border-soft); background: var(--color-bg-surface-secondary); }
+.ksr-link-error.krobi-setup { background: var(--color-bg-surface-secondary); color: var(--color-text-primary); border-color: var(--color-border-bold); }

@@ -1,0 +1,13 @@
+.work-action:hover { background: var(--paper-2); }
+.work-action { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 22px; padding: 3px 5px; border: 0; border-radius: 5px; background: transparent; color: var(--ink-2); font-size: 12px; font-weight: 500; cursor: pointer; box-shadow: none; }
+.work-action:disabled { opacity: .45; cursor: default; }
+.work-row { padding: 16px 18px; border-bottom: 1px solid var(--line-soft); }
+.work-title { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 13px; }
+.work-title b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.work-mark { width: 22px; height: 22px; display: grid; place-items: center; flex-shrink: 0; color: var(--blue); }
+.work-mark i, .work-reason i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+.work-mark[data-tone="rose"] { color: var(--rose); }
+.work-failure { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 10px 0 0 30px; font-size: 12px; }
+.work-reason { display: inline-flex; align-items: center; gap: 5px; color: var(--rose); }
+.work-failure .work-action { margin-left: auto; }
+.work-error { padding: 8px 18px; color: var(--rose); font-size: 12px; }

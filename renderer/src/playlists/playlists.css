@@ -1,0 +1,53 @@
+/* Playlist ordering uses the same ink, paper and lifted edges as the songs card. */
+.playlist-reorder { position: relative; }
+.retro-song-table.playlist-songs .retro-song-table__row button.playlist-reorder__grip {
+  position: absolute; inset: 50% auto auto 50%; transform: translate(-50%, -50%);
+  display: grid; place-items: center; width: 26px; height: 30px; min-height: 0;
+  padding: 0; border: 0; border-radius: 6px !important; background: none;
+  color: var(--ink) !important; box-shadow: none; font-size: 22px; line-height: 1;
+  cursor: grab; touch-action: none;
+}
+.playlist-songs .playlist-reorder__grip { opacity: 0; }
+.playlist-songs .retro-song-table__row:hover .playlist-reorder__grip,
+.playlist-songs .retro-song-table__row--selected .playlist-reorder__grip,
+.playlist-songs .retro-song-table__row:focus-within .playlist-reorder__grip,
+.playlist-songs .playlist-reorder__grip:focus-visible { opacity: 1; }
+.playlist-songs .retro-song-table__row:hover .playlist-reorder__number,
+.playlist-songs .retro-song-table__row--selected .playlist-reorder__number,
+.playlist-songs .retro-song-table__row:focus-within .playlist-reorder__number { visibility: hidden; }
+.retro-song-table.playlist-songs .retro-song-table__row button.playlist-reorder__grip:hover {
+  background: var(--line-soft) !important; transform: translate(-50%, -50%);
+}
+.playlist-reorder__lifted { opacity: .35; }
+.playlist-reorder__drop {
+  position: absolute; left: 8px; right: 8px; height: 4px;
+  transform: translateY(-2px); background: var(--ink); border-radius: 2px;
+  z-index: 12; pointer-events: none; list-style: none;
+}
+.playlist-reorder__drop::before {
+  content: ""; position: absolute; left: -6px; top: -4px;
+  width: 12px; height: 12px; border: 3px solid var(--ink);
+  border-radius: 50%; background: var(--panel); box-sizing: border-box;
+}
+.playlist-reorder__ghost {
+  position: fixed; z-index: 100; display: flex; align-items: center; gap: 10px;
+  max-width: min(360px, 80vw); padding: 8px 14px 8px 10px;
+  border: 2px solid var(--ink); border-radius: 10px; background: var(--panel);
+  box-shadow: 5px 5px 0 var(--ink); transform: rotate(-1.5deg);
+  color: var(--ink); font-size: 14px; pointer-events: none;
+}
+.playlist-reorder__ghost b {
+  display: grid; place-items: center; min-width: 26px; height: 26px;
+  border-radius: 7px; background: var(--ink); color: var(--paper);
+  font-family: var(--font-mono, monospace); font-size: 13px;
+}
+.playlist-reorder__ghost span { font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.playlist-reorder__ghost small { color: var(--ink-3); white-space: nowrap; }
+.playlist-reorder__live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* Facts, name and verbs form one reading column beside the existing cover. */
+.playlist-band__facts { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 13px; }
+.playlist-band__owner { font-weight: 600; }
+.playlist-band__dot { width: 8px; height: 8px; flex: none; border-radius: 50%; background: var(--list-color); border: 1px solid var(--line); }
+.playlist-band__title-row { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.playlist-band__more { align-self: center; color: var(--list-ink); } /* ⋯ sits on the list colour, beside the name */

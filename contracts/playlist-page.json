@@ -1,0 +1,15 @@
+{
+  "about": "The playlist page's facts line under its name in the band: «N canciones · duración», plus «N descargadas» only while offline (how much of the list can sound). Duration is the sum of the songs' durations; left out when 0; under an hour «m:ss», from an hour «H h M min» («H h» when M is 0). `descargadas` is null online. Read by krobi-ios Tools/Checks, krobi-android ContratosTest and the renderer's playlist page tests.",
+  "facts": [
+    { "case": "two songs, online", "canciones": 2, "segundos": 40, "descargadas": null, "out": "2 canciones · 0:40" },
+    { "case": "one song is singular", "canciones": 1, "segundos": 215, "descargadas": null, "out": "1 canción · 3:35" },
+    { "case": "no duration known, no duration printed", "canciones": 3, "segundos": 0, "descargadas": null, "out": "3 canciones" },
+    { "case": "an empty list", "canciones": 0, "segundos": 0, "descargadas": null, "out": "0 canciones" },
+    { "case": "under an hour", "canciones": 12, "segundos": 2462, "descargadas": null, "out": "12 canciones · 41:02" },
+    { "case": "past an hour", "canciones": 30, "segundos": 7325, "descargadas": null, "out": "30 canciones · 2 h 2 min" },
+    { "case": "a whole hour", "canciones": 15, "segundos": 3600, "descargadas": null, "out": "15 canciones · 1 h" },
+    { "case": "offline says how much can sound", "canciones": 12, "segundos": 2462, "descargadas": 5, "out": "12 canciones · 41:02 · 5 descargadas" },
+    { "case": "offline, one downloaded is singular", "canciones": 2, "segundos": 40, "descargadas": 1, "out": "2 canciones · 0:40 · 1 descargada" },
+    { "case": "offline, none downloaded", "canciones": 2, "segundos": 40, "descargadas": 0, "out": "2 canciones · 0:40 · 0 descargadas" }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "rows": [
+    {"id":"q-one", "rel_path":"A/One.mp3", "item":"One", "progress_id":"lyrics-batch", "job_idx":0, "text":"words", "status":"leased", "lease":"old-lyrics", "leased_by":"old-helper", "leased_at":900, "last_heartbeat":950, "attempts":1, "created_at":800},
+    {"id":"q-two", "rel_path":"A/Two.mp3", "item":"Two", "progress_id":"lyrics-batch", "job_idx":1, "status":"queued", "attempts":0, "created_at":801},
+    {"id":"q-dead", "rel_path":"A/Dead.mp3", "item":"Dead", "progress_id":"lyrics-dead", "job_idx":0, "status":"leased", "lease":"expired", "attempts":3, "created_at":802}
+  ],
+  "receipts": {"finished-lyrics":{"jobId":"q-finished", "identity":"helper", "response":{"accepted":true}, "row":{"kind":"align"}}}
+}

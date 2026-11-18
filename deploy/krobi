@@ -1,0 +1,291 @@
+#!/bin/sh
+# Manage only the installer's Compose project. No dotenv is executed as code.
+set -eu
+# Resolve only a plain stable release tag; no jq/Python dependency on the host.
+resolve_release() {
+    release_response=$(curl -fsSL --connect-timeout 3 --max-time 8 \
+            -H 'Accept: application/vnd.github+json' \
+            -A 'Flipspin/0.1.0 ( https://github.com/flipspin/flipspin )' \
+            https://api.github.com/repos/flipspin/flipspin/releases/latest 2>/dev/null) || release_response=''
+    release_tag=$(printf '%s\n' "$release_response" | sed -n 's/.*"tag_name"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p'
+    ) || release_tag=''
+    case "$release_tag" in *'
+'*) release_tag='' ;; esac
+    if printf '%s\n' "$release_tag" | grep -Eq '^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$'; then
+        printf '%s\n' "${release_tag#v}"
+    else
+        printf '%s\n' 'Could not check the published release; using :latest.' >&2
+        printf '%s\n' latest
+    fi
+}
+
+fail() { printf 'Error: %s\n' "$*" >&2; exit 1; }
+# The original registry coordinates use the retained installer name.
+canonical_image() {
+    legacy_name=krobi
+    case "$1" in
+        "ghcr.io/$legacy_name-app/$legacy_name-server") printf '%s\n' ghcr.io/flipspin/flipspin-server ;;
+        *) printf '%s\n' "$1" ;;
+    esac
+}
+compose() (
+    # Saved configuration wins over unrelated variables in the caller's shell.
+    unset KROBI_IMAGE KROBI_TAG KROBI_IMAGE_TAG KROBI_MUSIC_DIR KROBI_DATA_DIR KROBI_PORT PUID PGID
+    docker compose --project-name krobi --project-directory /opt/krobi -f /opt/krobi/compose.yml "$@"
+)
+service() {
+    # New installations use flipspin; keep the saved Compose file of older servers usable.
+    if compose config --services </dev/null | grep -qx flipspin; then printf '%s\n' flipspin;
+    else printf '%s\n' krobi; fi
+}
+get_env() { sed -n "s/^$1='\(.*\)'$/\1/p" /opt/krobi/.env; }
+log() { printf '%s\n' "$*"; printf '%s\n' "$*" >>/opt/krobi/install.log; }
+status_json() { curl --noproxy '*' -fsS --max-time 5 "http://127.0.0.1:$port/api/status" 2>/dev/null; }
+version() { sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p'; }
+wait_ready() {
+    deadline=$(($(date +%s) + 120))
+    while [ "$(date +%s)" -lt "$deadline" ]; do
+        remaining=$((deadline - $(date +%s)))
+        [ "$remaining" -gt 0 ] || break
+        request_timeout=5
+        if [ "$remaining" -lt 5 ]; then request_timeout=$remaining; fi
+        status=$(curl --noproxy '*' -fsS --max-time "$request_timeout" "http://127.0.0.1:$port/api/status" 2>/dev/null || true)
+        if printf '%s' "$status" | grep -Eq '"app"[[:space:]]*:[[:space:]]*"krobi"'; then return; fi
+        remaining=$((deadline - $(date +%s)))
+        [ "$remaining" -gt 0 ] || break
+        if [ "$remaining" -lt 2 ]; then sleep "$remaining"; else sleep 2; fi
+    done
+    fail 'Flipspin did not answer /api/status within 120 s. See: sudo docker compose -p krobi -f /opt/krobi/compose.yml logs --tail=100 krobi (or krobi logs).'
+}
+confirm() {
+    ( : </dev/tty >/dev/tty ) 2>/dev/null || fail 'Uninstalling needs a terminal to confirm.'
+    printf '%s Type yes: ' "$1" >/dev/tty
+    read -r answer </dev/tty || fail 'Could not read the answer.'
+    case "$answer" in yes|YES|sí|si|SI) ;; *) fail 'Cancelled.' ;; esac
+}
+# Purge is deliberately narrower than install: never recursively remove a
+# system directory, a symlink, or a parent of the other mount/install directory.
+purge_path() {
+    [ -d "$1" ] && [ ! -L "$1" ] || fail "Cannot purge this path: $1"
+    canonical=$(realpath "$1")
+    [ "$canonical" = "$1" ] || fail "The path changed since installation: $1"
+    case "$canonical" in
+        /etc/*|/usr/*|/bin/*|/sbin/*|/lib/*|/lib64/*|/boot/*|/dev/*|/proc/*|/run/*|/sys/*|/var/lib|/var/log|/var/cache|/var/tmp|/opt/krobi|/opt/krobi/*)
+            fail "Refusing to purge $1 automatically; delete that folder by hand." ;;
+        /home/*/*|/Users/*/*) ;;
+        /home/*|/Users/*) fail "Cannot purge a home directory: $1" ;;
+        /*/*) ;;
+        *) fail "Refusing to purge $1 automatically; use a dedicated subfolder." ;;
+    esac
+    for protected in /opt/krobi "$music" "$data"; do
+        [ "$protected" = "$1" ] && continue
+        case "$protected/" in "$canonical/"*) fail "The path contains another protected folder: $1" ;; esac
+    done
+}
+
+# BEGIN GENERATED INSTALLER ENDING
+# Regenerate with: python3 scripts/generate-installer-ending.py
+ending_scene() {
+    case "$1" in
+        truecolor) cat <<'KROBI_SCENE_TRUECOLOR'
+[0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m
+[0m   [0;38;2;200;205;212m*[0m                              [0;38;2;200;205;212m*[0m
+[0m   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[0;38;2;122;160;240m⢸⡿⢶⣤⣀[0m⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                           [0;38;2;200;205;212m*[0m
+[0m   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[0;38;2;122;160;240m⢸⡇[0m⠀[0;38;2;122;160;240m⠈⢻⣧[0m⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀          [0;38;2;110;118;129m░░░░░░[0m
+[0m   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[0;38;2;122;160;240m⣀⣀⣸⣇⣀⣀⠸⠟[0m⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀   [0;38;2;200;205;212m*[0m   [0;38;2;110;118;129m░░░░░░░░░░░░[0m
+[0m   ⠀⠀⠀⠀⠀⠀[0;38;2;122;160;240m⣀⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣤⣀[0m⠀⠀⠀⠀⠀⠀     [0;38;2;110;118;129m░░░░░░░░░░░░░░░░░░[0m
+[0m [0;38;2;200;205;212m*[0m ⠀⠀⠀[0;38;2;122;160;240m⣀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣀[0m⠀⠀⠀                            [0;38;2;200;205;212m*[0m
+[0m   ⠀[0;38;2;122;160;240m⢀⣼⣿⣿⣿⡿⠛⠉⠉⠉⠻⣿⣿⣿⣿⣿⣿⠟⠉⠉⠉⠛⢿⣿⣿⣿⣧⡀[0m⠀      [0;38;2;200;205;212m*[0m
+[0m   ⠀[0;38;2;122;160;240m⣾⣿⣿⣿⠋[0m⠀⠀⠀⠀⠀⠀[0;38;2;122;160;240m⠘⣿⣿⣿⣿⠃[0m⠀⠀⠀⠀⠀⠀[0;38;2;122;160;240m⠙⣿⣿⣿⣷[0m⠀                [0;38;2;110;118;129m░░░░░░░[0m
+[0m   [0;38;2;122;160;240m⣸⣿⣿⣿⠃[0m⠀⠀[0;38;2;122;160;240m⢀⣴⣤[0m⠀⠀⠀[0;38;2;122;160;240m⣿⣿⣿⣿[0m⠀⠀⠀[0;38;2;122;160;240m⣤⣦⡀[0m⠀⠀[0;38;2;122;160;240m⠘⣿⣿⣿⣇[0m             [0;38;2;110;118;129m░░░░░░░░░░░░░░░[0m
+[0m   [0;38;2;122;160;240m⣿⣿⣿⠇[0m⠀⠀⠀[0;38;2;122;160;240m⠈⠛⠋[0m⠀⠀[0;38;2;239;126;85m⢶⣿⣿⣿⣿⡶[0m⠀⠀[0;38;2;122;160;240m⠙⠛⠁[0m⠀⠀⠀[0;38;2;122;160;240m⠸⣿⣿⣿[0m
+[0m   [0;38;2;122;160;240m⣿⣿⣿⡀[0m⠀⠀⠀⠀⠀⠀⠀⠀⠀[0;38;2;239;126;85m⠉⠻⠟⠉[0m⠀⠀⠀⠀⠀⠀⠀⠀⠀[0;38;2;122;160;240m⢀⣿⣿⣿[0m         [0;38;2;200;205;212m*[0m
+[0m   [0;38;2;122;160;240m⠈⠿⣿⣷⣀[0m⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[0;38;2;122;160;240m⣀⣾⣿⠿⠁[0m                         [0;38;2;200;205;212m*[0m
+[0m   ⠀⠀[0;38;2;122;160;240m⠈⠙⠻⠿⠶⣦⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣴⠶⠿⠟⠋⠁[0m
+[0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m [0;38;2;110;118;129m·[0m
+KROBI_SCENE_TRUECOLOR
+            ;;
+        256) cat <<'KROBI_SCENE_256'
+[0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m
+[0m   [0;38;5;251m*[0m                              [0;38;5;251m*[0m
+[0m   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[0;38;5;111m⢸⡿⢶⣤⣀[0m⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                           [0;38;5;251m*[0m
+[0m   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[0;38;5;111m⢸⡇[0m⠀[0;38;5;111m⠈⢻⣧[0m⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀          [0;38;5;244m░░░░░░[0m
+[0m   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[0;38;5;111m⣀⣀⣸⣇⣀⣀⠸⠟[0m⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀   [0;38;5;251m*[0m   [0;38;5;244m░░░░░░░░░░░░[0m
+[0m   ⠀⠀⠀⠀⠀⠀[0;38;5;111m⣀⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣤⣀[0m⠀⠀⠀⠀⠀⠀     [0;38;5;244m░░░░░░░░░░░░░░░░░░[0m
+[0m [0;38;5;251m*[0m ⠀⠀⠀[0;38;5;111m⣀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣀[0m⠀⠀⠀                            [0;38;5;251m*[0m
+[0m   ⠀[0;38;5;111m⢀⣼⣿⣿⣿⡿⠛⠉⠉⠉⠻⣿⣿⣿⣿⣿⣿⠟⠉⠉⠉⠛⢿⣿⣿⣿⣧⡀[0m⠀      [0;38;5;251m*[0m
+[0m   ⠀[0;38;5;111m⣾⣿⣿⣿⠋[0m⠀⠀⠀⠀⠀⠀[0;38;5;111m⠘⣿⣿⣿⣿⠃[0m⠀⠀⠀⠀⠀⠀[0;38;5;111m⠙⣿⣿⣿⣷[0m⠀                [0;38;5;244m░░░░░░░[0m
+[0m   [0;38;5;111m⣸⣿⣿⣿⠃[0m⠀⠀[0;38;5;111m⢀⣴⣤[0m⠀⠀⠀[0;38;5;111m⣿⣿⣿⣿[0m⠀⠀⠀[0;38;5;111m⣤⣦⡀[0m⠀⠀[0;38;5;111m⠘⣿⣿⣿⣇[0m             [0;38;5;244m░░░░░░░░░░░░░░░[0m
+[0m   [0;38;5;111m⣿⣿⣿⠇[0m⠀⠀⠀[0;38;5;111m⠈⠛⠋[0m⠀⠀[0;38;5;209m⢶⣿⣿⣿⣿⡶[0m⠀⠀[0;38;5;111m⠙⠛⠁[0m⠀⠀⠀[0;38;5;111m⠸⣿⣿⣿[0m
+[0m   [0;38;5;111m⣿⣿⣿⡀[0m⠀⠀⠀⠀⠀⠀⠀⠀⠀[0;38;5;209m⠉⠻⠟⠉[0m⠀⠀⠀⠀⠀⠀⠀⠀⠀[0;38;5;111m⢀⣿⣿⣿[0m         [0;38;5;251m*[0m
+[0m   [0;38;5;111m⠈⠿⣿⣷⣀[0m⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀[0;38;5;111m⣀⣾⣿⠿⠁[0m                         [0;38;5;251m*[0m
+[0m   ⠀⠀[0;38;5;111m⠈⠙⠻⠿⠶⣦⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣴⠶⠿⠟⠋⠁[0m
+[0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m [0;38;5;244m·[0m
+KROBI_SCENE_256
+            ;;
+        plain) cat <<'KROBI_SCENE_PLAIN'
+· · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
+   *                              *
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡿⢶⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀                           *
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠈⢻⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀          ░░░░░░
+   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣸⣇⣀⣀⠸⠟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀   *   ░░░░░░░░░░░░
+   ⠀⠀⠀⠀⠀⠀⣀⣤⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣶⣤⣀⠀⠀⠀⠀⠀⠀     ░░░░░░░░░░░░░░░░░░
+ * ⠀⠀⠀⣀⣴⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣦⣀⠀⠀⠀                            *
+   ⠀⢀⣼⣿⣿⣿⡿⠛⠉⠉⠉⠻⣿⣿⣿⣿⣿⣿⠟⠉⠉⠉⠛⢿⣿⣿⣿⣧⡀⠀      *
+   ⠀⣾⣿⣿⣿⠋⠀⠀⠀⠀⠀⠀⠘⣿⣿⣿⣿⠃⠀⠀⠀⠀⠀⠀⠙⣿⣿⣿⣷⠀                ░░░░░░░
+   ⣸⣿⣿⣿⠃⠀⠀⢀⣴⣤⠀⠀⠀⣿⣿⣿⣿⠀⠀⠀⣤⣦⡀⠀⠀⠘⣿⣿⣿⣇             ░░░░░░░░░░░░░░░
+   ⣿⣿⣿⠇⠀⠀⠀⠈⠛⠋⠀⠀⢶⣿⣿⣿⣿⡶⠀⠀⠙⠛⠁⠀⠀⠀⠸⣿⣿⣿
+   ⣿⣿⣿⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⠟⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⣿         *
+   ⠈⠿⣿⣷⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣾⣿⠿⠁                         *
+   ⠀⠀⠈⠙⠻⠿⠶⣦⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣴⠶⠿⠟⠋⠁
+· · · · · · · · · · · · · · · · · · · · · · · · · · · · · · · ·
+KROBI_SCENE_PLAIN
+            ;;
+    esac
+}
+# Arguments: running version, HTTP address, setup link, setup code (empty if claimed).
+# stdout decides colour even when stdin is the curl pipe. Never call log() here.
+print_ending() {
+    ending_bold='' ending_dim='' ending_reset='' ending_art=plain
+    if [ -t 1 ] && [ "${NO_COLOR+x}" != x ]; then
+        ending_bold=$(printf '\033[1m')
+        ending_dim=$(printf '\033[2m')
+        ending_reset=$(printf '\033[0m')
+        case "${COLORTERM:-}" in truecolor|24bit) ending_art=truecolor ;; *) ending_art=256 ;; esac
+    fi
+    # POSIX locale precedence: an explicit C locale overrides a UTF-8 LANG.
+    case "${LC_ALL:-${LC_CTYPE:-${LANG:-}}}" in
+        *[Uu][Tt][Ff]-8*|*[Uu][Tt][Ff]8*) printf '\n'; ending_scene "$ending_art" ;;
+    esac
+    printf '\n%sFlipspin is running%s %s· %s%s\n\n' "$ending_bold" "$ending_reset" "$ending_dim" "$1" "$ending_reset"
+    if [ -n "$4" ]; then
+        printf '%s%s%s\n' "$ending_bold" "$3" "$ending_reset"
+        printf '%sPaste it in Flipspin → Setup link%s\n' "$ending_dim" "$ending_reset"
+        printf '%sNest address: %s\nSetup code: %s%s\n' "$ending_dim" "$2" "$4" "$ending_reset"
+    else
+        printf '%s%s%s\n' "$ending_bold" "$2" "$ending_reset"
+        printf '%sAlready set up%s\n' "$ending_dim" "$ending_reset"
+    fi
+}
+# END GENERATED INSTALLER ENDING
+
+command=${1:-status}
+case "$command" in update|setup-link|status|logs|stop|start|uninstall|reset-password) ;; --help) printf 'Usage: krobi update|setup-link|status|logs|stop|start|uninstall [--purge]|reset-password <user> [--password-stdin]\n'; exit 0 ;; *) fail "Unknown command: $command" ;; esac
+if [ "$command" = reset-password ]; then
+    [ "$#" = 2 ] || { [ "$#" = 3 ] && [ "$3" = --password-stdin ]; } || fail 'Usage: krobi reset-password <user> [--password-stdin]'
+elif [ "$#" -gt 1 ]; then
+    [ "$command" = uninstall ] && [ "$#" = 2 ] && [ "$2" = --purge ] || fail 'Only uninstall accepts --purge.'
+fi
+if [ "$(id -u)" != 0 ]; then exec sudo "$0" "$@"; fi
+[ -f /opt/krobi/compose.yml ] && [ -f /opt/krobi/.env ] || fail 'No installation found in /opt/krobi.'
+grep -q '^# Managed by krobi installer$' /opt/krobi/.env || fail 'This configuration was not created by the installer.'
+port=$(get_env KROBI_PORT)
+case "$command" in
+    setup-link)
+        status=$(status_json) || fail 'Flipspin is not responding; check krobi logs.'
+        token=
+        if printf '%s' "$status" | grep -Eq '"isInit"[[:space:]]*:[[:space:]]*false'; then
+            data=$(get_env KROBI_DATA_DIR)
+            token=$(cat "$data/Krobi/setup-token") || fail 'Could not read the setup code; check krobi logs.'
+            case "$token" in ''|*[!a-zA-Z0-9_-]*) fail 'The setup code has an unexpected format.' ;; esac
+            [ "${#token}" -ge 20 ] && [ "${#token}" -le 128 ] || fail 'The setup code has an unexpected format.'
+        else
+            printf '%s' "$status" | grep -Eq '"isInit"[[:space:]]*:[[:space:]]*true' || fail 'Could not determine whether this nest is set up.'
+        fi
+        # Same primary-route/private-address preference as the installer.
+        primary=$(ip -4 route get 1.1.1.1 2>/dev/null | sed -n 's/.* src \([^ ]*\).*/\1/p' || true)
+        lan_ip=$({ printf '%s\n' "$primary"; ip -4 -o addr show scope global 2>/dev/null | awk '{split($4,a,"/"); print a[1]}'; hostname -I 2>/dev/null | tr ' ' '\n'; } | awk -F. '
+            NF == 4 && ($1 == 10 || ($1 == 172 && $2 >= 16 && $2 <= 31) || ($1 == 192 && $2 == 168)) {print; exit}')
+        if [ -z "$lan_ip" ]; then
+            lan_ip=$(hostname -I | awk '{print $1}')
+            printf 'No private IPv4 address was found. Check the address before connecting from the app.\n' >&2
+        fi
+        [ -n "$lan_ip" ] || fail 'No network address was found. Check ip -4 addr and use the configured port.'
+        running_version=$(printf '%s' "$status" | version)
+        link=
+        if [ -n "$token" ]; then link="krobi://$lan_ip:$port/setup#$token"; fi
+        print_ending "${running_version:-unknown}" "http://$lan_ip:$port" "$link" "$token"
+        ;;
+    reset-password)
+        shift
+        if [ "${2:-}" = --password-stdin ]; then
+            compose exec -T --user krobi "$(service)" python -m app reset-password "$@"
+        else compose exec --user krobi "$(service)" python -m app reset-password "$@"; fi
+        ;;
+    update)
+        old=$(status_json | version || true)
+        old_id=$(compose images -q "$(service)" 2>/dev/null || true)
+        image=$(canonical_image "$(get_env KROBI_IMAGE)")
+        image=${image:-ghcr.io/flipspin/flipspin-server}
+        saved_tag=$(get_env KROBI_TAG)
+        case "$saved_tag" in
+            ''|latest) image_tag=$(resolve_release); saved_tag=latest ;;
+            *) image_tag=$saved_tag ;;
+        esac
+        # Migrate the installer's original Compose file while preserving the
+        # container's follow-mode marker. Persist the image version for start.
+        # Keep Compose variable expressions literal in the saved YAML.
+        # shellcheck disable=SC2016
+        sed 's/}:${KROBI_TAG:-latest}/}:${KROBI_IMAGE_TAG:-${KROBI_TAG:-latest}}/' /opt/krobi/compose.yml > /opt/krobi/compose.yml.tmp
+        mv /opt/krobi/compose.yml.tmp /opt/krobi/compose.yml
+        umask 077
+        sed '/^KROBI_IMAGE=/d; /^KROBI_IMAGE_TAG=/d; /^KROBI_TAG=/d' /opt/krobi/.env > /opt/krobi/.env.tmp
+        printf "KROBI_IMAGE='%s'\nKROBI_TAG='%s'\nKROBI_IMAGE_TAG='%s'\n" "$image" "$saved_tag" "$image_tag" >> /opt/krobi/.env.tmp
+        mv /opt/krobi/.env.tmp /opt/krobi/.env
+        log 'Downloading the Flipspin image…'
+        if ! compose pull >>/opt/krobi/install.log 2>&1; then
+            image=$(get_env KROBI_IMAGE):$image_tag
+            docker image inspect "$image" >/dev/null 2>&1 || fail 'Could not download the image. See /opt/krobi/install.log and run krobi update again.'
+            log 'Could not download the image; using the local image.'
+        fi
+        compose up -d --remove-orphans --pull never >>/opt/krobi/install.log 2>&1 || fail 'Could not start Flipspin. See /opt/krobi/install.log and krobi logs.'
+        wait_ready
+        new=$(printf '%s' "$status" | version)
+        new_id=$(compose images -q "$(service)")
+        if [ -n "$old" ] && [ "$old_id" = "$new_id" ]; then
+            log "Flipspin $new: already up to date ($old → $new)."
+        else log "Flipspin: ${old:-no previous version} → $new."; fi
+        ;;
+    status)
+        compose ps
+        status_json || fail 'Flipspin is not responding; check krobi logs.'
+        printf '\n'
+        ;;
+    logs) compose logs --follow --tail=100 "$(service)" ;;
+    stop) compose stop ;;
+    start) compose up -d --remove-orphans --pull never; wait_ready; printf 'Flipspin is ready.\n' ;;
+    uninstall)
+        music=$(get_env KROBI_MUSIC_DIR) data=$(get_env KROBI_DATA_DIR)
+        if [ "${2:-}" = --purge ]; then
+            confirm "Uninstall Flipspin with --purge? This deletes the data ($data); the music folder ($music) is removed only if Flipspin created it and it is completely empty."
+        else confirm 'Uninstall Flipspin? Music and data are kept.'; fi
+        if [ "${2:-}" = --purge ]; then
+            purge_path "$data"
+            remove_music=false
+            if [ "$(get_env KROBI_MUSIC_CREATED)" = 1 ]; then
+                purge_path "$music"
+                # Be more conservative than detecting audio extensions: retain
+                # every file, including hidden files and unknown audio formats.
+                if [ -z "$(find "$music" -mindepth 1 -print -quit)" ]; then remove_music=true; fi
+            fi
+            if [ "$remove_music" = true ]; then
+                confirm "PERMANENTLY DELETE the data ($data) and remove the empty folder Flipspin created ($music)?"
+            else
+                confirm "PERMANENTLY DELETE the data ($data)? Your music in $music is kept."
+            fi
+        fi
+        compose down
+        if [ "${2:-}" = --purge ]; then
+            purge_path "$data"
+            rm -rf -- "$data"
+            printf 'Data deleted in %s.\n' "$data"
+            # rmdir also protects files added after confirmation or while the
+            # service was stopping. Never recursively delete the music folder.
+            if [ "$remove_music" = true ] && rmdir -- "$music" 2>/dev/null; then
+                printf 'Removed the empty folder Flipspin created in %s.\n' "$music"
+            else printf 'Your music is kept in %s\n' "$music"; fi
+        else printf 'Music and data kept in %s and %s.\n' "$music" "$data"; fi
+        rm -f /opt/krobi/compose.yml /opt/krobi/.env /usr/local/bin/krobi /usr/local/bin/flipspin
+        printf 'Flipspin uninstalled. The log is kept in /opt/krobi/install.log.\n'
+        ;;
+esac

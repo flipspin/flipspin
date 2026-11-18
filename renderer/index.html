@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flipspin</title>
+    <script>
+      // Paper is the only palette. Apply its mode before first paint, also in
+      // the player window, which never mounts SettingsContext.
+      (function () {
+        var root = document.documentElement;
+        function apply() {
+          try {
+            root.setAttribute("data-theme", "paper");
+            localStorage.removeItem("theme");
+            var m = localStorage.getItem("krobi.mode");
+            root.setAttribute("data-mode", m === "dark" || m === "night" ? m : "light");
+          } catch (e) {
+            root.setAttribute("data-theme", "paper");
+            root.setAttribute("data-mode", "light");
+          }
+        }
+        apply();
+        window.addEventListener("storage", function (e) {
+          if (e.key === "theme" || e.key === "krobi.mode") apply();
+        });
+      })();
+    </script>
+  </head>
+  <body class="bg-white text-gray-900 dark:bg-[#242424] dark:text-white">
+    <div id="root" class="h-full"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,535 @@
+{
+  "check": 12,
+  "feature": "helper",
+  "states": [
+    {
+      "input": "working",
+      "word": "Trabajando"
+    },
+    {
+      "input": "idle",
+      "word": "Libre"
+    },
+    {
+      "input": "asleep",
+      "word": "Dormido"
+    },
+    {
+      "input": "closed",
+      "word": "Krobi cerrado"
+    },
+    {
+      "input": "offline",
+      "word": "Sin conexión"
+    },
+    {
+      "input": "outdated",
+      "word": "Desactualizado"
+    },
+    {
+      "input": "revoked",
+      "word": "Sin acceso"
+    }
+  ],
+  "accel": [
+    {
+      "input": "mlx",
+      "word": "Apple Silicon"
+    },
+    {
+      "input": "cuda",
+      "word": "Nvidia"
+    },
+    {
+      "input": "cpu",
+      "word": "CPU · lento"
+    }
+  ],
+  "waitReason": [
+    {
+      "input": "no-helper",
+      "word": "Ningún equipo procesa para el nido"
+    },
+    {
+      "input": "no-capable-helper",
+      "word": "Ningún equipo puede hacer este trabajo"
+    },
+    {
+      "input": "helpers-offline",
+      "word": "Los equipos están sin conexión"
+    },
+    {
+      "input": "helpers-busy",
+      "word": "Todos los equipos están trabajando"
+    }
+  ],
+  "snapshots": [
+    {
+      "name": "none",
+      "input": {
+        "helpers": [],
+        "kind": "align"
+      },
+      "who": null,
+      "speed": null,
+      "speedReason": "Ningún equipo procesa para el nido"
+    },
+    {
+      "name": "two samples",
+      "input": {
+        "helpers": [
+          {
+            "id": "pc",
+            "nest": false,
+            "name": "pc",
+            "os": "linux",
+            "accel": "cpu",
+            "keepAwake": "none",
+            "version": "0.7.1",
+            "state": "idle",
+            "memoryBytes": 17179869184,
+            "jobs": [
+              "align"
+            ],
+            "speed": {
+              "align": {
+                "samples": 2,
+                "medianSecondsPerMinute": 42
+              }
+            },
+            "lastSeenAt": 0
+          }
+        ],
+        "kind": "align"
+      },
+      "who": "pc",
+      "speed": null,
+      "speedReason": "Todavía sin medir"
+    },
+    {
+      "name": "three samples",
+      "input": {
+        "helpers": [
+          {
+            "id": "pc",
+            "nest": false,
+            "name": "pc",
+            "os": "linux",
+            "accel": "cpu",
+            "keepAwake": "none",
+            "version": "0.7.1",
+            "state": "idle",
+            "memoryBytes": 17179869184,
+            "jobs": [
+              "align"
+            ],
+            "speed": {
+              "align": {
+                "samples": 3,
+                "medianSecondsPerMinute": 42
+              }
+            },
+            "lastSeenAt": 0
+          }
+        ],
+        "kind": "align"
+      },
+      "who": "pc",
+      "speed": 42,
+      "speedReason": "Todavía sin medir"
+    },
+    {
+      "name": "fastest measured",
+      "input": {
+        "helpers": [
+          {
+            "id": "gpu",
+            "nest": false,
+            "name": "gpu",
+            "os": "linux",
+            "accel": "cuda",
+            "keepAwake": "none",
+            "version": "0.7.1",
+            "state": "idle",
+            "memoryBytes": 17179869184,
+            "jobs": [
+              "align"
+            ],
+            "speed": {
+              "align": {
+                "samples": 3,
+                "medianSecondsPerMinute": 9
+              }
+            },
+            "lastSeenAt": 0
+          },
+          {
+            "id": "chip",
+            "nest": false,
+            "name": "chip",
+            "os": "macos",
+            "accel": "mlx",
+            "keepAwake": "none",
+            "version": "0.7.1",
+            "state": "idle",
+            "memoryBytes": 17179869184,
+            "jobs": [
+              "align"
+            ],
+            "speed": {
+              "align": {
+                "samples": 3,
+                "medianSecondsPerMinute": 4
+              }
+            },
+            "lastSeenAt": 0
+          }
+        ],
+        "kind": "align"
+      },
+      "who": "chip",
+      "speed": 4,
+      "speedReason": "Todavía sin medir"
+    },
+    {
+      "name": "offline GPU",
+      "input": {
+        "helpers": [
+          {
+            "id": "gpu",
+            "nest": false,
+            "name": "gpu",
+            "os": "linux",
+            "accel": "cuda",
+            "keepAwake": "none",
+            "version": "0.7.1",
+            "state": "offline",
+            "memoryBytes": 17179869184,
+            "jobs": [
+              "align"
+            ],
+            "speed": {
+              "align": {
+                "samples": 0,
+                "medianSecondsPerMinute": 0
+              }
+            },
+            "lastSeenAt": 0
+          },
+          {
+            "id": "pc",
+            "nest": false,
+            "name": "pc",
+            "os": "linux",
+            "accel": "cpu",
+            "keepAwake": "none",
+            "version": "0.7.1",
+            "state": "idle",
+            "memoryBytes": 17179869184,
+            "jobs": [
+              "align"
+            ],
+            "speed": {
+              "align": {
+                "samples": 0,
+                "medianSecondsPerMinute": 0
+              }
+            },
+            "lastSeenAt": 0
+          }
+        ],
+        "kind": "align"
+      },
+      "who": "pc",
+      "speed": null,
+      "speedReason": "Todavía sin medir"
+    },
+    {
+      "name": "busy fastest still does the job",
+      "input": {
+        "helpers": [
+          {
+            "id": "gpu",
+            "nest": false,
+            "name": "gpu",
+            "os": "linux",
+            "accel": "cuda",
+            "keepAwake": "none",
+            "version": "0.7.1",
+            "state": "working",
+            "memoryBytes": 17179869184,
+            "jobs": [
+              "align"
+            ],
+            "speed": {
+              "align": {
+                "samples": 0,
+                "medianSecondsPerMinute": 0
+              }
+            },
+            "lastSeenAt": 0
+          },
+          {
+            "id": "pc",
+            "nest": false,
+            "name": "pc",
+            "os": "linux",
+            "accel": "cpu",
+            "keepAwake": "none",
+            "version": "0.7.1",
+            "state": "idle",
+            "memoryBytes": 17179869184,
+            "jobs": [
+              "align"
+            ],
+            "speed": {
+              "align": {
+                "samples": 0,
+                "medianSecondsPerMinute": 0
+              }
+            },
+            "lastSeenAt": 0
+          }
+        ],
+        "kind": "align"
+      },
+      "who": "gpu",
+      "speed": null,
+      "speedReason": "Todavía sin medir"
+    },
+    {
+      "name": "cannot do this kind",
+      "input": {
+        "helpers": [
+          {
+            "id": "pc",
+            "nest": false,
+            "name": "pc",
+            "os": "linux",
+            "accel": "cpu",
+            "keepAwake": "none",
+            "version": "0.7.1",
+            "state": "idle",
+            "memoryBytes": 17179869184,
+            "jobs": [
+              "stems"
+            ],
+            "speed": {
+              "align": {
+                "samples": 0,
+                "medianSecondsPerMinute": 0
+              }
+            },
+            "lastSeenAt": 0
+          }
+        ],
+        "kind": "align"
+      },
+      "who": null,
+      "speed": null,
+      "speedReason": "Ningún equipo procesa para el nido"
+    },
+    {
+      "name": "insufficient memory",
+      "input": {
+        "helpers": [
+          {
+            "id": "pc",
+            "nest": false,
+            "name": "pc",
+            "os": "linux",
+            "accel": "cpu",
+            "keepAwake": "none",
+            "version": "0.7.1",
+            "state": "idle",
+            "memoryBytes": 4294967296,
+            "jobs": [
+              "align"
+            ],
+            "speed": {
+              "align": {
+                "samples": 0,
+                "medianSecondsPerMinute": 0
+              }
+            },
+            "lastSeenAt": 0
+          }
+        ],
+        "kind": "align"
+      },
+      "who": null,
+      "speed": null,
+      "speedReason": "Ningún equipo procesa para el nido"
+    },
+    {
+      "name": "nest is a helper too",
+      "input": {
+        "helpers": [
+          {
+            "id": "nest",
+            "nest": true,
+            "name": "nest",
+            "os": "linux",
+            "accel": "cpu",
+            "keepAwake": "none",
+            "version": "0.7.1",
+            "state": "idle",
+            "memoryBytes": 17179869184,
+            "jobs": [
+              "align"
+            ],
+            "speed": {
+              "align": {
+                "samples": 3,
+                "medianSecondsPerMinute": 90
+              }
+            },
+            "lastSeenAt": 0
+          }
+        ],
+        "kind": "align"
+      },
+      "who": "nest",
+      "speed": 90,
+      "speedReason": "Todavía sin medir"
+    },
+    {
+      "name": "prefer another computer over nest",
+      "input": {
+        "helpers": [
+          {
+            "id": "nest",
+            "nest": true,
+            "name": "nest",
+            "os": "linux",
+            "accel": "cpu",
+            "keepAwake": "none",
+            "version": "0.7.1",
+            "state": "idle",
+            "memoryBytes": 17179869184,
+            "jobs": [
+              "align"
+            ],
+            "speed": {
+              "align": {
+                "samples": 3,
+                "medianSecondsPerMinute": 1
+              }
+            },
+            "lastSeenAt": 0
+          },
+          {
+            "id": "pc",
+            "nest": false,
+            "name": "pc",
+            "os": "linux",
+            "accel": "cpu",
+            "keepAwake": "none",
+            "version": "0.7.1",
+            "state": "idle",
+            "memoryBytes": 17179869184,
+            "jobs": [
+              "align"
+            ],
+            "speed": {
+              "align": {
+                "samples": 3,
+                "medianSecondsPerMinute": 90
+              }
+            },
+            "lastSeenAt": 0
+          }
+        ],
+        "kind": "align"
+      },
+      "who": "pc",
+      "speed": 90,
+      "speedReason": "Todavía sin medir"
+    },
+    {
+      "name": "outdated excluded",
+      "input": {
+        "helpers": [
+          {
+            "id": "pc",
+            "nest": false,
+            "name": "pc",
+            "os": "linux",
+            "accel": "cpu",
+            "keepAwake": "none",
+            "version": "0.7.1",
+            "state": "outdated",
+            "memoryBytes": 17179869184,
+            "jobs": [
+              "align"
+            ],
+            "speed": {
+              "align": {
+                "samples": 0,
+                "medianSecondsPerMinute": 0
+              }
+            },
+            "lastSeenAt": 0
+          }
+        ],
+        "kind": "align"
+      },
+      "who": null,
+      "speed": null,
+      "speedReason": "Ningún equipo procesa para el nido"
+    },
+    {
+      "name": "unknown cohort uses acceleration",
+      "input": {
+        "helpers": [
+          {
+            "id": "pc",
+            "nest": false,
+            "name": "pc",
+            "os": "linux",
+            "accel": "cpu",
+            "keepAwake": "none",
+            "version": "0.7.1",
+            "state": "idle",
+            "memoryBytes": 17179869184,
+            "jobs": [
+              "align"
+            ],
+            "speed": {
+              "align": {
+                "samples": 0,
+                "medianSecondsPerMinute": 0
+              }
+            },
+            "lastSeenAt": 0
+          },
+          {
+            "id": "gpu",
+            "nest": false,
+            "name": "gpu",
+            "os": "linux",
+            "accel": "cuda",
+            "keepAwake": "none",
+            "version": "0.7.1",
+            "state": "idle",
+            "memoryBytes": 17179869184,
+            "jobs": [
+              "align"
+            ],
+            "speed": {
+              "align": {
+                "samples": 0,
+                "medianSecondsPerMinute": 0
+              }
+            },
+            "lastSeenAt": 0
+          }
+        ],
+        "kind": "align"
+      },
+      "who": "gpu",
+      "speed": null,
+      "speedReason": "Todavía sin medir"
+    }
+  ]
+}

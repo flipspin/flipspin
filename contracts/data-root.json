@@ -1,0 +1,240 @@
+{
+  "description": "Data root resolution; $HOME and $CASE are test-local absolute paths. A trailing slash in legacy creates a directory. Resolution has no side effects.",
+  "cases": [
+    {
+      "id": "linux-default",
+      "platform": "linux",
+      "env": {},
+      "legacy": [],
+      "expected": "$HOME/.local/share/flipspin",
+      "source": "OS default"
+    },
+    {
+      "id": "mac-default",
+      "platform": "darwin",
+      "env": {},
+      "legacy": [],
+      "expected": "$HOME/Library/Application Support/Flipspin",
+      "source": "OS default"
+    },
+    {
+      "id": "windows-default",
+      "platform": "win32",
+      "env": {
+        "LOCALAPPDATA": "$CASE/local"
+      },
+      "legacy": [],
+      "expected": "$CASE/local/Flipspin",
+      "source": "OS default"
+    },
+    {
+      "id": "windows-fallback",
+      "platform": "win32",
+      "env": {},
+      "legacy": [],
+      "expected": "$HOME/AppData/Local/Flipspin",
+      "source": "OS default"
+    },
+    {
+      "id": "xdg",
+      "platform": "linux",
+      "env": {
+        "XDG_DATA_HOME": "$CASE/xdg"
+      },
+      "legacy": [],
+      "expected": "$CASE/xdg/flipspin",
+      "source": "OS default"
+    },
+    {
+      "id": "empty-legacy",
+      "platform": "linux",
+      "env": {},
+      "legacy": [
+        "empty/"
+      ],
+      "expected": "$HOME/.local/share/flipspin",
+      "source": "OS default"
+    },
+    {
+      "id": "music-only-is-not-legacy-data",
+      "platform": "linux",
+      "env": {},
+      "legacy": [
+        "Music/"
+      ],
+      "expected": "$HOME/.local/share/flipspin",
+      "source": "OS default"
+    },
+    {
+      "id": "legacy-users-json",
+      "platform": "linux",
+      "env": {},
+      "legacy": [
+        "users.json"
+      ],
+      "expected": "$HOME/Krobi",
+      "source": "legacy data"
+    },
+    {
+      "id": "legacy-instance-json",
+      "platform": "linux",
+      "env": {},
+      "legacy": [
+        "instance.json"
+      ],
+      "expected": "$HOME/Krobi",
+      "source": "legacy data"
+    },
+    {
+      "id": "legacy-jobs-sqlite",
+      "platform": "linux",
+      "env": {},
+      "legacy": [
+        "jobs.sqlite"
+      ],
+      "expected": "$HOME/Krobi",
+      "source": "legacy data"
+    },
+    {
+      "id": "legacy-playlists",
+      "platform": "linux",
+      "env": {},
+      "legacy": [
+        "playlists/"
+      ],
+      "expected": "$HOME/Krobi",
+      "source": "legacy data"
+    },
+    {
+      "id": "primary",
+      "platform": "linux",
+      "env": {
+        "FLIPSPIN_DATA_DIR": "$CASE/root"
+      },
+      "legacy": [],
+      "expected": "$CASE/root",
+      "source": "FLIPSPIN_DATA_DIR"
+    },
+    {
+      "id": "alias",
+      "platform": "linux",
+      "env": {
+        "KROBI_DATA_DIR": "$CASE/root"
+      },
+      "legacy": [],
+      "expected": "$CASE/root",
+      "source": "KROBI_DATA_DIR"
+    },
+    {
+      "id": "matching-alias",
+      "platform": "linux",
+      "env": {
+        "FLIPSPIN_DATA_DIR": "$CASE/root",
+        "KROBI_DATA_DIR": "$CASE/root"
+      },
+      "legacy": [],
+      "expected": "$CASE/root",
+      "source": "FLIPSPIN_DATA_DIR"
+    },
+    {
+      "id": "conflicting-alias",
+      "platform": "linux",
+      "env": {
+        "FLIPSPIN_DATA_DIR": "$CASE/a",
+        "KROBI_DATA_DIR": "$CASE/b"
+      },
+      "legacy": [],
+      "error": "FLIPSPIN_DATA_DIR and KROBI_DATA_DIR"
+    },
+    {
+      "id": "flag-beats-both",
+      "platform": "linux",
+      "env": {
+        "FLIPSPIN_DATA_DIR": "$CASE/a",
+        "KROBI_DATA_DIR": "$CASE/b"
+      },
+      "legacy": [],
+      "flag": "$CASE/flag",
+      "expected": "$CASE/flag",
+      "source": "--data-dir"
+    },
+    {
+      "id": "root-beats-legacy",
+      "platform": "linux",
+      "env": {
+        "FLIPSPIN_DATA_DIR": "$CASE/root"
+      },
+      "legacy": [
+        "users.json"
+      ],
+      "expected": "$CASE/root",
+      "source": "FLIPSPIN_DATA_DIR"
+    },
+    {
+      "id": "tilde",
+      "platform": "linux",
+      "env": {
+        "FLIPSPIN_DATA_DIR": "~/custom"
+      },
+      "legacy": [],
+      "expected": "$HOME/custom",
+      "source": "FLIPSPIN_DATA_DIR"
+    },
+    {
+      "id": "docker",
+      "platform": "linux",
+      "env": {
+        "FLIPSPIN_DATA_DIR": "/data/Krobi",
+        "HOME": "/data"
+      },
+      "legacy": [],
+      "expected": "/data/Krobi",
+      "source": "FLIPSPIN_DATA_DIR"
+    },
+    {
+      "id": "systemd",
+      "platform": "linux",
+      "env": {
+        "FLIPSPIN_DATA_DIR": "$CASE/service/Krobi",
+        "KROBI_MUSIC_DIR": "$CASE/service/Krobi/Music",
+        "KROBI_PLAYLIST_DIR": "$CASE/service/Krobi/playlists",
+        "KROBI_TEMP_DIR": "$CASE/service/Krobi/temp",
+        "KROBI_LOG_DIR": "$CASE/service/Krobi/logs",
+        "KROBI_CREDENTIALS_DIR": "$CASE/service/Krobi/credentials"
+      },
+      "legacy": [],
+      "expected": "$CASE/service/Krobi",
+      "source": "FLIPSPIN_DATA_DIR"
+    },
+    {
+      "id": "helper-only-tools-is-legacy",
+      "platform": "darwin",
+      "env": {},
+      "legacy": [
+        "tools/"
+      ],
+      "expected": "$HOME/Krobi",
+      "source": "legacy data"
+    },
+    {
+      "id": "helper-only-models-is-legacy",
+      "platform": "darwin",
+      "env": {},
+      "legacy": [
+        "models/"
+      ],
+      "expected": "$HOME/Krobi",
+      "source": "legacy data"
+    },
+    {
+      "id": "settings-only-is-legacy",
+      "platform": "darwin",
+      "env": {},
+      "legacy": [
+        ".env"
+      ],
+      "expected": "$HOME/Krobi",
+      "source": "legacy data"
+    }
+  ]
+}

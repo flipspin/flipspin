@@ -1,0 +1,17 @@
+{
+  "src/auth/CodeSignIn.tsx": { "count": 1, "reason": "Unsigned-in approval wait has no authenticated event stream." },
+  "src/browse/useAcquisition.ts": { "count": 1, "reason": "Active acquisition progress before its terminal ledger event." },
+  "src/data/poll.ts": { "count": 1, "reason": "Shared foreground-only progress scheduler and imperative wait." },
+  "src/lib/progressSource.ts": { "count": 1, "reason": "Active download percent is not on the change stream." },
+  "src/library/tracks/TagEditDetails.tsx": { "count": 1, "reason": "Running tag edit progress between ledger state changes." },
+  "src/lyrics/syncRunStore.ts": { "count": 1, "reason": "Running lyrics sync progress between job state changes." },
+  "src/match/MatchWindow.tsx": { "count": 1, "reason": "Active match/download operation progress." },
+  "src/onboarding/musicData.ts": { "count": 4, "reason": "Running scan/upload counts until catalog publication." },
+  "src/pairing/SubsonicDeviceDialog.tsx": { "count": 1, "reason": "First Subsonic connection has no area event yet." },
+  "src/settings/config.tsx": { "count": 2, "reason": "Restart watch only while a restart is requested or running." },
+  "src/settings/duplicatesData.ts": { "count": 1, "reason": "Running duplicate scan progress." },
+  "src/settings/libraryScansData.ts": { "count": 1, "reason": "Running library scan progress." },
+  "src/settings/sourceInstall.ts": { "count": 1, "reason": "Running plugin install until its job ends; change events arrive late while the nest builds." },
+  "src/stems/background.ts": { "count": 1, "reason": "Pending stems job progress." },
+  "src/stems/useStemSong.ts": { "count": 1, "reason": "Pending stems job progress." }
+}

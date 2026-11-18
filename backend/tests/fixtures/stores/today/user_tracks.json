@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "rows": [
+    {
+      "user_id": "fixture-owner",
+      "rel_path": "Album/song.mp3",
+      "added_at": "2023-11-14T22:13:20Z",
+      "liked": true,
+      "play_count": 3
+    }
+  ]
+}

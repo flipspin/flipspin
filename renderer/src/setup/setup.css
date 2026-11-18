@@ -1,0 +1,121 @@
+@import '../onboarding/night-tokens.css';
+
+/*
+ * The first-run surface: layout for the krobi-ui island (`SetupSurface.tsx`).
+ * krobi-ui lives under `src/ui` and is scoped to
+ * `.krobi-setup.z-root`; this file holds only what Flipspin adds around it.
+ */
+
+/* `index.css` paints every bare <button> coral from `@layer base` (min-height,
+   hover opacity, focus outline…). krobi-ui is unlayered, so it already wins every
+   property it sets; this reverts the ones it does not, so no coral leaks into a
+   krobi-ui button. Same layer, higher specificity: it beats the global rule and
+   still loses to every unlayered `.z-btn` rule. */
+@layer base {
+  .krobi-setup button,
+  .krobi-setup button:hover,
+  .krobi-setup button:active,
+  .krobi-setup button:focus,
+  .krobi-setup button:focus-visible {
+    all: revert-layer;
+  }
+}
+
+.krobi-setup--page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: var(--space-10) var(--gutter);
+  box-sizing: border-box;
+}
+
+.krobi-setup--page .krobi-setup__column {
+  padding: 32px;
+  background: var(--kob-panel);
+  border: 1px solid var(--kob-line);
+  border-top: 4px solid var(--kob-hue);
+  border-radius: 14px;
+  box-sizing: border-box;
+}
+
+.krobi-setup--page .z-btn { --_h: 40px; }
+.krobi-setup--page .z-btn:hover:not(:disabled),
+.krobi-setup--page .z-btn:active:not(:disabled) { transform: none; }
+.krobi-setup--page .z-input,
+.krobi-setup--page .z-select { height: 40px; background: var(--kob-ground); box-sizing: border-box; }
+.krobi-setup--page .z-input:focus,
+.krobi-setup--page .z-select:focus { box-shadow: none; }
+
+@media (max-width: 599px) {
+  .krobi-setup--page { padding: 20px 16px; }
+  .krobi-setup--page .krobi-setup__column { padding: 24px 20px; }
+}
+
+.krobi-setup__column {
+  display: grid;
+  gap: var(--space-4);
+  width: min(32rem, 100%);
+}
+
+.krobi-setup--inline {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-lg);
+}
+
+.krobi-setup__title {
+  margin: 0;
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-text-primary);
+}
+
+.krobi-setup__form {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.krobi-setup__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* A notice in the flow of a form (krobi-ui's `.z-banner` is a full-width strip). */
+.krobi-setup .z-banner {
+  border: var(--border-w) solid var(--color-border-bold);
+  border-radius: var(--radius-md);
+}
+
+.krobi-setup__list {
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.krobi-setup p { margin: 0; }
+
+/* A wait line alone in the column ("Looking for your nest…", "Checking your session…"): centred in the window,
+   one size for all three, so the swap between them does not jump. */
+.krobi-setup__wait {
+  margin: 0;
+  text-align: center;
+}
+
+/* Let discovered names use the full row and truncate without breaking words. */
+.nest-picker-card .zr-card__titles { flex: 1; }
+.nest-picker-card .zr-card__title { display: block; width: 100%; }
+.nest-picker-card .zr-card__title strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,0 +1,6 @@
+Model:           NVIDIA GeForce GTX 1080 Ti
+IRQ:             42
+GPU UUID:        GPU-00000000-0000-0000-0000-000000000000
+Video BIOS:      86.02.39.00.01
+Bus Type:        PCIe
+DMA Size:        47 bits

@@ -1,0 +1,69 @@
+/* Library only: the toolbar scrolls away; facets and column names pin together. */
+.library-table .library-scroll {
+  padding: 0;
+  overflow-anchor: none;
+  overscroll-behavior-y: contain;
+  scroll-padding-top: var(--stack-h, 0px);
+}
+.library-scroll__content { min-height: 100%; }
+.library-sticky-sentinel { height: 1px; margin-bottom: -1px; pointer-events: none; }
+.library-sticky-stack {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  background: var(--paper);
+}
+.library-sticky-stack::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -4px;
+  height: 4px;
+  background: var(--song-table-ink);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+.library-scroll[data-stuck="true"] .library-sticky-stack::after { opacity: 1; }
+.library-table .retro-song-table__group { top: var(--stack-h, 0px); }
+.library-filters-popover {
+  width: min(560px, calc(100vw - 16px));
+  padding: 16px;
+  color: var(--ink);
+  background: var(--panel);
+  border: 2px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 4px 4px 0 var(--line);
+}
+/* Existing Select portals are siblings of the kit's layer root. */
+body:has(.library-filters-popover[data-state="open"]) .krobi-select-panel { z-index: var(--z-popover); }
+.library-filters-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.library-active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 20px;
+  padding: 10px 16px;
+  border-bottom: 2px solid var(--line);
+  color: var(--ink-3);
+  font-size: 12px;
+  animation: library-filters-enter var(--dur-fast) var(--ease-out);
+}
+@keyframes library-filters-enter { from { opacity: 0; } to { opacity: 1; } }
+.library-active-filter { display: inline-flex; align-items: center; gap: 6px; }
+.library-active-filter b { color: var(--ink); font-weight: 600; }
+.library-active-filters .library-filter-clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding: 2px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--ink-3);
+  font: inherit;
+  cursor: pointer;
+}
+.library-active-filters .library-filter-clear:hover { color: var(--ink); }
+.library-filter-results { margin-inline-start: auto; font-family: var(--font-mono, ui-monospace, monospace); }

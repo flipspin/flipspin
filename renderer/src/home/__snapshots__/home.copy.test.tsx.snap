@@ -1,0 +1,5 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`preserves Home text content in en 1`] = `"Recently addedNo albums yet. Import music to get started.Your playlistsNo playlists yet.Most playedNothing played yet.Your library0 songs · 0 hNo songs yet0 songsOpen ExploreJobs0Nothing running"`;
+
+exports[`preserves Home text content in es 1`] = `"Recién agregadoAún no hay álbumes. Importa música para empezar.Tus playlistsNo hay playlists todavía.Más escuchadasAún no has escuchado nada.Tu biblioteca0 canciones · 0 hAún no hay canciones0 cancionesAbrir ExplorarTrabajos0Nada en curso"`;

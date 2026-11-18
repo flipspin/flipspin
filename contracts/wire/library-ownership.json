@@ -1,0 +1,36 @@
+{
+  "results": [
+    {
+      "match": {
+        "album": "Butter",
+        "artist": "BTS",
+        "durationSeconds": 183.0,
+        "path": "/music/Butter/01 - Butter.mp3",
+        "title": "Butter",
+        "trackNumber": 1
+      },
+      "nearMatch": null,
+      "owned": true,
+      "reason": null
+    },
+    {
+      "match": null,
+      "nearMatch": null,
+      "owned": false,
+      "reason": null
+    },
+    {
+      "match": null,
+      "nearMatch": {
+        "album": "Butter (Hotter Remix)",
+        "artist": "BTS",
+        "durationSeconds": 290.0,
+        "path": "/music/Butter (Hotter Remix)/01 - Butter.mp3",
+        "title": "Butter",
+        "trackNumber": 1
+      },
+      "owned": false,
+      "reason": "Duración distinta: 4:50 frente a 3:03"
+    }
+  ]
+}
