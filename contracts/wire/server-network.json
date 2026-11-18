@@ -1,0 +1,17 @@
+{
+  "externalUrl": "https://musica.ejemplo.com",
+  "lan": [
+    "http://192.168.1.20:8000",
+    "http://10.0.0.5:8000"
+  ],
+  "lanNetworks": [
+    "192.168.1.0/24"
+  ],
+  "outside": null,
+  "route": null,
+  "tailscale": {
+    "ip": "100.101.1.2",
+    "name": "krobi.tail1234.ts.net",
+    "url": "http://100.101.1.2:8000"
+  }
+}

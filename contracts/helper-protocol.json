@@ -1,0 +1,687 @@
+{
+  "leaseSeconds": 600,
+  "maxAttempts": 3,
+  "cases": [
+    {
+      "name": "idempotent enqueue and exclusive capability-matched claim",
+      "steps": [
+        {
+          "input": {
+            "op": "enqueue",
+            "kind": "transcribe",
+            "key": "song",
+            "as": "job"
+          },
+          "expected": {
+            "state": "queued",
+            "attempts": 0
+          }
+        },
+        {
+          "input": {
+            "op": "enqueue",
+            "kind": "transcribe",
+            "key": "song",
+            "sameAs": "job"
+          },
+          "expected": {
+            "sameJob": true,
+            "records": 1
+          }
+        },
+        {
+          "input": {
+            "op": "claim",
+            "holder": "incapable",
+            "capabilities": [],
+            "route": "/api/helpers/claim"
+          },
+          "expected": null
+        },
+        {
+          "input": {
+            "op": "claim",
+            "holder": "helper",
+            "as": "lease",
+            "route": "/api/helpers/claim"
+          },
+          "expected": {
+            "state": "leased",
+            "attempts": 1,
+            "leaseSeconds": 600
+          }
+        },
+        {
+          "input": {
+            "op": "claim",
+            "holder": "second",
+            "route": "/api/helpers/claim"
+          },
+          "expected": null
+        },
+        {
+          "input": {
+            "op": "heartbeat",
+            "job": "job",
+            "lease": "lease",
+            "phase": "transcribing",
+            "progress": 40,
+            "route": "/api/helpers/jobs/{id}/heartbeat"
+          },
+          "expected": {
+            "stop": false
+          }
+        },
+        {
+          "input": {
+            "op": "inspect",
+            "job": "job"
+          },
+          "expected": {
+            "phase": "transcribing",
+            "progress": 40,
+            "leaseSeconds": 600
+          }
+        }
+      ]
+    },
+    {
+      "name": "lyrics first then one stems job",
+      "steps": [
+        {
+          "input": {
+            "op": "enqueue",
+            "kind": "stems",
+            "key": "split",
+            "as": "stems"
+          },
+          "expected": {
+            "state": "queued",
+            "attempts": 0
+          }
+        },
+        {
+          "input": {
+            "op": "enqueue",
+            "kind": "transcribe",
+            "key": "words",
+            "as": "lyrics"
+          },
+          "expected": {
+            "state": "queued",
+            "attempts": 0
+          }
+        },
+        {
+          "input": {
+            "op": "claim",
+            "holder": "helper",
+            "as": "lyricsLease",
+            "route": "/api/helpers/claim"
+          },
+          "expected": {
+            "state": "leased",
+            "attempts": 1,
+            "leaseSeconds": 600
+          }
+        },
+        {
+          "input": {
+            "op": "claim",
+            "holder": "helper",
+            "route": "/api/helpers/claim"
+          },
+          "expected": null
+        },
+        {
+          "input": {
+            "op": "complete",
+            "job": "lyrics",
+            "lease": "lyricsLease",
+            "route": "/api/helpers/jobs/{id}/result"
+          },
+          "expected": true
+        },
+        {
+          "input": {
+            "op": "claim",
+            "holder": "helper",
+            "as": "stemsLease",
+            "route": "/api/helpers/claim"
+          },
+          "expected": {
+            "state": "leased",
+            "attempts": 1,
+            "leaseSeconds": 600
+          }
+        },
+        {
+          "input": {
+            "op": "inspect",
+            "job": "stems"
+          },
+          "expected": {
+            "state": "leased",
+            "attempts": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "expiry on next claim fences a stale result",
+      "steps": [
+        {
+          "input": {
+            "op": "enqueue",
+            "kind": "transcribe",
+            "key": "song",
+            "as": "job"
+          },
+          "expected": {
+            "state": "queued",
+            "attempts": 0
+          }
+        },
+        {
+          "input": {
+            "op": "claim",
+            "holder": "helper",
+            "as": "old",
+            "route": "/api/helpers/claim"
+          },
+          "expected": {
+            "state": "leased",
+            "attempts": 1,
+            "leaseSeconds": 600
+          }
+        },
+        {
+          "input": {
+            "op": "advance",
+            "seconds": 601
+          },
+          "expected": null
+        },
+        {
+          "input": {
+            "op": "claim",
+            "holder": "second",
+            "as": "new",
+            "route": "/api/helpers/claim"
+          },
+          "expected": {
+            "state": "leased",
+            "attempts": 2
+          }
+        },
+        {
+          "input": {
+            "op": "complete",
+            "job": "job",
+            "lease": "old",
+            "route": "/api/helpers/jobs/{id}/result"
+          },
+          "expected": false
+        },
+        {
+          "input": {
+            "op": "heartbeat",
+            "job": "job",
+            "lease": "old",
+            "route": "/api/helpers/jobs/{id}/heartbeat"
+          },
+          "expected": {
+            "stop": true,
+            "reason": "lease-lost"
+          }
+        },
+        {
+          "input": {
+            "op": "complete",
+            "job": "job",
+            "lease": "new",
+            "route": "/api/helpers/jobs/{id}/result"
+          },
+          "expected": true
+        },
+        {
+          "input": {
+            "op": "inspect",
+            "job": "job"
+          },
+          "expected": {
+            "state": "done",
+            "applied": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "heartbeat extends visibility",
+      "steps": [
+        {
+          "input": {
+            "op": "enqueue",
+            "kind": "transcribe",
+            "key": "song",
+            "as": "job"
+          },
+          "expected": {
+            "state": "queued",
+            "attempts": 0
+          }
+        },
+        {
+          "input": {
+            "op": "claim",
+            "holder": "helper",
+            "as": "lease",
+            "route": "/api/helpers/claim"
+          },
+          "expected": {
+            "state": "leased",
+            "attempts": 1,
+            "leaseSeconds": 600
+          }
+        },
+        {
+          "input": {
+            "op": "advance",
+            "seconds": 599
+          },
+          "expected": null
+        },
+        {
+          "input": {
+            "op": "heartbeat",
+            "job": "job",
+            "lease": "lease",
+            "route": "/api/helpers/jobs/{id}/heartbeat"
+          },
+          "expected": {
+            "stop": false
+          }
+        },
+        {
+          "input": {
+            "op": "advance",
+            "seconds": 599
+          },
+          "expected": null
+        },
+        {
+          "input": {
+            "op": "claim",
+            "holder": "second",
+            "route": "/api/helpers/claim"
+          },
+          "expected": null
+        },
+        {
+          "input": {
+            "op": "inspect",
+            "job": "job"
+          },
+          "expected": {
+            "state": "leased",
+            "leaseSeconds": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "max attempts after three expired leases",
+      "steps": [
+        {
+          "input": {
+            "op": "enqueue",
+            "kind": "transcribe",
+            "key": "song",
+            "as": "job"
+          },
+          "expected": {
+            "state": "queued",
+            "attempts": 0
+          }
+        },
+        {
+          "input": {
+            "op": "claim",
+            "holder": "helper",
+            "as": "one",
+            "route": "/api/helpers/claim"
+          },
+          "expected": {
+            "state": "leased",
+            "attempts": 1,
+            "leaseSeconds": 600
+          }
+        },
+        {
+          "input": {
+            "op": "advance",
+            "seconds": 601
+          },
+          "expected": null
+        },
+        {
+          "input": {
+            "op": "claim",
+            "holder": "helper",
+            "as": "two",
+            "route": "/api/helpers/claim"
+          },
+          "expected": {
+            "state": "leased",
+            "attempts": 2
+          }
+        },
+        {
+          "input": {
+            "op": "advance",
+            "seconds": 601
+          },
+          "expected": null
+        },
+        {
+          "input": {
+            "op": "claim",
+            "holder": "helper",
+            "as": "three",
+            "route": "/api/helpers/claim"
+          },
+          "expected": {
+            "state": "leased",
+            "attempts": 3
+          }
+        },
+        {
+          "input": {
+            "op": "advance",
+            "seconds": 601
+          },
+          "expected": null
+        },
+        {
+          "input": {
+            "op": "claim",
+            "holder": "second",
+            "route": "/api/helpers/claim"
+          },
+          "expected": null
+        },
+        {
+          "input": {
+            "op": "inspect",
+            "job": "job"
+          },
+          "expected": {
+            "state": "dead",
+            "attempts": 3,
+            "error": "el equipo dejó de responder 3 veces",
+            "lease": null
+          }
+        },
+        {
+          "input": {
+            "op": "complete",
+            "job": "job",
+            "lease": "three",
+            "route": "/api/helpers/jobs/{id}/result"
+          },
+          "expected": false
+        }
+      ]
+    },
+    {
+      "name": "accidents retry up to three; retain the final reason",
+      "steps": [
+        {
+          "input": {
+            "op": "enqueue",
+            "kind": "transcribe",
+            "key": "song",
+            "as": "job"
+          },
+          "expected": {
+            "state": "queued",
+            "attempts": 0
+          }
+        },
+        {
+          "input": {
+            "op": "claim",
+            "holder": "helper",
+            "as": "one",
+            "route": "/api/helpers/claim"
+          },
+          "expected": {
+            "state": "leased",
+            "attempts": 1,
+            "leaseSeconds": 600
+          }
+        },
+        {
+          "input": {
+            "op": "fail",
+            "job": "job",
+            "lease": "one",
+            "reason": "download failed",
+            "final": false,
+            "route": "/api/helpers/jobs/{id}/result"
+          },
+          "expected": true
+        },
+        {
+          "input": {
+            "op": "claim",
+            "holder": "helper",
+            "as": "two",
+            "route": "/api/helpers/claim"
+          },
+          "expected": {
+            "attempts": 2
+          }
+        },
+        {
+          "input": {
+            "op": "fail",
+            "job": "job",
+            "lease": "two",
+            "reason": "worker crashed",
+            "final": false,
+            "route": "/api/helpers/jobs/{id}/result"
+          },
+          "expected": true
+        },
+        {
+          "input": {
+            "op": "claim",
+            "holder": "helper",
+            "as": "three",
+            "route": "/api/helpers/claim"
+          },
+          "expected": {
+            "attempts": 3
+          }
+        },
+        {
+          "input": {
+            "op": "fail",
+            "job": "job",
+            "lease": "three",
+            "reason": "disk full",
+            "final": false,
+            "route": "/api/helpers/jobs/{id}/result"
+          },
+          "expected": false
+        },
+        {
+          "input": {
+            "op": "inspect",
+            "job": "job"
+          },
+          "expected": {
+            "state": "dead",
+            "error": "disk full",
+            "attempts": 3
+          }
+        }
+      ]
+    },
+    {
+      "name": "a verdict is final on its first lease",
+      "steps": [
+        {
+          "input": {
+            "op": "enqueue",
+            "kind": "transcribe",
+            "key": "song",
+            "as": "job"
+          },
+          "expected": {
+            "state": "queued",
+            "attempts": 0
+          }
+        },
+        {
+          "input": {
+            "op": "claim",
+            "holder": "helper",
+            "as": "lease",
+            "route": "/api/helpers/claim"
+          },
+          "expected": {
+            "state": "leased",
+            "attempts": 1,
+            "leaseSeconds": 600
+          }
+        },
+        {
+          "input": {
+            "op": "fail",
+            "job": "job",
+            "lease": "lease",
+            "reason": "instrumental",
+            "final": true,
+            "route": "/api/helpers/jobs/{id}/result"
+          },
+          "expected": false
+        },
+        {
+          "input": {
+            "op": "claim",
+            "holder": "second",
+            "route": "/api/helpers/claim"
+          },
+          "expected": null
+        },
+        {
+          "input": {
+            "op": "inspect",
+            "job": "job"
+          },
+          "expected": {
+            "state": "dead",
+            "error": "instrumental",
+            "attempts": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "cancel says stop and discards the result",
+      "steps": [
+        {
+          "input": {
+            "op": "enqueue",
+            "kind": "transcribe",
+            "key": "song",
+            "as": "job"
+          },
+          "expected": {
+            "state": "queued",
+            "attempts": 0
+          }
+        },
+        {
+          "input": {
+            "op": "claim",
+            "holder": "helper",
+            "as": "lease",
+            "route": "/api/helpers/claim"
+          },
+          "expected": {
+            "state": "leased",
+            "attempts": 1,
+            "leaseSeconds": 600
+          }
+        },
+        {
+          "input": {
+            "op": "cancel",
+            "job": "job"
+          },
+          "expected": true
+        },
+        {
+          "input": {
+            "op": "heartbeat",
+            "job": "job",
+            "lease": "lease",
+            "route": "/api/helpers/jobs/{id}/heartbeat"
+          },
+          "expected": {
+            "stop": true,
+            "reason": "lease-lost"
+          }
+        },
+        {
+          "input": {
+            "op": "complete",
+            "job": "job",
+            "lease": "lease",
+            "route": "/api/helpers/jobs/{id}/result"
+          },
+          "expected": false
+        },
+        {
+          "input": {
+            "op": "inspect",
+            "job": "job"
+          },
+          "expected": {
+            "state": "cancelled",
+            "applied": 0
+          }
+        }
+      ]
+    }
+  ],
+  "routes": {
+    "claim": "/api/helpers/claim",
+    "heartbeat": "/api/helpers/jobs/{id}/heartbeat",
+    "result": "/api/helpers/jobs/{id}/result",
+    "bye": "/api/helpers/bye"
+  },
+  "httpCases": [
+    {
+      "kind": "align",
+      "claim": "/api/helpers/claim",
+      "heartbeat": "/api/helpers/jobs/{id}/heartbeat",
+      "result": "/api/helpers/jobs/{id}/result"
+    },
+    {
+      "kind": "transcribe",
+      "claim": "/api/helpers/claim",
+      "heartbeat": "/api/helpers/jobs/{id}/heartbeat",
+      "result": "/api/helpers/jobs/{id}/result"
+    },
+    {
+      "kind": "stems",
+      "claim": "/api/helpers/claim",
+      "heartbeat": "/api/helpers/jobs/{id}/heartbeat",
+      "result": "/api/helpers/jobs/{id}/result"
+    }
+  ]
+}

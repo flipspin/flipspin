@@ -1,0 +1,29 @@
+backend:
+  - backend/**
+renderer:
+  - renderer/**
+  - package.json
+  - package-lock.json
+  - renderer/i18next.config.ts
+shell:
+  - src-tauri/**
+helper:
+  - helper/**
+contracts:
+  - contracts/**
+docs:
+  - docs/**
+  - '*.md'
+  - '*/AGENTS.md'
+ci:
+  - .github/**
+  - Makefile
+  - .tool-versions
+  - rust-toolchain.toml
+  - scripts/**
+  # Shared packaging assets can affect every application.
+  - resources/**
+deploy:
+  - deploy/**
+  - backend/Dockerfile*
+  - docker-compose.yml

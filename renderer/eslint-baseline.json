@@ -1,0 +1,5 @@
+{
+  "src/lib/ipc.ts": {
+    "no-hand-response-types": 1
+  }
+}

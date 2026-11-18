@@ -1,0 +1,5 @@
+.krobi-select:disabled { opacity: .45; cursor: default; }
+.krobi-select-panel__group { padding: 9px 9px 4px; color: var(--ink-3); font: 600 11px var(--font-main); }
+.krobi-select-panel__option[data-pinned] { position: sticky; top: 0; background: var(--panel); border-bottom: 1px solid var(--line-soft); border-radius: 0; }
+.krobi-select-panel__option[data-pinned][data-highlighted] { background: var(--paper); }
+.krobi-select-panel .krobi-select-panel__option[data-emphasized] { background: var(--yellow-tint); }

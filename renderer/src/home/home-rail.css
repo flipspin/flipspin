@@ -1,0 +1,32 @@
+.home-floating, .home-columns { display: flex; flex: 1; height: 100%; min-height: 0; min-width: 0; overflow: hidden; }
+.home-main {
+  display: flex; flex-direction: column; flex: 1; gap: 20px; min-width: 0; min-height: 0;
+  overflow-y: auto; scrollbar-width: none; padding: var(--shell-content-top) 24px 24px;
+}
+.home-main::-webkit-scrollbar, .home-rail__clip::-webkit-scrollbar { display: none; }
+.home-main > * { flex-shrink: 0; }
+/* Width belongs to the shell; the fixed inner rail clips during the fold.
+   No gap on the parent: a zero-width rail returns all its space to Home. */
+.home-rail { --home-rail-width: 320px; width: var(--home-rail-width); flex: none; min-height: 0; overflow: hidden; transition: width var(--dur-sidebar) var(--ease-spring); }
+.home-rail[data-folded] { width: 0; }
+.home-rail__clip {
+  width: 320px; height: 100%; min-height: 0; box-sizing: border-box;
+  display: flex; flex-direction: column; gap: 24px; overflow-y: auto; scrollbar-width: none;
+  padding: var(--shell-content-top) 24px 24px 0;
+  will-change: opacity;
+  transition: opacity var(--dur-fast) var(--ease-out) calc(var(--dur-sidebar) / 3);
+}
+.home-rail[data-folded] .home-rail__clip { opacity: 0; pointer-events: none; transition-delay: 0s; }
+.home-rail[data-resizing], .home-rail[data-resizing] .home-rail__clip { transition: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .home-rail, .home-rail .home-rail__clip { transition: none !important; }
+}
+.home-rail__jobs { flex: 1; min-height: 180px; }
+.home-jobs--bare { height: 100%; min-height: 0; display: flex; flex-direction: column; color: var(--ink); }
+.home-jobs__heading { display: flex; align-items: baseline; gap: 8px; padding: 0 0 12px; }
+.home-jobs__heading h2 { margin: 0; font-size: 15px; font-weight: 800; }
+.home-jobs__count { font: 12px var(--font-mono); color: var(--ink-3); }
+.home-jobs--bare .home-jobs__rows article { padding: 12px 0; border: 0; background: transparent; box-shadow: none; }
+.home-jobs--bare .home-jobs__rows .border-t,
+.home-jobs--bare .home-jobs__rows .border-b { border: 0; }
+.home-jobs--bare .home-jobs__rows > div { padding-left: 0; padding-right: 0; }

@@ -1,0 +1,13 @@
+{
+  "freedBytes": 7,
+  "playlists": "deleted",
+  "removedSongs": 1,
+  "success": true,
+  "user": {
+    "createdAt": "2026-10-28T12:00:00Z",
+    "id": "<account-id>",
+    "label": "Ana",
+    "lastSeenAt": null,
+    "role": "member"
+  }
+}

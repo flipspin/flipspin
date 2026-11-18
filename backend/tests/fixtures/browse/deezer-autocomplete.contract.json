@@ -1,0 +1,7 @@
+{
+  "_provenance": "Synthetic contract fixture, NOT a live recording. 2026-11-10: live probe blocked by DNS/network/tool approval. Replace with a recorded response before relying on this undocumented endpoint shape.",
+  "artists": {"data": [{"id": 246791, "name": "Dua Lipa", "type": "artist"}]},
+  "albums": {"data": [{"id": 131462272, "title": "Future Nostalgia", "artist": {"id": 246791, "name": "Dua Lipa"}, "type": "album"}]},
+  "tracks": {"data": [{"id": 908604612, "title": "Levitating", "duration": 203, "artist": {"id": 246791, "name": "Dua Lipa"}, "album": {"id": 131462272, "title": "Future Nostalgia"}, "type": "track"}]},
+  "playlists": {"data": [{"id": 123, "title": "Pop Mix", "creator": {"name": "Deezer"}, "type": "playlist"}]}
+}

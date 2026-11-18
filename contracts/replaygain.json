@@ -1,0 +1,30 @@
+{
+  "referenceLufs": -18,
+  "cases": [
+    {"name": "computed", "row": {"track_lufs": -22, "true_peak": 0.7, "album_gain": -2, "album_peak": 0.9}, "tags": {}, "expected": {"trackGain": 4, "albumGain": -2, "trackPeak": 0.7, "albumPeak": 0.9, "baseGain": 0}},
+    {"name": "tag wins per field including zero", "row": {"track_lufs": -22, "true_peak": 0.7}, "tags": {"trackGain": 0, "albumGain": -3, "trackPeak": 0.6}, "expected": {"trackGain": 0, "albumGain": -3, "trackPeak": 0.6, "albumPeak": null, "baseGain": 0}},
+    {"name": "missing", "row": {}, "tags": {}, "expected": null},
+    {"name": "Krobi marker and owned gain fields use computed", "row": {"track_lufs": -22, "true_peak": 0.7, "album_gain": -2, "album_peak": 0.9}, "tags": {"trackGain": -8, "albumGain": -9, "trackPeak": 0.4, "albumPeak": 0.5, "tag_owner": "krobi", "owned_fields": ["trackGain", "albumGain", "trackPeak", "albumPeak"]}, "expected": {"trackGain": 4, "albumGain": -2, "trackPeak": 0.7, "albumPeak": 0.9, "baseGain": 0}},
+    {"name": "marker alone does not claim foreign gain", "row": {"track_lufs": -22, "true_peak": 0.7, "album_gain": -2, "album_peak": 0.9}, "tags": {"trackGain": -8, "tag_owner": "krobi"}, "expected": {"trackGain": -8, "albumGain": -2, "trackPeak": 0.7, "albumPeak": 0.9, "baseGain": 0}},
+    {"name": "field record without marker does not claim foreign gain", "row": {"track_lufs": -22, "true_peak": 0.7, "album_gain": -2, "album_peak": 0.9}, "tags": {"trackGain": -8, "owned_fields": ["trackGain"]}, "expected": {"trackGain": -8, "albumGain": -2, "trackPeak": 0.7, "albumPeak": 0.9, "baseGain": 0}},
+    {"name": "BPM and key ownership does not claim foreign gain", "row": {"track_lufs": -22, "true_peak": 0.7, "album_gain": -2, "album_peak": 0.9}, "tags": {"trackGain": -8, "tag_owner": "krobi", "owned_fields": ["bpm", "key"]}, "expected": {"trackGain": -8, "albumGain": -2, "trackPeak": 0.7, "albumPeak": 0.9, "baseGain": 0}},
+    {"name": "gain ownership is per field", "row": {"track_lufs": -22, "true_peak": 0.7, "album_gain": -2, "album_peak": 0.9}, "tags": {"trackGain": -8, "albumGain": -9, "tag_owner": "krobi", "owned_fields": ["trackGain"]}, "expected": {"trackGain": 4, "albumGain": -9, "trackPeak": 0.7, "albumPeak": 0.9, "baseGain": 0}},
+    {"name": "owned tags without measurements give no gain", "row": {}, "tags": {"trackGain": -8, "tag_owner": "krobi", "owned_fields": ["trackGain"]}, "expected": null},
+    {"name": "foreign R128 gains include plus five dB", "row": {"track_lufs": -22, "true_peak": 0.7, "album_gain": -2, "album_peak": 0.9}, "tags": {"r128TrackGain": "-512", "r128AlbumGain": "256"}, "expected": {"trackGain": 3, "albumGain": 6, "trackPeak": 0.7, "albumPeak": 0.9, "baseGain": 0}},
+    {"name": "owned R128 gains use computed", "row": {"track_lufs": -22, "true_peak": 0.7, "album_gain": -2, "album_peak": 0.9}, "tags": {"r128TrackGain": "-512", "r128AlbumGain": "256", "tag_owner": "krobi", "owned_fields": ["trackGain", "albumGain"]}, "expected": {"trackGain": 4, "albumGain": -2, "trackPeak": 0.7, "albumPeak": 0.9, "baseGain": 0}},
+    {"name": "R128 marker alone leaves foreign gains", "row": {"track_lufs": -22, "true_peak": 0.7, "album_gain": -2, "album_peak": 0.9}, "tags": {"r128TrackGain": "-512", "tag_owner": "krobi"}, "expected": {"trackGain": 3, "albumGain": -2, "trackPeak": 0.7, "albumPeak": 0.9, "baseGain": 0}},
+    {"name": "ReplayGain dB wins over R128 when both exist", "row": {"track_lufs": -22, "true_peak": 0.7, "album_gain": -2, "album_peak": 0.9}, "tags": {"trackGain": "-7.25 dB", "r128TrackGain": "-512"}, "expected": {"trackGain": -7.25, "albumGain": -2, "trackPeak": 0.7, "albumPeak": 0.9, "baseGain": 0}}
+  ],
+  "playback": [
+    {"name": "off", "gain": {"trackGain": -6}, "mode": "off", "albumOrder": false, "factor": 1},
+    {"name": "track", "gain": {"trackGain": -6.020599913279624}, "mode": "track", "albumOrder": true, "factor": 0.5},
+    {"name": "album in order", "gain": {"trackGain": -6, "albumGain": -12.041199826559248}, "mode": "album", "albumOrder": true, "factor": 0.25},
+    {"name": "auto, album in order", "gain": {"trackGain": -6, "albumGain": -12.041199826559248}, "mode": "auto", "albumOrder": true, "factor": 0.25},
+    {"name": "auto, shuffled or mixed", "gain": {"trackGain": -6.020599913279624, "albumGain": -12}, "mode": "auto", "albumOrder": false, "factor": 0.5},
+    {"name": "auto, album unavailable", "gain": {"trackGain": -6.020599913279624}, "mode": "auto", "albumOrder": true, "factor": 0.5},
+    {"name": "album forced even when shuffled", "gain": {"trackGain": -6.020599913279624, "albumGain": -12}, "mode": "album", "albumOrder": false, "factor": 0.251188643150958},
+    {"name": "album unavailable", "gain": {"trackGain": -6.020599913279624}, "mode": "album", "albumOrder": true, "factor": 0.5},
+    {"name": "prevent clipping", "gain": {"trackGain": 12, "trackPeak": 0.8}, "mode": "track", "albumOrder": false, "factor": 1.25},
+    {"name": "missing", "gain": null, "mode": "track", "albumOrder": false, "factor": 1}
+  ]
+}

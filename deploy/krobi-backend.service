@@ -1,0 +1,128 @@
+# Flipspin backend -- PRIMARY deploy path.
+#
+# Install:  /etc/systemd/system/krobi-backend.service
+# Env file: /etc/krobi/backend.env   (see deploy/krobi-backend.env.example)
+# Full procedure: docs/deployment.md
+#
+# Assumed layout (a Linux host, VM or container):
+#   /opt/krobi/backend          <- the repo's backend/ directory
+#   /opt/krobi/venv             <- python3 -m venv, requirements-runtime.txt
+#   /var/lib/krobi              <- service user's HOME
+#   /var/lib/krobi/Krobi/Music  <- the library (a mount, or plain storage)
+#
+# AUTH: the first account created on a new server claims it (POST /api/claim)
+# and becomes its owner; every device then signs in with its own token. Until
+# the server is claimed anyone who can reach the port can claim it -- set
+# KROBI_REQUIRE_SETUP_TOKEN=true in the EnvironmentFile if that matters.
+# KROBI_API_TOKEN remains as a legacy shared secret. There is no TLS here:
+# tokens cross the network in the clear. Keep this on the LAN or behind a VPN.
+# Do not port-forward it.
+
+[Unit]
+Description=Flipspin music manager backend (FastAPI/uvicorn)
+Documentation=https://github.com/flipspin/flipspin/blob/main/docs/deployment.md
+
+# network-online, not plain network: the service binds a specific interface
+# stack and yt-dlp/Spotify calls fail noisily if DNS is not up yet.
+Wants=network-online.target
+After=network-online.target
+
+# If the music directory is a real mount point, systemd must not start the backend
+# before it is mounted -- otherwise ConfigManager.from_env() happily mkdir's
+# an empty Music directory on the ROOT filesystem, the library looks empty,
+# and the first download fills up the root disk instead of the music disk.
+# Comment this out only if the music directory is plain storage on rootfs.
+RequiresMountsFor=/var/lib/krobi/Krobi/Music
+
+# main.py calls sys.exit(1) when ConfigManager.from_env() fails (bad path,
+# unwritable dir). Without a start limit that becomes an infinite 5s crash
+# loop that buries the real error in the journal. These two keys live in
+# [Unit], not [Service] -- systemd moved them in v229 and silently warns
+# "Unknown key name" if you leave them under [Service].
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=exec
+User=krobi
+Group=krobi
+
+# Explicit state root; retain HOME for one release for ancillary tools.
+Environment=FLIPSPIN_DATA_DIR=/var/lib/krobi/Krobi
+Environment=HOME=/var/lib/krobi
+Environment=KROBI_INSTALL_METHOD=systemd
+Environment=FORWARDED_ALLOW_IPS=127.0.0.1
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONDONTWRITEBYTECODE=1
+
+# librosa/numba write JIT caches; without this they land in the venv's
+# site-packages (root-owned) and are silently discarded every restart.
+Environment=NUMBA_CACHE_DIR=/var/lib/krobi/.cache/numba
+Environment=XDG_CACHE_HOME=/var/lib/krobi/.cache
+
+# All KROBI_* settings and any API keys live here. chmod 640 root:krobi --
+# it holds Spotify/Genius secrets.
+EnvironmentFile=/etc/krobi/backend.env
+
+WorkingDirectory=/opt/krobi/backend
+
+# --host 0.0.0.0 is NOT optional. 127.0.0.1 binds the container's loopback,
+# which is reachable from precisely nothing else -- the service will look
+# perfectly healthy in `systemctl status` and be unreachable from every other
+# machine on the network.
+#
+# --workers 1 is also NOT optional. app/infra/progress.py keeps ProgressTracker
+# entries in process memory; the SSE endpoint /download-progress-stream/{id}
+# can only see progress written by its own worker. With 2+ workers, roughly
+# half of all downloads appear frozen at 0% forever.
+ExecStart=/opt/krobi/venv/bin/uvicorn app.main:app \
+    --host 0.0.0.0 \
+    --port 8000 \
+    --workers 1 \
+    --timeout-keep-alive 75 \
+    --proxy-headers \
+    --no-access-log
+
+Restart=on-failure
+# Store validation/migration refusal (EX_CONFIG): operator intervention required.
+RestartPreventExitStatus=78
+# The owner-requested restart uses EX_TEMPFAIL (75), even if exit policies change.
+RestartForceExitStatus=75
+RestartSec=5s
+
+# Downloads and ffmpeg renders should not be killed mid-write on `stop`.
+KillSignal=SIGINT
+TimeoutStopSec=30
+
+# --- sandboxing ------------------------------------------------------------
+# Conservative on purpose. Inside an UNPRIVILEGED container some systemd sandbox
+# options (PrivateDevices, ProtectKernelTunables, ProtectKernelModules,
+# RestrictNamespaces) can fail to apply and take the unit down with
+# "Failed to set up mount namespacing". If the unit refuses to start, comment
+# out this block first and re-add options one at a time.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=false
+ProtectControlGroups=true
+# Optional nest CPU helper: use deploy/krobi-backend-nest-cpu.conf as a drop-in.
+# It delegates cpu/memory and overrides ProtectControlGroups for child limits.
+RestrictSUIDSGID=true
+RemoveIPC=true
+
+# ProtectSystem=strict makes everything read-only except these. The music
+# path must be listed or every download fails with EROFS.
+ReadWritePaths=/var/lib/krobi
+ReadWritePaths=/var/lib/krobi/Krobi/Music
+
+# librosa/numba will use every core it is given. Uncomment to leave headroom
+# for the rest of the machine.
+# CPUQuota=600%
+# MemoryMax=6G
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=krobi-backend
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,137 @@
+name: Server image
+
+# Called releases push only an untagged multi-arch index after the amd64 smoke.
+# Manual builds may attach only a testing sha tag.
+on:
+  workflow_call:
+    outputs:
+      digest:
+        description: Multi-arch index digest
+        value: ${{ jobs.image.outputs.digest }}
+  workflow_dispatch:
+
+concurrency:
+  group: server-image-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  # Put the OCI annotations on the multi-arch index too, so ghcr.io shows the
+  # description and licence on the package page and not only per platform.
+  DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest,index
+
+jobs:
+  image:
+    name: Build and push (amd64 + arm64)
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      digest: ${{ steps.push.outputs.digest }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # A tag that disagrees with the version the server reports in
+      # /api/status would publish an image that lies about itself.
+      - name: Tag matches APP_VERSION
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          app_version=$(sed -n 's/^APP_VERSION = "\([^"]*\)".*/\1/p' backend/app/config.py)
+          tag="${GITHUB_REF_NAME#v}"
+          echo "tag=$tag APP_VERSION=$app_version"
+          test "$tag" = "$app_version" || { echo "::error::tag v$tag != APP_VERSION $app_version (backend/app/config.py)"; exit 1; }
+
+      - uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3.7.0
+        with:
+          platforms: arm64
+          cache-image: false
+
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
+        with:
+          cache-binary: false
+
+      - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Lowercase image name
+        id: image
+        run: |
+          echo "name=ghcr.io/flipspin/flipspin-server" >> "$GITHUB_OUTPUT"
+          sed -n 's/^APP_VERSION = "\([^"]*\)".*/version=\1/p' backend/app/config.py >> "$GITHUB_OUTPUT"
+
+      - id: meta
+        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5.10.0
+        with:
+          # metadata-action lowercases this; ghcr.io rejects upper case.
+          images: ghcr.io/flipspin/flipspin-server
+          tags: type=sha
+          flavor: latest=false
+          labels: |
+            org.opencontainers.image.title=Flipspin server
+            org.opencontainers.image.licenses=AGPL-3.0-or-later
+          annotations: |
+            org.opencontainers.image.title=Flipspin server
+            org.opencontainers.image.licenses=AGPL-3.0-or-later
+
+      # Smoke test before anything is pushed: the native (amd64) image must
+      # boot and answer the handshake as Flipspin.
+      - name: Build amd64 for the smoke test
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
+        with:
+          context: .
+          file: backend/Dockerfile
+          platforms: linux/amd64
+          load: true
+          tags: krobi-server:smoke
+
+      - name: Smoke test -- GET /api/status says app == "krobi"
+        run: |
+          mkdir -p "$RUNNER_TEMP/music"
+          docker run -d --name krobi-smoke -p 8000:8000 \
+            -v krobi-smoke-data:/data -v "$RUNNER_TEMP/music:/music" krobi-server:smoke
+          for _ in $(seq 1 60); do
+            if body=$(curl -sf http://127.0.0.1:8000/api/status); then break; fi
+            sleep 2
+          done
+          echo "$body"
+          docker logs krobi-smoke 2>&1 | tail -n 20
+          echo "$body" | python3 -c 'import json,sys; d=json.load(sys.stdin); assert d["app"] == "krobi", d; assert d["setupTokenRequired"] is True, d'
+          # The plugin installer's fetch and build steps, as the server user:
+          # clone the known source, make a venv with the server's Python, pip install it.
+          docker exec --user 1000:1000 -e HOME=/tmp -e GIT_TERMINAL_PROMPT=0 krobi-smoke sh -euc '
+            git clone --depth 1 -- https://github.com/flipspin/flipspin-source-youtube /tmp/plugin/src
+            python -m venv /tmp/plugin/venv
+            /tmp/plugin/venv/bin/python -m pip install --quiet -- /tmp/plugin/src
+            test -f /tmp/plugin/src/krobi-extension.json'
+          docker rm -f krobi-smoke
+
+      - name: Build and push amd64 + arm64
+        id: push
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
+        with:
+          context: .
+          file: backend/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          outputs: type=image,name=${{ steps.image.outputs.name }},push-by-digest=true,name-canonical=true,push=true
+          labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
+          build-args: |
+            KROBI_VERSION=${{ steps.image.outputs.version }}
+            KROBI_REVISION=${{ github.sha }}
+            KROBI_CREATED=${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.created'] }}
+          provenance: true
+          sbom: true
+
+      - name: Attach a testing sha tag for manual builds only
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          IMAGE: ${{ steps.image.outputs.name }}
+          DIGEST: ${{ steps.push.outputs.digest }}
+        run: docker buildx imagetools create --tag "$IMAGE:sha-$GITHUB_SHA" "$IMAGE@$DIGEST"

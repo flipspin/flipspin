@@ -1,0 +1,513 @@
+{
+  "cases": [
+    {
+      "id": "valid-feature",
+      "manifest": {
+        "manifest": 1,
+        "id": "example",
+        "kind": "feature",
+        "name": "Example",
+        "version": "1.0.0",
+        "protocol": {
+          "plugin_api": [
+            1
+          ]
+        },
+        "runs": [
+          "nest",
+          "desktop"
+        ],
+        "adds": [
+          "page"
+        ],
+        "reaches": [],
+        "entry": {
+          "module": "example.krobi_plugin"
+        },
+        "license": "AGPL-3.0-or-later",
+        "homepage": "https://example.test"
+      },
+      "state": "on",
+      "protocol": "plugin_api",
+      "runtimes": [
+        "nest",
+        "desktop"
+      ]
+    },
+    {
+      "id": "valid-engine",
+      "manifest": {
+        "manifest": 1,
+        "id": "example",
+        "kind": "engine",
+        "name": "Example",
+        "version": "1.0.0",
+        "protocol": {
+          "helper": [
+            1
+          ]
+        },
+        "runs": [
+          "helper",
+          "nest"
+        ],
+        "adds": [
+          "page"
+        ],
+        "reaches": [],
+        "entry": {
+          "extra": "engine"
+        },
+        "license": "AGPL-3.0-or-later",
+        "homepage": "https://example.test"
+      },
+      "state": "on",
+      "protocol": "helper",
+      "runtimes": [
+        "helper",
+        "nest"
+      ]
+    },
+    {
+      "id": "valid-source",
+      "manifest": {
+        "manifest": 1,
+        "id": "example",
+        "kind": "source",
+        "name": "Example",
+        "version": "1.0.0",
+        "protocol": {
+          "source": [
+            1
+          ]
+        },
+        "runs": [
+          "nest"
+        ],
+        "adds": [
+          "page"
+        ],
+        "reaches": [],
+        "entry": {
+          "command": [
+            "{python}",
+            "-m",
+            "example"
+          ]
+        },
+        "license": "AGPL-3.0-or-later",
+        "homepage": "https://example.test"
+      },
+      "state": "on",
+      "protocol": "source",
+      "runtimes": [
+        "nest"
+      ]
+    },
+    {
+      "id": "no-overlap",
+      "manifest": {
+        "manifest": 1,
+        "id": "example",
+        "kind": "feature",
+        "name": "Example",
+        "version": "1.0.0",
+        "protocol": {
+          "plugin_api": [
+            2
+          ]
+        },
+        "runs": [
+          "nest",
+          "desktop"
+        ],
+        "adds": [
+          "page"
+        ],
+        "reaches": [],
+        "entry": {
+          "module": "example.krobi_plugin"
+        },
+        "license": "AGPL-3.0-or-later",
+        "homepage": "https://example.test"
+      },
+      "state": "incompatible"
+    },
+    {
+      "id": "missing-name",
+      "manifest": {
+        "manifest": 1,
+        "id": "example",
+        "kind": "feature",
+        "version": "1.0.0",
+        "protocol": {
+          "plugin_api": [
+            1
+          ]
+        },
+        "runs": [
+          "nest",
+          "desktop"
+        ],
+        "adds": [
+          "page"
+        ],
+        "reaches": [],
+        "entry": {
+          "module": "example.krobi_plugin"
+        },
+        "license": "AGPL-3.0-or-later",
+        "homepage": "https://example.test"
+      },
+      "state": "invalid"
+    },
+    {
+      "id": "future-keys",
+      "manifest": {
+        "manifest": 1,
+        "id": "example",
+        "kind": "feature",
+        "name": "Example",
+        "version": "1.0.0",
+        "protocol": {
+          "plugin_api": [
+            1
+          ]
+        },
+        "runs": [
+          "nest",
+          "desktop"
+        ],
+        "adds": [
+          "page"
+        ],
+        "reaches": [],
+        "entry": {
+          "module": "example.krobi_plugin"
+        },
+        "license": "AGPL-3.0-or-later",
+        "homepage": "https://example.test",
+        "future": {
+          "ignored": true
+        }
+      },
+      "state": "on"
+    },
+    {
+      "id": "overlap",
+      "manifest": {
+        "manifest": 1,
+        "id": "example",
+        "kind": "feature",
+        "name": "Example",
+        "version": "1.0.0",
+        "protocol": {
+          "plugin_api": [
+            2,
+            1
+          ]
+        },
+        "runs": [
+          "nest",
+          "desktop"
+        ],
+        "adds": [
+          "page"
+        ],
+        "reaches": [],
+        "entry": {
+          "module": "example.krobi_plugin"
+        },
+        "license": "AGPL-3.0-or-later",
+        "homepage": "https://example.test"
+      },
+      "state": "on"
+    },
+    {
+      "id": "wrong-protocol",
+      "manifest": {
+        "manifest": 1,
+        "id": "example",
+        "kind": "feature",
+        "name": "Example",
+        "version": "1.0.0",
+        "protocol": {
+          "helper": [
+            1
+          ]
+        },
+        "runs": [
+          "nest",
+          "desktop"
+        ],
+        "adds": [
+          "page"
+        ],
+        "reaches": [],
+        "entry": {
+          "module": "example.krobi_plugin"
+        },
+        "license": "AGPL-3.0-or-later",
+        "homepage": "https://example.test"
+      },
+      "state": "invalid"
+    },
+    {
+      "id": "wrong-runtime",
+      "manifest": {
+        "manifest": 1,
+        "id": "example",
+        "kind": "feature",
+        "name": "Example",
+        "version": "1.0.0",
+        "protocol": {
+          "plugin_api": [
+            1
+          ]
+        },
+        "runs": [
+          "helper"
+        ],
+        "adds": [
+          "page"
+        ],
+        "reaches": [],
+        "entry": {
+          "module": "example.krobi_plugin"
+        },
+        "license": "AGPL-3.0-or-later",
+        "homepage": "https://example.test"
+      },
+      "state": "invalid"
+    },
+    {
+      "id": "missing-entry",
+      "manifest": {
+        "manifest": 1,
+        "id": "example",
+        "kind": "feature",
+        "name": "Example",
+        "version": "1.0.0",
+        "protocol": {
+          "plugin_api": [
+            1
+          ]
+        },
+        "runs": [
+          "nest",
+          "desktop"
+        ],
+        "adds": [
+          "page"
+        ],
+        "reaches": [],
+        "entry": {},
+        "license": "AGPL-3.0-or-later",
+        "homepage": "https://example.test"
+      },
+      "state": "invalid"
+    },
+    {
+      "id": "boolean-protocol",
+      "manifest": {
+        "manifest": 1,
+        "id": "example",
+        "kind": "feature",
+        "name": "Example",
+        "version": "1.0.0",
+        "protocol": {
+          "plugin_api": [
+            true
+          ]
+        },
+        "runs": [
+          "nest",
+          "desktop"
+        ],
+        "adds": [
+          "page"
+        ],
+        "reaches": [],
+        "entry": {
+          "module": "example.krobi_plugin"
+        },
+        "license": "AGPL-3.0-or-later",
+        "homepage": "https://example.test"
+      },
+      "state": "invalid"
+    },
+    {
+      "id": "bad-version",
+      "manifest": {
+        "manifest": 1,
+        "id": "example",
+        "kind": "feature",
+        "name": "Example",
+        "version": "01.2.3",
+        "protocol": {
+          "plugin_api": [
+            1
+          ]
+        },
+        "runs": [
+          "nest",
+          "desktop"
+        ],
+        "adds": [
+          "page"
+        ],
+        "reaches": [],
+        "entry": {
+          "module": "example.krobi_plugin"
+        },
+        "license": "AGPL-3.0-or-later",
+        "homepage": "https://example.test"
+      },
+      "state": "invalid"
+    },
+    {
+      "id": "bad-id",
+      "manifest": {
+        "manifest": 1,
+        "id": "../outside",
+        "kind": "feature",
+        "name": "Example",
+        "version": "1.0.0",
+        "protocol": {
+          "plugin_api": [
+            1
+          ]
+        },
+        "runs": [
+          "nest",
+          "desktop"
+        ],
+        "adds": [
+          "page"
+        ],
+        "reaches": [],
+        "entry": {
+          "module": "example.krobi_plugin"
+        },
+        "license": "AGPL-3.0-or-later",
+        "homepage": "https://example.test"
+      },
+      "state": "invalid"
+    },
+    {
+      "id": "future-manifest",
+      "manifest": {
+        "manifest": 2,
+        "id": "example",
+        "kind": "feature",
+        "name": "Example",
+        "version": "1.0.0",
+        "protocol": {
+          "plugin_api": [
+            1
+          ]
+        },
+        "runs": [
+          "nest",
+          "desktop"
+        ],
+        "adds": [
+          "page"
+        ],
+        "reaches": [],
+        "entry": {
+          "module": "example.krobi_plugin"
+        },
+        "license": "AGPL-3.0-or-later",
+        "homepage": "https://example.test"
+      },
+      "state": "invalid"
+    },
+    {
+      "id": "empty-protocol",
+      "manifest": {
+        "manifest": 1,
+        "id": "example",
+        "kind": "feature",
+        "name": "Example",
+        "version": "1.0.0",
+        "protocol": {
+          "plugin_api": []
+        },
+        "runs": [
+          "nest",
+          "desktop"
+        ],
+        "adds": [
+          "page"
+        ],
+        "reaches": [],
+        "entry": {
+          "module": "example.krobi_plugin"
+        },
+        "license": "AGPL-3.0-or-later",
+        "homepage": "https://example.test"
+      },
+      "state": "incompatible"
+    },
+    {
+      "id": "unknown-kind",
+      "manifest": {
+        "manifest": 1,
+        "id": "example",
+        "kind": "plugin",
+        "name": "Example",
+        "version": "1.0.0",
+        "protocol": {
+          "plugin_api": [
+            1
+          ]
+        },
+        "runs": [
+          "nest",
+          "desktop"
+        ],
+        "adds": [
+          "page"
+        ],
+        "reaches": [],
+        "entry": {
+          "module": "example.krobi_plugin"
+        },
+        "license": "AGPL-3.0-or-later",
+        "homepage": "https://example.test"
+      },
+      "state": "invalid"
+    },
+    {
+      "id": "future-entry-key",
+      "manifest": {
+        "manifest": 1,
+        "id": "example",
+        "kind": "feature",
+        "name": "Example",
+        "version": "1.0.0",
+        "protocol": {
+          "plugin_api": [
+            1
+          ]
+        },
+        "runs": [
+          "nest",
+          "desktop"
+        ],
+        "adds": [
+          "page"
+        ],
+        "reaches": [],
+        "entry": {
+          "module": "example.krobi_plugin",
+          "future": "ignored"
+        },
+        "license": "AGPL-3.0-or-later",
+        "homepage": "https://example.test"
+      },
+      "state": "on"
+    }
+  ]
+}

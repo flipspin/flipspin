@@ -1,0 +1,42 @@
+{
+  "users": [
+    {
+      "created_at": "2026-08-20T11:02:31Z",
+      "devices": [
+        {
+          "created_at": "2026-08-20T11:02:31Z",
+          "id": "5f3c1a2b9d40",
+          "label": "Robin (iPhone)",
+          "last_seen_at": "2026-08-25T09:14:02Z",
+          "token_sha256": "338c484b914f904880aa70e0ca0d00afb93ce12258712c7db9a28d5fb32d5423"
+        },
+        {
+          "created_at": "2026-08-26T20:11:09Z",
+          "id": "c02d7ae4f118",
+          "label": "Robin (MacBook)",
+          "last_seen_at": null,
+          "token_sha256": "c8376b40a5cccbeb5658f74035192e51de8e2c2238b04d1ef21f8479d903fcaf"
+        }
+      ],
+      "id": "5f3c1a2b9d40",
+      "label": "Robin",
+      "role": "owner"
+    },
+    {
+      "created_at": "2026-08-21T18:40:00Z",
+      "devices": [
+        {
+          "created_at": "2026-08-21T18:40:00Z",
+          "id": "a71e0c4488b6",
+          "label": "Ana (iPhone)",
+          "last_seen_at": null,
+          "token_sha256": "41900b6a849133dcabd57be1d6cc33da440cc8fe57e486bc2b8bd7702ef5b917"
+        }
+      ],
+      "id": "a71e0c4488b6",
+      "label": "Ana",
+      "role": "member"
+    }
+  ],
+  "version": 2
+}

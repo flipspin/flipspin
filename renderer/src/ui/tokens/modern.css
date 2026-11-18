@@ -1,0 +1,154 @@
+/* Flipspin UI; modern profile and calm tone, scoped to the dialog island. AGPL-3.0. */
+.krobi-modern[data-profile="modern"] {
+  --color-bg-surface-primary: #F3F3F0;
+  --color-bg-surface-secondary: #FDFDFB;
+  --color-bg-surface-tertiary: #FDFDFB;
+  --color-bg-surface-head: #F7F7F4;
+  --color-bg-surface-hover: #F1F1EC;
+  --color-bg-surface-rail: #ECECE8;
+  --color-bg-surface-foot: #F7F7F4;
+  --color-bg-surface-dim: #E6E6E1;
+  --color-text-primary: #1C1C19;
+  --color-text-secondary: #4A4A45;
+  --color-text-tertiary: #6E6E68;
+  --color-text-body: #3A3A35;
+  --color-text-disabled: #B8B8B1;
+  --color-text-on-fill: #FDFDFB;
+  --color-text-accent: #A3422A;
+  --color-border-primary: #DADAD4;
+  --color-border-soft: #E9E9E4;
+  --color-border-mid: #E0E0DA;
+  --color-border-bold: #1C1C19;
+  --color-border-accent: #C2502E;
+  --color-bg-fill-primary: #C2502E;
+  --color-bg-fill-primary-hover: #A9442A;
+  --color-bg-fill-secondary: #FDFDFB;
+  --color-bg-fill-secondary-hover: #F1F1EC;
+  --zm-ink-fill: #1C1C19;
+  --zm-ink-fill-hover: #33332E;
+  --zm-on-ink: #FDFDFB;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 26px;
+  --radius-pill: 999px;
+  --radius-full: 50%;
+  --shadow-1: 0 1px 2px rgba(28, 28, 25, .06);
+  --shadow-2: 0 1px 2px rgba(28, 28, 25, .04), 0 8px 24px rgba(28, 28, 25, .06);
+  --shadow-3: 0 2px 4px rgba(28, 28, 25, .05), 0 20px 48px rgba(28, 28, 25, .12);
+  --shadow-4: var(--shadow-3);
+  --shadow-raised: var(--shadow-2);
+  --shadow-hover: var(--shadow-3);
+  --shadow-seat: var(--shadow-1);
+  --zm-shadow-av: 0 4px 10px rgba(28, 28, 25, .18);
+  --text-body: 14px;
+  --leading-body: 1.45;
+  --size-control: 40px;
+  --size-control-sm: 32px;
+  --size-row: 52px;
+  --row-pad: 12px 16px;
+  --zm-tint-1: #E3E9FD;
+  --zm-bad: #D8434F;   --zm-bad-soft: #FBE3E4;   --zm-bad-fg: #A82A35;
+}
+@media (prefers-color-scheme: dark) {
+  .krobi-modern[data-profile="modern"]:not([data-theme="light"]) {
+    --color-bg-surface-primary: #161615;
+    --color-bg-surface-secondary: #1F1F1D;
+    --color-bg-surface-tertiary: #232321;
+    --color-bg-surface-head: #252523;
+    --color-bg-surface-hover: #2A2A27;
+    --color-bg-surface-rail: #1A1A19;
+    --color-bg-surface-foot: #232321;
+    --color-bg-surface-dim: #2E2E2B;
+    --color-text-primary: #F2F1EC;
+    --color-text-secondary: #C9C7BF;
+    --color-text-tertiary: #9A9891;
+    --color-text-body: #DAD8D0;
+    --color-text-disabled: #5E5D58;
+    --color-text-on-fill: #FDFDFB;
+    --color-text-accent: #F0937A;
+    --color-border-primary: #3A3936;
+    --color-border-soft: #2B2B28;
+    --color-border-mid: #33332F;
+    --color-border-bold: #F2F1EC;
+    --color-bg-fill-primary: #C2502E;
+    --color-bg-fill-primary-hover: #D45E3B;
+    --color-bg-fill-secondary: #232321;
+    --color-bg-fill-secondary-hover: #2A2A27;
+    --zm-ink-fill: #F2F1EC;
+    --zm-ink-fill-hover: #DAD8D0;
+    --zm-on-ink: #1C1C19;
+    --shadow-1: 0 1px 2px rgba(0, 0, 0, .35);
+    --shadow-2: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .28);
+    --shadow-3: 0 2px 4px rgba(0, 0, 0, .35), 0 20px 48px rgba(0, 0, 0, .45);
+    --zm-shadow-av: 0 4px 10px rgba(0, 0, 0, .45);
+    --zm-tint-1: #2A3150;
+    --zm-bad-soft: #4A2328;  --zm-bad-fg: #F4A3AA;
+    color-scheme: dark;
+  }
+}
+.krobi-modern[data-profile="modern"][data-theme="dark"] {
+  --color-bg-surface-primary: #161615;
+  --color-bg-surface-secondary: #1F1F1D;
+  --color-bg-surface-tertiary: #232321;
+  --color-bg-surface-head: #252523;
+  --color-bg-surface-hover: #2A2A27;
+  --color-bg-surface-rail: #1A1A19;
+  --color-bg-surface-foot: #232321;
+  --color-bg-surface-dim: #2E2E2B;
+  --color-text-primary: #F2F1EC;
+  --color-text-secondary: #C9C7BF;
+  --color-text-tertiary: #9A9891;
+  --color-text-body: #DAD8D0;
+  --color-text-disabled: #5E5D58;
+  --color-text-on-fill: #FDFDFB;
+  --color-text-accent: #F0937A;
+  --color-border-primary: #3A3936;
+  --color-border-soft: #2B2B28;
+  --color-border-mid: #33332F;
+  --color-border-bold: #F2F1EC;
+  --color-bg-fill-primary: #C2502E;
+  --color-bg-fill-primary-hover: #D45E3B;
+  --color-bg-fill-secondary: #232321;
+  --color-bg-fill-secondary-hover: #2A2A27;
+  --zm-ink-fill: #F2F1EC;
+  --zm-ink-fill-hover: #DAD8D0;
+  --zm-on-ink: #1C1C19;
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, .35);
+  --shadow-2: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .28);
+  --shadow-3: 0 2px 4px rgba(0, 0, 0, .35), 0 20px 48px rgba(0, 0, 0, .45);
+  --zm-shadow-av: 0 4px 10px rgba(0, 0, 0, .45);
+  --zm-tint-1: #2A3150;
+  --zm-bad-soft: #4A2328;  --zm-bad-fg: #F4A3AA;
+  color-scheme: dark;
+}
+.krobi-modern[data-profile="modern"][data-tone="calm"] {
+  --color-bg-surface-primary: #F4F4F2;
+  --color-bg-surface-secondary: #FDFDFC;
+  --color-bg-surface-head: #F6F6F4;
+  --color-bg-surface-hover: #EFEFEC;
+  --color-bg-surface-rail: #F4F4F2;
+  --color-border-primary: #DEDED9;
+  --color-border-soft: #E8E8E4;
+  --radius-sm: 6px; --radius-md: 8px; --radius-lg: 12px; --radius-xl: 14px;
+  --shadow-1: 0 1px 1px rgba(28, 28, 25, .04);
+  --shadow-2: 0 1px 2px rgba(28, 28, 25, .05);
+  --shadow-3: 0 12px 32px rgba(28, 28, 25, .14);
+  --zm-shadow-av: none;
+  --size-control: 36px;
+  --zm-tint-1: #EFEFEC;
+}
+@media (prefers-color-scheme: dark) {
+  .krobi-modern[data-profile="modern"][data-tone="calm"]:not([data-theme="light"]) {
+    --color-bg-surface-primary: #161615; --color-bg-surface-secondary: #1C1C1B; --color-bg-surface-head: #222220; --color-bg-surface-hover: #262624; --color-bg-surface-rail: #161615;
+    --color-border-primary: #34342F; --color-border-soft: #2A2A27;
+    --shadow-1: none; --shadow-2: none; --shadow-3: 0 12px 32px rgba(0, 0, 0, .5);
+    --zm-tint-1: #262624;
+  }
+}
+.krobi-modern[data-profile="modern"][data-tone="calm"][data-theme="dark"] {
+  --color-bg-surface-primary: #161615; --color-bg-surface-secondary: #1C1C1B; --color-bg-surface-head: #222220; --color-bg-surface-hover: #262624; --color-bg-surface-rail: #161615;
+  --color-border-primary: #34342F; --color-border-soft: #2A2A27;
+  --shadow-1: none; --shadow-2: none; --shadow-3: 0 12px 32px rgba(0, 0, 0, .5);
+  --zm-tint-1: #262624;
+}

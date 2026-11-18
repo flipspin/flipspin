@@ -1,0 +1,94 @@
+/* Step layouts stay separate from the shared frame and controls in onboarding.css. */
+.krobi-onboarding .kob-tip { text-decoration: underline dotted var(--kob-ink-4); text-underline-offset: 3px; }
+.krobi-onboarding .kob-music-folder { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border: 1px solid var(--kob-line); border-radius: 10px; background: var(--kob-ground); }
+.krobi-onboarding .kob-music-folder > svg { flex: none; color: var(--kob-ink-2); }
+.krobi-onboarding .kob-music-folder > code { flex: 1; min-width: 0; overflow-wrap: anywhere; color: var(--kob-ink-2); font-size: 13px; }
+.krobi-onboarding .kob-music-counts { display: flex; flex-wrap: wrap; gap: 28px; align-items: baseline; color: var(--kob-ink-2); font-size: 14px; }
+.krobi-onboarding .kob-music-counts b { font-family: var(--font-mono); font-size: 22px; font-weight: 700; color: var(--kob-ink); }
+.krobi-onboarding .kob-music-counts > :first-child b { font-size: 34px; font-weight: 800; }
+.krobi-onboarding .kob-spotify { border: 1px solid var(--kob-line); border-radius: 10px; }
+.krobi-onboarding .kob-spotify > span { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; font-size: 15px; }
+.krobi-onboarding .kob-spotify small { font-size: 12px; }
+.krobi-onboarding .kob-tiles { text-align: left; gap: 10px; width: 100%; box-sizing: border-box; }
+.krobi-onboarding .kob-tiles > i { font-style: normal; overflow-wrap: anywhere; }
+.krobi-onboarding .kob-addons { display: flex; flex-direction: column; gap: 18px; font-size: 14px; }
+.krobi-onboarding .kob-addons-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; width: 100%; max-width: 900px; }
+.krobi-onboarding .kob-addon { display: flex; flex-direction: column; gap: 10px; box-sizing: border-box; }
+.krobi-onboarding .kob-option-head { width: 100%; display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 700; }
+.krobi-onboarding .kob-option-head > input[type="checkbox"], .krobi-onboarding .kob-option-head > small { margin-left: auto; }
+.krobi-onboarding .kob-option-head small { font-size: 13px; font-weight: 400; }
+.krobi-onboarding .kob-option-head input { width: 20px; height: 20px; flex: none; accent-color: var(--kob-ink); cursor: pointer; }
+.krobi-onboarding .kob-option-head input:disabled { cursor: default; }
+.krobi-onboarding .kob-addon-dot--yellow { background: var(--accent-yellow); }
+.krobi-onboarding .kob-addon-dot--purple { background: var(--accent-purple); }
+.krobi-onboarding .kob-addon-dot--amber { background: var(--accent-amber); }
+.krobi-onboarding .kob-addon p { margin: 0; color: var(--kob-ink-2); font-size: 14px; line-height: 1.45; }
+.krobi-onboarding .kob-option--soon p { color: var(--kob-ink-3); }
+.krobi-onboarding .kob-addon .kob-specs { width: 100%; margin: 0; gap: 6px 12px; padding: 10px 0 2px; border-top: 1px solid var(--kob-line); font-size: 12px; }
+.krobi-onboarding .kob-spec { display: contents; }
+.krobi-onboarding .kob-spec dt { color: var(--kob-ink-3); }
+.krobi-onboarding .kob-spec dd { margin: 0; }
+.krobi-onboarding .kob-addon-footer { margin-top: auto; font-size: 12px; line-height: 1.45; }
+.krobi-onboarding .kob-remote-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.krobi-onboarding .kob-remote-option { display: flex; flex-direction: column; gap: 10px; cursor: pointer; color: var(--kob-ink-2); font-size: 14px; }
+.krobi-onboarding .kob-remote-option b { color: var(--kob-ink); }
+.krobi-onboarding .kob-remote-option > .kob-mono { margin-top: auto; font-size: 12px; overflow-wrap: anywhere; }
+.krobi-onboarding .kob-check-remote { align-self: flex-start; }
+.krobi-onboarding .kob-remote-install { display: flex; flex-direction: column; gap: 10px; }
+.krobi-onboarding .kob-remote-install .kob-code { display: flex; gap: 10px; align-items: center; }
+.krobi-onboarding .kob-code code { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.krobi-onboarding .kob-away { display: flex; align-items: center; justify-content: center; width: 100%; padding: 28px 0; }
+.krobi-onboarding .kob-away-end { width: 120px; display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 14px; }
+.krobi-onboarding .kob-away-end small, .krobi-onboarding .kob-away-link small { font-size: 11px; }
+.krobi-onboarding .kob-away-end .kob-status { font-size: 12px; }
+.krobi-onboarding .kob-away-phone { width: 34px; height: 58px; border: 2px solid var(--kob-ink-2); border-radius: 8px; }
+.krobi-onboarding .kob-away-nest { width: 52px; height: 64px; border: 2px solid var(--kob-hue); border-radius: 8px; background: var(--kob-raised); }
+.krobi-onboarding .kob-away-link { flex: 1; max-width: 150px; min-width: 30px; display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 40px; color: var(--kob-ink-2); }
+.krobi-onboarding .kob-away-link > span { width: 100%; border-top: 2px solid var(--kob-hue); }
+.krobi-onboarding .kob-review .kob-row { gap: 12px; padding: 12px 16px; }
+.krobi-onboarding .kob-review-label { flex: 0 0 110px; font-size: 13px; }
+.krobi-onboarding .kob-review strong { flex: 1; min-width: 0; font-size: 14px; font-weight: 600; overflow-wrap: anywhere; }
+.krobi-onboarding .kob-credentials { margin: 0; }
+.krobi-onboarding .kob-credentials dt { flex: 0 0 150px; font-size: 13px; color: var(--kob-ink-3); }
+.krobi-onboarding .kob-credentials dd { margin: 0; flex: 1; min-width: 0; font: 14px var(--font-mono); overflow-wrap: anywhere; }
+.krobi-onboarding .kob-compatible-apps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.krobi-onboarding .kob-compatible-apps > div { display: flex; justify-content: space-between; gap: 8px; padding: 10px 12px; border: 1px solid var(--kob-line); border-radius: 8px; font-size: 14px; }
+.krobi-onboarding .kob-compatible-apps .kob-mono { font-size: 12px; }
+.krobi-onboarding .kob-device-phone { display: flex; flex-direction: column; gap: 12px; width: 220px; height: 420px; box-sizing: border-box; border: 2px solid var(--kob-ink-2); border-radius: 30px; padding: 46px 18px; }
+.krobi-onboarding .kob-device-phone b { font-size: 15px; }
+.krobi-onboarding .kob-device-phone code { padding: 8px 10px; border: 1px solid var(--kob-line); border-radius: 6px; font: 11px var(--font-mono); color: var(--kob-ink-2); overflow-wrap: anywhere; }
+.krobi-onboarding .kob-device-phone > i { margin-top: 6px; height: 32px; border-radius: 8px; background: var(--kob-hue); }
+.kob-import-dialog.krobi-onboarding { min-height: 0; display: block; width: min(900px, calc(100vw - 48px)); max-height: calc(100dvh - 64px); overflow-y: auto; box-sizing: border-box; padding: 24px; border: 1px solid var(--kob-line); border-radius: 12px; background: var(--kob-ground); color: var(--kob-ink); box-shadow: none; }
+.kob-import-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 18px; }
+.kob-import-head h2 { margin: 0; font-size: 22px; }
+@media (max-width: 700px) {
+  .krobi-onboarding .kob-addons-grid, .krobi-onboarding .kob-remote-options { grid-template-columns: 1fr; }
+  .krobi-onboarding .kob-review-label { flex-basis: 80px; }
+  .krobi-onboarding .kob-credentials dt { flex-basis: 100px; }
+  .krobi-onboarding .kob-credentials .kob-row { flex-wrap: wrap; }
+  .krobi-onboarding .kob-music-counts { gap: 14px; }
+}
+.krobi-onboarding .kob-remote-option > .kob-status { font-size: 14px; }
+.krobi-onboarding .kob-option-head input[type="radio"] { width: 18px; height: 18px; }
+
+/* A checkbox that can't be ticked says why where it is, not only in a tooltip. */
+.krobi-onboarding .kob-addon-reason { margin: 0; color: var(--kob-ink-2); font-size: 13px; }
+
+/* Sources step: the audio source card (AddonsStep's option shape) and a preview of what it unlocks. */
+.krobi-onboarding .kob-sources { display: flex; flex-direction: column; gap: 14px; width: 100%; font-size: 14px; }
+.krobi-onboarding .kob-source { cursor: default; }
+.krobi-onboarding .kob-option.kob-addon.kob-option--soon { min-height: 0; }
+.krobi-onboarding .kob-source__kicker { font: 600 12px var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent-blue); }
+.krobi-onboarding .kob-source-dot { background: var(--accent-blue); }
+.krobi-onboarding .kob-option-head .kob-mono { font-size: 12px; font-weight: 500; }
+.krobi-onboarding .kob-source__state { margin-left: auto; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
+.krobi-onboarding .kob-trending { display: grid; gap: 10px; width: 100%; text-align: left; }
+.krobi-onboarding .kob-trending__head { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; }
+.krobi-onboarding .kob-trending__row { display: flex; align-items: center; gap: 12px; padding: 8px; border: 1px solid var(--kob-line); border-radius: 10px; background: var(--kob-panel); }
+.krobi-onboarding .kob-trending__row > i { width: 40px; height: 40px; flex: none; border-radius: 6px; background: var(--_c); }
+.krobi-onboarding .kob-trending__row > span { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.krobi-onboarding .kob-trending__row b, .krobi-onboarding .kob-trending__row small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.krobi-onboarding .kob-trending__row small { color: var(--kob-ink-3); font-size: 12px; }
+.krobi-onboarding .kob-trending__row > em { font-style: normal; font-weight: 600; font-size: 12px; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--accent-blue); }
+.krobi-onboarding .kob-trending__row.is-ghost > i { background: transparent; border: 1px dashed var(--kob-line); }
+.krobi-onboarding .kob-trending__row.is-ghost > em { opacity: 0.4; }

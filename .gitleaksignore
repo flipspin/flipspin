@@ -1,0 +1,7 @@
+# Test fixtures only: hashes of fake tokens and placeholder strings, never real credentials.
+backend/tests/fixtures/users_v1.json:generic-api-key:9
+backend/tests/fixtures/users_v1.json:generic-api-key:17
+backend/tests/fixtures/users_v2.json:generic-api-key:11
+backend/tests/fixtures/users_v2.json:generic-api-key:18
+backend/tests/fixtures/users_v2.json:generic-api-key:33
+backend/tests/integration/test_secret_routes.py:generic-api-key:214

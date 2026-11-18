@@ -1,0 +1,10 @@
+{
+  "candidatesTried": 3,
+  "error": "No matching audio was found.",
+  "failedAt": 0,
+  "failedStage": "fetch",
+  "index": 0,
+  "kind": "not-found",
+  "provider": "youtube",
+  "retryable": true
+}

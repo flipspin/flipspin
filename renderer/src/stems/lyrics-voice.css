@@ -1,0 +1,25 @@
+/* Glass stays legible over both the plain and cover-tinted lyrics backdrop. */
+.lx-seg, .lx-ask { --lx-ink: #F5F1E8; --lx-edge: color-mix(in srgb, var(--lx-ink) 20%, transparent); --lx-glass: #181512; color: var(--lx-ink); }
+.lx-seg button, .lx-ask button { min-height: 0; box-shadow: none; text-transform: none; }
+.lx-seg { position: relative; display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; padding: 3px; border-radius: 999px; background: color-mix(in srgb, var(--lx-glass) 28%, transparent); border: 1px solid var(--lx-edge); }
+.lx-seg__thumb { position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc((100% - 6px) / 3); border-radius: 999px; background: var(--lx-ink); transition: transform var(--dur-fast) var(--ease); }
+.lx-seg__option { position: relative; display: flex; border-radius: 999px; overflow: hidden; }
+.lx-seg [role="radio"] { position: relative; width: 100%; height: 32px; padding: 0 16px; border: 0; border-radius: 999px; background: none; color: var(--lx-ink); font: inherit; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 7px; white-space: nowrap; cursor: pointer; }
+.lx-seg button svg, .lx-ask__confirm svg { width: 15px; height: 15px; flex: none; }
+.lx-seg button.is-on { color: var(--lx-glass); }
+.lx-seg.is-none .lx-seg__thumb { opacity: 0; }
+.lx-seg button:disabled { opacity: .45; cursor: default; }
+.lx-seg [role="radio"].is-asking { box-shadow: inset 0 0 0 1.5px var(--blue); }
+.lx-seg button:focus-visible, .lx-ask button:focus-visible { outline: 2px solid var(--blue); outline-offset: -2px; }
+.lx-seg__option.is-working { background: color-mix(in srgb, var(--blue) 30%, transparent); }
+.lx-seg__fill { position: absolute; inset: 0 auto 0 0; background: color-mix(in srgb, var(--blue) 55%, transparent); transition: width var(--dur-slow) var(--ease); }
+.lx-seg .is-working [role="radio"] { padding-right: 30px; }
+.lx-seg .lx-seg__cancel { position: absolute; right: 4px; top: 7px; display: grid; place-items: center; width: 18px; height: 18px; padding: 0; border: 0; border-radius: 50%; background: color-mix(in srgb, var(--lx-ink) 20%, transparent); color: var(--lx-ink); cursor: pointer; }
+.lx-seg .lx-seg__cancel svg { width: 12px; height: 12px; }
+.lx-ask { display: flex; flex-direction: column; gap: 10px; box-sizing: border-box; width: max-content; min-width: 250px; max-width: calc(100vw - 16px); padding: 12px; border-radius: 12px; border: 1px solid var(--lx-edge); background: color-mix(in srgb, var(--lx-glass) 75%, transparent); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); font-family: var(--font-main); }
+.lx-ask__heading { font-size: 13px; font-weight: 600; }
+.lx-ask__details { color: color-mix(in srgb, var(--lx-ink) 65%, transparent); font: 500 11px var(--font-mono); overflow-wrap: anywhere; }
+.lx-ask .lx-ask__confirm { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 32px; padding: 6px 13px; border: 0; border-radius: 16px; background: var(--blue); color: var(--chalk); font: 600 12.5px var(--font-main); cursor: pointer; }
+.lx-ask__pill { display: inline-flex; align-items: center; height: 18px; padding: 0 7px; border-radius: 9px; background: color-mix(in srgb, var(--chalk) 22%, transparent); font-size: 10.5px; }
+@media (prefers-reduced-motion: reduce) { .lx-seg__thumb, .lx-seg__fill { transition: none; } }
+@media (prefers-reduced-transparency: reduce) { .lx-ask { background: var(--lx-glass); backdrop-filter: none; -webkit-backdrop-filter: none; } }

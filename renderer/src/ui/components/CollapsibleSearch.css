@@ -1,0 +1,88 @@
+.collapsible-search {
+  --search-w: clamp(160px, 22vw, 300px);
+  box-sizing: border-box;
+  position: relative;
+  flex: none;
+  inline-size: 36px;
+  block-size: 36px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: 2px;
+  background: transparent;
+  color: var(--ink);
+  transition: inline-size var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+}
+.collapsible-search[data-open] {
+  inline-size: var(--search-w);
+  border-color: var(--line);
+  background: var(--panel);
+  transition: inline-size var(--dur) var(--ease-out), border-color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+}
+.collapsible-search--boxed {
+  /* Closed, it is one more Paper button in Library's toolbar (ui/buttons.css:
+     34 px, the same corner, border, shadow and yellow hover as "Filters"). */
+  inline-size: 34px;
+  block-size: 34px;
+  border-color: var(--line);
+  border-radius: var(--r-sm);
+  background: var(--panel);
+  box-shadow: var(--shadow-pop-sm);
+}
+.collapsible-search--boxed[data-open] { inline-size: var(--search-w); }
+.collapsible-search--boxed:not([data-open]):hover { background: var(--yellow); }
+.collapsible-search--boxed:not([data-open]) button:hover { background: transparent; }
+.collapsible-search--boxed button { width: 30px; }
+.collapsible-search--boxed input { padding: 0 32px; }
+.collapsible-search input {
+  box-sizing: border-box;
+  display: block;
+  inline-size: var(--search-w);
+  block-size: 100%;
+  padding: 0 36px;
+  border: 0;
+  outline: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font: 13px var(--font-mono, ui-monospace, monospace);
+  appearance: none;
+}
+/* Inside a table toolbar, `.retro-table-toolbar input` (retro-song-table.css)
+   frames every input with a 2px border and an offset shadow, !important. This
+   input sits inside the box's own frame, so that second frame drew a double
+   border on the closed button. */
+.retro-table-toolbar .collapsible-search input,
+.retro-table-toolbar .collapsible-search input:focus {
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: none;
+  background: transparent;
+}
+.collapsible-search input::-webkit-search-cancel-button { appearance: none; }
+.collapsible-search input::placeholder { opacity: 0; color: var(--ink-3); transition: opacity var(--dur-press) var(--ease); }
+.collapsible-search[data-open] input::placeholder { opacity: 1; transition-duration: var(--dur-fast); }
+.collapsible-search button {
+  position: absolute;
+  inset-block: 0;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--ink-2);
+}
+.collapsible-search__trigger { inset-inline-start: 0; }
+.collapsible-search .collapsible-search__clear { inset-inline-end: 0; opacity: 0; pointer-events: none; transition: opacity var(--dur-press) var(--ease); }
+.collapsible-search[data-open] .collapsible-search__clear { opacity: 1; pointer-events: auto; transition: opacity var(--dur-fast) var(--ease) calc(var(--dur) - var(--dur-fast)); }
+/* The open field's own ink border is the focus mark (the teal ring read as an
+   ugly blue square). Keyboard focus on the closed magnifier still gets a ring. */
+.collapsible-search:focus-within { outline: none; }
+.collapsible-search__trigger:focus-visible { outline: 2px solid var(--teal); outline-offset: -2px; }
+.collapsible-search button:hover { color: var(--ink); background: var(--paper-2); }
+
+/* Keep the shortcut target mounted while a selection replaces the tools. */
+.collapsible-search[data-suspended] { position: absolute; inset-inline-end: 8px; inline-size: 0; opacity: 0; pointer-events: none; border-width: 0; transition: none; }

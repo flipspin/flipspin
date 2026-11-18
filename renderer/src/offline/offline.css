@@ -1,0 +1,13 @@
+.ak-banner { display: flex; align-items: center; gap: 12px; padding: 10px 28px; background: var(--paper-2); color: var(--ink); border-bottom: 2px solid var(--ink); font-size: 15px; flex: none; }
+.ak-banner b { font-weight: 700; }
+.ak-banner__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--yellow); flex: none; }
+.ak-banner__age { margin-left: auto; font: 13px var(--font-mono); color: var(--ink-3); white-space: nowrap; }
+.ak-banner__details:empty { display: none; }
+.retro-song-table__row.is-offline-unavailable { opacity: .45; }
+.offline-song-status { width: 200px; flex: none; display: flex; justify-content: flex-end; align-items: center; font: 11px var(--font-mono); white-space: nowrap; }
+.retro-song-table:has(.offline-song-status) .song-grid { --sc-genre: 0px; --sc-date: 0px; --sc-analysis: 0px; --sc-key: 0px; --sc-bpm: 0px; --sc-lyrics: 0px; }
+.retro-song-table:has(.offline-song-status) :is(.song-col--genre, .song-col--date, .song-col--analysis, .song-col--key, .song-col--bpm, .song-col--lyrics) { display: none; }
+@media (max-width: 600px) { .offline-song-status { width: 145px; font-size: 9px; } }
+@media (max-width: 600px) { .ak-banner { padding: 8px 12px; font-size: 12px; gap: 8px; } .ak-banner__age { font-size: 10px; } }
+.offline-account-actions { border: 0; padding: 0; margin: 0; min-width: 0; opacity: .5; }
+.ak-copy-age { font: 400 12px var(--font-mono); color: var(--ink-3); text-transform: none; white-space: nowrap; cursor: help; }

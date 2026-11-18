@@ -1,0 +1,1 @@
+disallowed-methods = [{ path = "dirs::home_dir", reason = "Resolve server/helper data through data_paths; allow unrelated home uses with a reason." }]

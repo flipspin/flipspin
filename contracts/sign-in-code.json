@@ -1,0 +1,94 @@
+{
+  "alphabet": "23456789ABCDEFGHJKLMNPQRSTUVWXYZ",
+  "length": 6,
+  "expiresIn": 600,
+  "pollInterval": 2,
+  "format": [
+    {
+      "input": "abc234",
+      "normalized": "ABC234",
+      "valid": true,
+      "display": "ABC 234"
+    },
+    {
+      "input": " ABC-234 ",
+      "normalized": "ABC234",
+      "valid": true,
+      "display": "ABC 234"
+    },
+    {
+      "input": "ABO234",
+      "normalized": "ABO234",
+      "valid": false,
+      "display": null
+    },
+    {
+      "input": "ABI234",
+      "normalized": "ABI234",
+      "valid": false,
+      "display": null
+    },
+    {
+      "input": "ABC01L",
+      "normalized": "ABC01L",
+      "valid": false,
+      "display": null
+    },
+    {
+      "input": "ABC23",
+      "normalized": "ABC23",
+      "valid": false,
+      "display": null
+    },
+    {
+      "input": "ABC2345",
+      "normalized": "ABC2345",
+      "valid": false,
+      "display": null
+    }
+  ],
+  "expiry": [
+    {
+      "seconds": 600,
+      "display": "10:00"
+    },
+    {
+      "seconds": 61,
+      "display": "1:01"
+    },
+    {
+      "seconds": 0.2,
+      "display": "0:01"
+    },
+    {
+      "seconds": 0,
+      "display": "0:00"
+    },
+    {
+      "seconds": -2,
+      "display": "0:00"
+    }
+  ],
+  "network": [
+    {
+      "via": "local",
+      "allowed": true
+    },
+    {
+      "via": "vpn",
+      "allowed": true
+    },
+    {
+      "via": "tailscale",
+      "allowed": true
+    },
+    {
+      "via": "proxy",
+      "allowed": false
+    },
+    {
+      "via": "open-port",
+      "allowed": false
+    }
+  ]
+}

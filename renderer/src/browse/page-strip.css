@@ -1,0 +1,26 @@
+/* Message strip above song and album tables: a fixed, always-reserved height so a message never moves the table.
+   Banner look = the Sources-step panel (1 px hairline, 12 px radius, dot + word, one coral action), replacing the
+   cream card with the heavy black border. Canvas: claude.ai/artifact/4NCH6iGXF1jEQQhZ3oSxfy, banner b. */
+.page-strip { height: 36px; box-sizing: border-box; display: flex; align-items: center; min-width: 0; }
+.page-strip__banner { flex: 1; min-width: 0; height: 100%; box-sizing: border-box; display: flex; align-items: center; gap: 10px;
+  padding: 0 4px 0 12px; background: var(--panel); color: var(--ink); border: 1px solid var(--line-med); border-radius: 12px;
+  font-size: 13px; white-space: nowrap; overflow: hidden; }
+.page-strip__banner.is-bad { border-color: color-mix(in srgb, var(--rose) 45%, transparent); background: color-mix(in srgb, var(--rose) 8%, var(--panel)); }
+.page-strip__banner.is-fading { animation: page-strip-fade var(--dur-slow) ease-in 2.5s forwards; }
+@keyframes page-strip-fade { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
+.page-strip__dot { width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--yellow); }
+.is-ok > .page-strip__dot { background: var(--green); }
+.is-bad > .page-strip__dot { background: var(--rose); }
+.page-strip__banner > b { font-weight: 700; flex: none; }
+.page-strip__body { color: var(--ink-2); min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.page-strip__end { margin-left: auto; display: inline-flex; gap: 6px; flex: none; }
+.page-strip__btn { font: 600 13px var(--font-sans, inherit); height: 26px; padding: 0 10px; border-radius: 999px; border: 0; background: transparent; color: var(--ink); cursor: pointer; }
+.page-strip__btn:hover { background: color-mix(in srgb, var(--ink) 7%, transparent); }
+.page-strip__btn:focus-visible { outline: 2px solid var(--krobi-blue, var(--blue)); outline-offset: 2px; }
+.page-strip__btn.is-primary { background: var(--coral); color: var(--line); border: 1px solid var(--coral-deep); }
+.page-strip__meter { width: 120px; height: 8px; flex: none; border: 1px solid var(--line-med); border-radius: 4px; background: var(--paper-2, var(--panel-2)); overflow: hidden; }
+.page-strip__meter > i { display: block; height: 100%; background: var(--green); transition: width var(--dur) ease; }
+.page-strip__step { font: 500 12px var(--font-mono, monospace); color: var(--ink-2); flex: none; }
+@media (prefers-reduced-motion: reduce) { .page-strip__banner.is-fading { animation: none; } }
+/* In a header's action row: takes the row's free width, keeps the same fixed height, so the header and the table below never move. */
+.page-strip--inline { flex: 1 1 320px; min-width: 0; }

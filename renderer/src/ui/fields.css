@@ -1,0 +1,25 @@
+/* Paper fields shared by app dialogs. */
+.k-field {
+  min-width: 0;
+  width: 100%;
+  padding: 8px 10px;
+  border: 2px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--panel);
+  color: var(--ink);
+  font: 400 13px/1.5 var(--font-main), sans-serif;
+}
+.k-field:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
+.k-field:disabled { opacity: .45; }
+.k-field[type="checkbox"] {
+  appearance: none;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+}
+.k-field[type="checkbox"]:checked::after { content: "✓"; color: var(--ink); font: 800 12px/1 var(--font-main); }

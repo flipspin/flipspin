@@ -1,0 +1,17 @@
+{
+  "artist": null,
+  "edited": false,
+  "fetchedAt": 2.0,
+  "kind": "synced",
+  "lineConfidence": null,
+  "lowLines": null,
+  "offsetMs": 0,
+  "providerRef": null,
+  "relPath": "Album/Song.mp3",
+  "result": null,
+  "revision": "1a3b10c1c438bd1230f1facfa1e9a8f49a7c1a9fafb3ba59f398fff0ddcb3226",
+  "sidecar": "Song.lrc",
+  "source": "lrclib",
+  "text": "[00:01]Current words\n",
+  "title": null
+}

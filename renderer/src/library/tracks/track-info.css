@@ -1,0 +1,46 @@
+/* A song's details (TrackInfoModal.tsx): a metadata list, not cards.
+   Tokens only. */
+
+.ti { display: grid; gap: 14px; padding: 16px; color: var(--ink); }
+
+.ti-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; }
+.ti-cover { width: 64px; height: 64px; border: 2px solid var(--line); border-radius: var(--r-md); box-shadow: var(--shadow-pop-sm); }
+.ti-names { min-width: 0; display: grid; gap: 1px; }
+.ti-title { font: 700 16px/1.25 var(--font-main); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ti-artist { font-size: 13px; color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ti-meta { font: 400 11.5px var(--font-mono, ui-monospace, monospace); color: var(--ink-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ti-mood { display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px; border: 1px solid var(--line-med); border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; cursor: help; }
+.ti-mood > i { width: 8px; height: 8px; border-radius: 50%; }
+
+.ti-section { border-top: 1px solid var(--line-soft); padding-top: 10px; }
+.ti-h {
+  margin: 0 0 6px;
+  font: 600 10.5px var(--font-mono, ui-monospace, monospace);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+/* Label · value in two tracks, baselines aligned (Astryx MetadataList). */
+.ti-dl { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 5px 16px; margin: 0; align-items: center; }
+.ti-dl > dt { font-size: 12.5px; color: var(--ink-3); }
+.ti-dl > dt[title] { cursor: help; }
+.ti-dl > dd { margin: 0; min-width: 0; display: flex; align-items: center; gap: 8px; font-size: 13px; overflow: hidden; }
+
+.ti-num { font-variant-numeric: tabular-nums; font-weight: 600; }
+.ti-soft { color: var(--ink-2); }
+.ti-src { font: 500 10.5px var(--font-mono, ui-monospace, monospace); color: var(--ink-3); text-transform: uppercase; letter-spacing: 0.04em; }
+
+.ti-file { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+.ti-path { font: 400 11.5px var(--font-mono, ui-monospace, monospace); color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; direction: rtl; text-align: left; }
+
+.ti-lyric { display: inline-flex; align-items: center; gap: 6px; }
+
+.ti-meter { display: inline-flex; align-items: center; gap: 10px; }
+.ti-bar { position: relative; width: 96px; height: 4px; border-radius: 999px; background: var(--line-soft); overflow: hidden; }
+.ti-bar > i { position: absolute; inset: 0 auto 0 0; border-radius: inherit; }
+
+.ti-edit-tags { border: 0; background: none; color: var(--ink-2); font: 600 13px var(--font-main); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.ti-edit-tags:hover:not(:disabled) { color: var(--ink); }
+.ti-edit-tags:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
+.ti-edit-tags:disabled { opacity: 0.45; cursor: default; }

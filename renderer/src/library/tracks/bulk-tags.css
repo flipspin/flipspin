@@ -1,0 +1,10 @@
+.bulk-tags .song-fields > dd { min-height: 44px; }
+.bulk-mixed, .bulk-original { color: var(--ink-3); }
+.bulk-mixed { font-style: italic; }
+.bulk-original { font-size: 12px; }
+.bulk-tags .song-field { column-gap: 8px; }
+.bulk-tags .song-original { flex-basis: 100%; text-align: left; }
+.bulk-tags .song-change-count { text-transform: capitalize; }
+.bulk-edit-row { display: grid; gap: 8px; padding: 12px 0; border-bottom: 1px solid var(--line-soft); overflow-wrap: anywhere; }
+.bulk-edit-row > span { color: var(--ink-3); font-size: 12px; }
+.bulk-edit-row ul { display: grid; gap: 6px; margin: 0; padding-left: 18px; }

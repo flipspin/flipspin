@@ -1,0 +1,5 @@
+/* Setup follow-up actions stay within the Home library panel. */
+.krobi-setup-followup { display: grid; gap: 0.5rem; font-size: 0.875rem; }
+.krobi-setup-followup p { margin: 0; overflow-wrap: anywhere; }
+button.krobi-setup-followup-link { min-height: 44px; height: auto; padding: 0; color: var(--color-text-secondary); font: inherit; font-weight: 600; text-align: left; text-decoration: underline; text-underline-offset: 3px; background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+button.krobi-setup-followup-link:hover { color: var(--color-text-primary); background: transparent; }

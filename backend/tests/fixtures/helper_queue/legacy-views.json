@@ -1,0 +1,698 @@
+{
+  "queued": {
+    "lyrics": {
+      "rows": [
+        {
+          "id": "<opaque>",
+          "rel_path": "Album/One.mp3",
+          "item": "One",
+          "progress_id": "<opaque>",
+          "text": "words",
+          "expected_lyric": null,
+          "isolate_vocals": true,
+          "stems_vocals": false,
+          "job_attempt": 1,
+          "job_idx": 0,
+          "status": "queued",
+          "lease": null,
+          "leased_by": null,
+          "leased_at": 0.0,
+          "last_heartbeat": 0.0,
+          "attempts": 0,
+          "created_at": 1000.0,
+          "phase": null,
+          "error": null,
+          "kind": "align",
+          "needs": [
+            "jobs:align",
+            "memoryBytes>=8589934592"
+          ],
+          "offered_at": 1000.0,
+          "result": null,
+          "jobId": "<opaque>",
+          "offeredAt": 1000.0,
+          "leasedBy": null,
+          "waitReason": "no-helper",
+          "selection": null
+        },
+        {
+          "id": "<opaque>",
+          "rel_path": "Album/Two.mp3",
+          "item": "Two",
+          "progress_id": "<opaque>",
+          "text": null,
+          "expected_lyric": null,
+          "isolate_vocals": true,
+          "stems_vocals": false,
+          "job_attempt": 1,
+          "job_idx": 1,
+          "status": "queued",
+          "lease": null,
+          "leased_by": null,
+          "leased_at": 0.0,
+          "last_heartbeat": 0.0,
+          "attempts": 0,
+          "created_at": 1000.0,
+          "phase": null,
+          "error": null,
+          "kind": "transcribe",
+          "needs": [
+            "jobs:transcribe",
+            "memoryBytes>=8589934592"
+          ],
+          "offered_at": 1000.0,
+          "result": null,
+          "jobId": "<opaque>",
+          "offeredAt": 1000.0,
+          "leasedBy": null,
+          "waitReason": "no-helper",
+          "selection": null
+        }
+      ],
+      "queued": 2,
+      "leased": 0,
+      "online": false,
+      "agents": [],
+      "worker": null,
+      "helpers": [],
+      "waitReason": "no-helper",
+      "oldestAt": 1000.0,
+      "oldestQueuedAt": 1000.0,
+      "running": {
+        "progressId": "<opaque>",
+        "total": 2,
+        "done": 0,
+        "saved": null,
+        "failed": null
+      }
+    },
+    "stems": {
+      "jobs": [
+        {
+          "kind": "stems",
+          "needs": [
+            "jobs:stems",
+            "memoryBytes>=8589934592"
+          ],
+          "offeredAt": 1000.0,
+          "leasedBy": null,
+          "result": null,
+          "album": "Album",
+          "file": "Split.mp3",
+          "status": "queued",
+          "phase": "queued",
+          "progress": null,
+          "error": null,
+          "requestedAt": "1970-01-01T00:16:40Z",
+          "updatedAt": "1970-01-01T00:16:40Z",
+          "waitReason": "no-helper"
+        }
+      ],
+      "agent": {
+        "online": false,
+        "lastSeen": null,
+        "name": null
+      },
+      "waitReason": "no-helper",
+      "oldestAt": 1000.0
+    }
+  },
+  "lyrics-working": {
+    "lyrics": {
+      "rows": [
+        {
+          "id": "<opaque>",
+          "rel_path": "Album/One.mp3",
+          "item": "One",
+          "progress_id": "<opaque>",
+          "text": "words",
+          "expected_lyric": null,
+          "isolate_vocals": true,
+          "stems_vocals": false,
+          "job_attempt": 1,
+          "job_idx": 0,
+          "status": "leased",
+          "lease": "<opaque>",
+          "leased_by": "helper",
+          "leased_at": 1000.0,
+          "last_heartbeat": 1010.0,
+          "attempts": 1,
+          "created_at": 1000.0,
+          "phase": "alineando",
+          "error": null,
+          "kind": "align",
+          "needs": [
+            "jobs:align",
+            "memoryBytes>=8589934592"
+          ],
+          "offered_at": 1000.0,
+          "result": null,
+          "jobId": "<opaque>",
+          "offeredAt": 1000.0,
+          "leasedBy": "helper",
+          "waitReason": null,
+          "selection": null
+        },
+        {
+          "id": "<opaque>",
+          "rel_path": "Album/Two.mp3",
+          "item": "Two",
+          "progress_id": "<opaque>",
+          "text": null,
+          "expected_lyric": null,
+          "isolate_vocals": true,
+          "stems_vocals": false,
+          "job_attempt": 1,
+          "job_idx": 1,
+          "status": "queued",
+          "lease": null,
+          "leased_by": null,
+          "leased_at": 0.0,
+          "last_heartbeat": 0.0,
+          "attempts": 0,
+          "created_at": 1000.0,
+          "phase": null,
+          "error": null,
+          "kind": "transcribe",
+          "needs": [
+            "jobs:transcribe",
+            "memoryBytes>=8589934592"
+          ],
+          "offered_at": 1000.0,
+          "result": null,
+          "jobId": "<opaque>",
+          "offeredAt": 1000.0,
+          "leasedBy": null,
+          "waitReason": "helpers-busy",
+          "selection": null
+        }
+      ],
+      "queued": 1,
+      "leased": 1,
+      "online": true,
+      "agents": [
+        {
+          "name": "Mac",
+          "version": "0.8.0",
+          "platform": "",
+          "lastSeenAt": 1010.0,
+          "busy": true
+        }
+      ],
+      "worker": {
+        "id": "<opaque>",
+        "nest": false,
+        "name": "Mac",
+        "sessionId": null,
+        "os": "macos",
+        "accel": "mlx",
+        "gpu": null,
+        "chip": null,
+        "memoryBytes": null,
+        "jobs": [
+          "align",
+          "transcribe",
+          "stems"
+        ],
+        "speed": {},
+        "keepAwake": "none",
+        "goodbye": null,
+        "macos": null,
+        "version": "0.8.0",
+        "state": "working",
+        "lastError": null,
+        "lastSeenAt": 1010.0,
+        "job": {
+          "title": "One",
+          "phase": "alineando"
+        },
+        "labels": []
+      },
+      "helpers": [
+        {
+          "id": "<opaque>",
+          "nest": false,
+          "name": "Mac",
+          "sessionId": null,
+          "os": "macos",
+          "accel": "mlx",
+          "gpu": null,
+          "chip": null,
+          "memoryBytes": null,
+          "jobs": [
+            "align",
+            "transcribe",
+            "stems"
+          ],
+          "speed": {},
+          "keepAwake": "none",
+          "goodbye": null,
+          "macos": null,
+          "version": "0.8.0",
+          "state": "working",
+          "lastError": null,
+          "lastSeenAt": 1010.0,
+          "job": {
+            "title": "One",
+            "phase": "alineando"
+          },
+          "labels": []
+        }
+      ],
+      "waitReason": "helpers-busy",
+      "oldestAt": 1000.0,
+      "oldestQueuedAt": 1000.0,
+      "running": {
+        "progressId": "<opaque>",
+        "total": 2,
+        "done": 0,
+        "saved": null,
+        "failed": null
+      }
+    },
+    "stems": {
+      "jobs": [
+        {
+          "kind": "stems",
+          "needs": [
+            "jobs:stems",
+            "memoryBytes>=8589934592"
+          ],
+          "offeredAt": 1000.0,
+          "leasedBy": null,
+          "result": null,
+          "album": "Album",
+          "file": "Split.mp3",
+          "status": "queued",
+          "phase": "queued",
+          "progress": null,
+          "error": null,
+          "requestedAt": "1970-01-01T00:16:40Z",
+          "updatedAt": "1970-01-01T00:16:40Z",
+          "waitReason": "helpers-busy"
+        }
+      ],
+      "agent": {
+        "online": true,
+        "lastSeen": "1970-01-01T00:16:50Z",
+        "name": "Mac"
+      },
+      "waitReason": "helpers-busy",
+      "oldestAt": 1000.0
+    }
+  },
+  "lyrics-accident": {
+    "lyrics": {
+      "rows": [
+        {
+          "id": "<opaque>",
+          "rel_path": "Album/One.mp3",
+          "item": "One",
+          "progress_id": "<opaque>",
+          "text": "words",
+          "expected_lyric": null,
+          "isolate_vocals": true,
+          "stems_vocals": false,
+          "job_attempt": 1,
+          "job_idx": 0,
+          "status": "queued",
+          "lease": null,
+          "leased_by": "helper",
+          "leased_at": 1000.0,
+          "last_heartbeat": 1010.0,
+          "attempts": 1,
+          "created_at": 1000.0,
+          "phase": "alineando",
+          "error": null,
+          "kind": "align",
+          "needs": [
+            "jobs:align",
+            "memoryBytes>=8589934592"
+          ],
+          "offered_at": 1000.0,
+          "result": null,
+          "jobId": "<opaque>",
+          "offeredAt": 1000.0,
+          "leasedBy": "helper",
+          "waitReason": null,
+          "selection": null
+        },
+        {
+          "id": "<opaque>",
+          "rel_path": "Album/Two.mp3",
+          "item": "Two",
+          "progress_id": "<opaque>",
+          "text": null,
+          "expected_lyric": null,
+          "isolate_vocals": true,
+          "stems_vocals": false,
+          "job_attempt": 1,
+          "job_idx": 1,
+          "status": "queued",
+          "lease": null,
+          "leased_by": null,
+          "leased_at": 0.0,
+          "last_heartbeat": 0.0,
+          "attempts": 0,
+          "created_at": 1000.0,
+          "phase": null,
+          "error": null,
+          "kind": "transcribe",
+          "needs": [
+            "jobs:transcribe",
+            "memoryBytes>=8589934592"
+          ],
+          "offered_at": 1000.0,
+          "result": null,
+          "jobId": "<opaque>",
+          "offeredAt": 1000.0,
+          "leasedBy": null,
+          "waitReason": null,
+          "selection": null
+        }
+      ],
+      "queued": 2,
+      "leased": 0,
+      "online": true,
+      "agents": [
+        {
+          "name": "Mac",
+          "version": "0.8.0",
+          "platform": "",
+          "lastSeenAt": 1010.0,
+          "busy": false
+        }
+      ],
+      "worker": {
+        "id": "<opaque>",
+        "nest": false,
+        "name": "Mac",
+        "sessionId": null,
+        "os": "macos",
+        "accel": "mlx",
+        "gpu": null,
+        "chip": null,
+        "memoryBytes": null,
+        "jobs": [
+          "align",
+          "transcribe",
+          "stems"
+        ],
+        "speed": {},
+        "keepAwake": "none",
+        "goodbye": null,
+        "macos": null,
+        "version": "0.8.0",
+        "state": "idle",
+        "lastError": null,
+        "lastSeenAt": 1010.0,
+        "job": null,
+        "labels": []
+      },
+      "helpers": [
+        {
+          "id": "<opaque>",
+          "nest": false,
+          "name": "Mac",
+          "sessionId": null,
+          "os": "macos",
+          "accel": "mlx",
+          "gpu": null,
+          "chip": null,
+          "memoryBytes": null,
+          "jobs": [
+            "align",
+            "transcribe",
+            "stems"
+          ],
+          "speed": {},
+          "keepAwake": "none",
+          "goodbye": null,
+          "macos": null,
+          "version": "0.8.0",
+          "state": "idle",
+          "lastError": null,
+          "lastSeenAt": 1010.0,
+          "job": null,
+          "labels": []
+        }
+      ],
+      "waitReason": null,
+      "oldestAt": 1000.0,
+      "oldestQueuedAt": 1000.0,
+      "running": {
+        "progressId": "<opaque>",
+        "total": 2,
+        "done": 0,
+        "saved": null,
+        "failed": null
+      }
+    },
+    "stems": {
+      "jobs": [
+        {
+          "kind": "stems",
+          "needs": [
+            "jobs:stems",
+            "memoryBytes>=8589934592"
+          ],
+          "offeredAt": 1000.0,
+          "leasedBy": null,
+          "result": null,
+          "album": "Album",
+          "file": "Split.mp3",
+          "status": "queued",
+          "phase": "queued",
+          "progress": null,
+          "error": null,
+          "requestedAt": "1970-01-01T00:16:40Z",
+          "updatedAt": "1970-01-01T00:16:40Z",
+          "waitReason": null
+        }
+      ],
+      "agent": {
+        "online": true,
+        "lastSeen": "1970-01-01T00:16:50Z",
+        "name": "Mac"
+      },
+      "waitReason": null,
+      "oldestAt": 1000.0
+    }
+  },
+  "stems-working": {
+    "lyrics": {
+      "rows": [],
+      "queued": 0,
+      "leased": 0,
+      "online": true,
+      "agents": [
+        {
+          "name": "Mac",
+          "version": "0.8.0",
+          "platform": "",
+          "lastSeenAt": 1010.0,
+          "busy": true
+        }
+      ],
+      "worker": {
+        "id": "<opaque>",
+        "nest": false,
+        "name": "Mac",
+        "sessionId": null,
+        "os": "macos",
+        "accel": "mlx",
+        "gpu": null,
+        "chip": null,
+        "memoryBytes": null,
+        "jobs": [
+          "align",
+          "transcribe",
+          "stems"
+        ],
+        "speed": {},
+        "keepAwake": "none",
+        "goodbye": null,
+        "macos": null,
+        "version": "0.8.0",
+        "state": "working",
+        "lastError": null,
+        "lastSeenAt": 1010.0,
+        "job": {
+          "title": "Split.mp3",
+          "phase": "separating"
+        },
+        "labels": []
+      },
+      "helpers": [
+        {
+          "id": "<opaque>",
+          "nest": false,
+          "name": "Mac",
+          "sessionId": null,
+          "os": "macos",
+          "accel": "mlx",
+          "gpu": null,
+          "chip": null,
+          "memoryBytes": null,
+          "jobs": [
+            "align",
+            "transcribe",
+            "stems"
+          ],
+          "speed": {},
+          "keepAwake": "none",
+          "goodbye": null,
+          "macos": null,
+          "version": "0.8.0",
+          "state": "working",
+          "lastError": null,
+          "lastSeenAt": 1010.0,
+          "job": {
+            "title": "Split.mp3",
+            "phase": "separating"
+          },
+          "labels": []
+        }
+      ],
+      "waitReason": "helpers-busy",
+      "oldestAt": null,
+      "oldestQueuedAt": null,
+      "running": null
+    },
+    "stems": {
+      "jobs": [
+        {
+          "kind": "stems",
+          "needs": [
+            "jobs:stems",
+            "memoryBytes>=8589934592"
+          ],
+          "offeredAt": 1000.0,
+          "leasedBy": "helper",
+          "result": null,
+          "album": "Album",
+          "file": "Split.mp3",
+          "status": "running",
+          "phase": "separating",
+          "progress": 50.0,
+          "error": null,
+          "requestedAt": "1970-01-01T00:16:40Z",
+          "updatedAt": "1970-01-01T00:16:50Z",
+          "waitReason": null
+        }
+      ],
+      "agent": {
+        "online": true,
+        "lastSeen": "1970-01-01T00:16:50Z",
+        "name": "Mac"
+      },
+      "waitReason": "helpers-busy",
+      "oldestAt": 1000.0
+    }
+  },
+  "stems-final-failure": {
+    "lyrics": {
+      "rows": [],
+      "queued": 0,
+      "leased": 0,
+      "online": true,
+      "agents": [
+        {
+          "name": "Mac",
+          "version": "0.8.0",
+          "platform": "",
+          "lastSeenAt": 1010.0,
+          "busy": false
+        }
+      ],
+      "worker": {
+        "id": "<opaque>",
+        "nest": false,
+        "name": "Mac",
+        "sessionId": null,
+        "os": "macos",
+        "accel": "mlx",
+        "gpu": null,
+        "chip": null,
+        "memoryBytes": null,
+        "jobs": [
+          "align",
+          "transcribe",
+          "stems"
+        ],
+        "speed": {},
+        "keepAwake": "none",
+        "goodbye": null,
+        "macos": null,
+        "version": "0.8.0",
+        "state": "idle",
+        "lastError": null,
+        "lastSeenAt": 1010.0,
+        "job": null,
+        "labels": []
+      },
+      "helpers": [
+        {
+          "id": "<opaque>",
+          "nest": false,
+          "name": "Mac",
+          "sessionId": null,
+          "os": "macos",
+          "accel": "mlx",
+          "gpu": null,
+          "chip": null,
+          "memoryBytes": null,
+          "jobs": [
+            "align",
+            "transcribe",
+            "stems"
+          ],
+          "speed": {},
+          "keepAwake": "none",
+          "goodbye": null,
+          "macos": null,
+          "version": "0.8.0",
+          "state": "idle",
+          "lastError": null,
+          "lastSeenAt": 1010.0,
+          "job": null,
+          "labels": []
+        }
+      ],
+      "waitReason": null,
+      "oldestAt": null,
+      "oldestQueuedAt": null,
+      "running": null
+    },
+    "stems": {
+      "jobs": [
+        {
+          "kind": "stems",
+          "needs": [
+            "jobs:stems",
+            "memoryBytes>=8589934592"
+          ],
+          "offeredAt": 1000.0,
+          "leasedBy": "helper",
+          "result": null,
+          "album": "Album",
+          "file": "Split.mp3",
+          "status": "failed",
+          "phase": "failed",
+          "progress": null,
+          "error": "bad audio",
+          "requestedAt": "1970-01-01T00:16:40Z",
+          "updatedAt": "1970-01-01T00:16:50Z",
+          "waitReason": null
+        }
+      ],
+      "agent": {
+        "online": true,
+        "lastSeen": "1970-01-01T00:16:50Z",
+        "name": "Mac"
+      },
+      "waitReason": null,
+      "oldestAt": null
+    }
+  }
+}

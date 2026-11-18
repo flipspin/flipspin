@@ -1,0 +1,164 @@
+{
+  "about": "The «resolver» rules every client must agree on. Read by krobi-ios Tools/Checks, krobi-android ContratosTest and the renderer's resolve.test.ts. Change a case here, and all three suites change with it. rowControl = the one acquire/resolve control a catalog row shows: anadir («+»), cambiar, mover, ninguno.",
+  "fold": [
+    {
+      "in": "Un Verano Sin Ti (Deluxe)",
+      "out": "un verano sin ti"
+    },
+    {
+      "in": "Rosalía — Motomami!",
+      "out": "rosalia motomami"
+    },
+    {
+      "in": "MIL PROBLEMAS [Remastered 2024]",
+      "out": "mil problemas"
+    },
+    {
+      "in": "Mañana Será Bonito",
+      "out": "manana sera bonito"
+    },
+    {
+      "in": "",
+      "out": ""
+    }
+  ],
+  "ownedElsewhere": [
+    {
+      "case": "owned under its single: offer the move",
+      "verdict": {
+        "owned": true,
+        "match": {
+          "album": "Dientes De Fierro",
+          "path": "/home/krobi/Krobi/Music/Dientes De Fierro/01 - Dientes De Fierro.mp3"
+        }
+      },
+      "albumTitle": "Mil Problemas",
+      "move": true
+    },
+    {
+      "case": "already in this album by tag",
+      "verdict": {
+        "owned": true,
+        "match": {
+          "album": "Mil Problemas",
+          "path": "/home/krobi/Krobi/Music/Mil Problemas/03 - Dientes De Fierro.mp3"
+        }
+      },
+      "albumTitle": "Mil Problemas",
+      "move": false
+    },
+    {
+      "case": "a moved FLAC keeps its single's tag but sits in this album's folder: no move",
+      "verdict": {
+        "owned": true,
+        "match": {
+          "album": "Dientes De Fierro",
+          "path": "/home/krobi/Krobi/Music/Mil Problemas/01 - Dientes De Fierro.flac"
+        }
+      },
+      "albumTitle": "Mil Problemas",
+      "move": false
+    },
+    {
+      "case": "same album, folded: deluxe and accents",
+      "verdict": {
+        "owned": true,
+        "match": {
+          "album": "Mil problemas (Deluxe)",
+          "path": "/m/Mil problemas (Deluxe)/03.mp3"
+        }
+      },
+      "albumTitle": "MIL PROBLEMAS",
+      "move": false
+    },
+    {
+      "case": "not owned: nothing to move",
+      "verdict": {
+        "owned": false,
+        "nearMatch": {
+          "album": "Dientes De Fierro",
+          "path": "/m/Dientes De Fierro/01.mp3",
+          "durationSeconds": 290
+        }
+      },
+      "albumTitle": "Mil Problemas",
+      "move": false
+    }
+  ],
+  "confirmDetail": [
+    {
+      "case": "the length of the cut that goes",
+      "nearMatch": {
+        "path": "/m/a/x.mp3",
+        "durationSeconds": 290
+      },
+      "text": "Se borrará tu versión de 4:50."
+    },
+    {
+      "case": "no length known",
+      "nearMatch": {
+        "path": "/m/a/x.mp3"
+      },
+      "text": "Se borrará tu versión."
+    }
+  ],
+  "rowControl": [
+    {
+      "case": "not in the library: add it",
+      "verdict": {
+        "owned": false
+      },
+      "albumTitle": "Mil Problemas",
+      "control": "anadir"
+    },
+    {
+      "case": "another cut in the library: only «Cambiar», no «+» beside it (the maintainer, 2026-10-19)",
+      "verdict": {
+        "owned": false,
+        "nearMatch": {
+          "album": "Dientes De Fierro",
+          "path": "/m/Dientes De Fierro/01.mp3",
+          "durationSeconds": 290
+        }
+      },
+      "albumTitle": "Mil Problemas",
+      "control": "cambiar"
+    },
+    {
+      "case": "owned under its single, on an album page: move it",
+      "verdict": {
+        "owned": true,
+        "match": {
+          "album": "Dientes De Fierro",
+          "path": "/m/Dientes De Fierro/01.mp3"
+        }
+      },
+      "albumTitle": "Mil Problemas",
+      "control": "mover"
+    },
+    {
+      "case": "owned here: no acquire or resolve control",
+      "verdict": {
+        "owned": true,
+        "match": {
+          "album": "Mil Problemas",
+          "path": "/m/Mil Problemas/03.mp3"
+        }
+      },
+      "albumTitle": "Mil Problemas",
+      "control": "ninguno"
+    },
+    {
+      "case": "owned elsewhere, on a list that is not an album page: nothing to move to",
+      "verdict": {
+        "owned": true,
+        "match": {
+          "album": "Dientes De Fierro",
+          "path": "/m/Dientes De Fierro/01.mp3"
+        }
+      },
+      "albumTitle": null,
+      "control": "ninguno"
+    }
+  ]
+}

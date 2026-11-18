@@ -1,0 +1,138 @@
+/* The one cover card (CoverCard.tsx). Grown from the Library grid card:
+   tokens only; motion from ui/tokens/app.css, shadows from theme.css. */
+
+.cover-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.cover-card__open {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+}
+.cover-card__open:hover { background: transparent; }
+.cover-card__open:focus-visible { outline: none; }
+
+.cover-card__art {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 2px solid var(--line);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-pop);
+  transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+.cover-card__art > * { width: 100%; height: 100%; }
+
+/* Lift: one pixel up-left, the shadow grows. A press seats it. */
+.cover-card:is(:hover, :focus-within, [data-menu-open]) .cover-card__art {
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow-pop-lg);
+}
+.cover-card__open:active .cover-card__art {
+  transform: translate(1px, 1px);
+  box-shadow: var(--shadow-pop-sm);
+  transition-duration: var(--dur-press);
+}
+.cover-card__open:focus-visible .cover-card__art { outline: 2px solid var(--coral); outline-offset: 2px; }
+
+:root[data-mode="night"] .cover-card__art { border-color: transparent; box-shadow: none; }
+:root[data-mode="night"] .cover-card:hover .cover-card__art { box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45); }
+
+.cover-card__title {
+  font: 700 13.5px var(--font-main);
+  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cover-card__sub {
+  display: flex;
+  gap: 6px;
+  justify-content: space-between;
+  min-width: 0;
+  margin-top: -3px;
+  overflow: hidden;
+  font: 400 11.5px var(--font-mono, ui-monospace, monospace);
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+.cover-card__sub > * { overflow: hidden; text-overflow: ellipsis; }
+
+/* The controls sit on a square laid over the cover; they move with its lift. */
+.cover-card__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 1;
+  pointer-events: none;
+  transition: transform var(--dur-fast) var(--ease);
+}
+.cover-card:is(:hover, :focus-within, [data-menu-open]) .cover-card__overlay { transform: translate(-1px, -1px); }
+
+.cover-card__more,
+.cover-card__disc {
+  position: absolute;
+  pointer-events: auto;
+  min-height: 0;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+}
+.cover-card:is(:hover, :focus-within, [data-menu-open]) :is(.cover-card__more, .cover-card__disc),
+.cover-card[data-current] .cover-card__disc { opacity: 1; }
+
+.cover-card__more {
+  top: 6px;
+  right: 6px;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--panel);
+  color: var(--ink);
+}
+.cover-card__more:hover,
+.cover-card[data-menu-open] .cover-card__more { background: var(--purple); }
+
+.cover-card__disc {
+  right: 8px;
+  bottom: 8px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+}
+.cover-card__disc > .krobi-disc { width: 30px; height: 30px; }
+
+.cover-card__more:focus-visible,
+.cover-card__disc:focus-visible { outline: 2px solid var(--coral); outline-offset: 2px; }
+
+/* Touch: no hover to reveal them, so the controls are always there. */
+@media (hover: none) {
+  .cover-card :is(.cover-card__more, .cover-card__disc) { opacity: 1; }
+}
+
+/* An artist: a round cover. */
+.cover-card[data-round] .cover-card__art { border-radius: 50%; }
+/* Shown but not openable. */
+.cover-card__open:disabled { cursor: default; }
+.cover-card[data-disabled] .cover-card__art { transform: none; box-shadow: var(--shadow-pop); }

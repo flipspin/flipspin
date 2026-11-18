@@ -1,0 +1,159 @@
+/* The wrapper gives the size-contained story a definite square in either Home layout. */
+.home-library-square { width: 100%; aspect-ratio: 1; flex: none; }
+.home-compact { container: home / size; }
+.home-compact .home-library-square { max-width: 100cqh; }
+
+/* Home's story island: semantic tokens follow the app palette and mode. */
+.krobi-library {
+  --color-text-primary: var(--line);
+  --color-text-on-fill: #FFFBF0;
+  --color-bg-surface-primary: #FFFBF0;
+  --color-border-bold: var(--line);
+  --accent-teal: var(--teal);
+  --accent-purple: var(--purple);
+  --accent-yellow: var(--yellow);
+  --accent-blue: var(--blue);
+  --accent-green: var(--green);
+  --accent-rose: var(--rose);
+  --border-w: 2px;
+  --shadow-4: 5px 5px 0 var(--line);
+  --radius-sm: 3px; --radius-md: 6px; --radius-lg: 10px; --radius-xl: 18px;
+  --radius-pill: 999px; --radius-full: 50%;
+  --text-xs: 11px; --text-sm: 13px; --text-md: 16px; --text-xl: 22px; --text-3xl: 32px;
+  --tracking-eyebrow: .16em; --tracking-hero: -.045em; --tracking-tight: -.01em;
+  --space-1: 5px; --space-1-5: 6px; --space-2: 8px; --space-2-5: 10px;
+  --space-3: 12px; --space-3-5: 14px; --space-4: 18px; --space-6: 26px;
+  --space-8: 30px; --space-10: 44px; --space-12: 56px;
+}
+@layer base {
+  .krobi-library button,
+  .krobi-library button:hover,
+  .krobi-library button:active,
+  .krobi-library button:focus,
+  .krobi-library button:focus-visible { all: revert-layer; }
+}
+.krobi-library.tb { width: 100%; height: 100%; min-height: 0; container: library / size; background: var(--panel); color: var(--ink); border: 2px solid var(--line); border-radius: 12px; box-shadow: 4px 4px 0 var(--line); display: flex; flex-direction: column; overflow: hidden; }
+.krobi-library .z-story__top { align-items: center; flex-wrap: nowrap; gap: 6px; }
+.krobi-library .z-story__kicker { margin: 0; min-width: 0; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.krobi-library .tb-total { font: 11px var(--font-mono); }
+.krobi-library .tb-body { flex: 1; min-height: 0; padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+/* Fill story cards with their accent and keep unselected marks pale so selected data remains distinct. */
+.krobi-library .tb-body { background: color-mix(in oklab, var(--_c) 90%, var(--panel)); }
+:root:is([data-mode="dark"], [data-mode="night"]) .krobi-library .tb-body { background: color-mix(in oklab, var(--_c) 55%, var(--ink-2)); }
+.krobi-library .z-story {
+  flex: 1; min-height: 0; padding: 0; border: 0; border-radius: 0; box-shadow: none;
+  background: transparent; color: var(--line);
+  --_on: var(--line); --_off: var(--panel); --_cream: var(--panel);
+}
+:root:is([data-mode="dark"], [data-mode="night"]) .krobi-library .z-story { --_off: var(--ink); --_cream: var(--ink); }
+.krobi-library .z-story__kicker { color: var(--line); }
+.krobi-library .z-pickbars > button[aria-pressed="true"] > i { background: var(--line); }
+.krobi-library svg.z-bloom path { stroke: var(--line); }
+.krobi-library svg.z-bloom path[aria-pressed="true"] { fill: var(--line); }
+.krobi-library svg.z-bloom text { fill: var(--line); }
+.krobi-library .z-pickrows > button[aria-pressed="true"] > span:first-child,
+.krobi-library .z-pickchips > button[aria-pressed="true"] { background: var(--line); color: var(--_cream); }
+.krobi-library .z-pickchips > button { color: var(--line); }
+.krobi-library.tb--empty .z-story { --_on: var(--ink); }
+.krobi-library .tb-claim { display: flex; flex: none; flex-direction: column; gap: 6px; }
+.krobi-library .z-story__big { font-size: clamp(32px, 12cqh, 64px); }
+.krobi-library .z-story__fact { line-height: 1.4; }
+.krobi-library .z-story__fig { flex: 1 1 0; min-height: 0; container: story-figure / size; }
+.krobi-library .z-pickbars { min-height: 0; }
+.krobi-library .z-pickbars > button > i { box-sizing: border-box; }
+.krobi-library .z-pickbars__ticks { flex: none; }
+.krobi-library .z-pickrows { min-height: 0; grid-auto-rows: clamp(36px, 30cqh, 44px); gap: 5px; overflow-y: auto; overscroll-behavior: contain; }
+.krobi-library .z-pickrows > button { position: relative; min-height: 28px; padding-bottom: 6px; align-items: center; grid-template-columns: minmax(0, 1fr) max-content; }
+.krobi-library .z-pickrows > button::after { content: ""; position: absolute; bottom: 0; left: 0; width: var(--_w); height: 4px; border-radius: var(--radius-pill); background: var(--_cream); }
+.krobi-library .z-pickrows > button[aria-pressed="true"]::after { height: 5px; background: var(--line); }
+.krobi-library .z-pickrows > button > span:first-child { width: 100%; min-width: 0; max-height: none; height: auto; min-height: 20px; line-height: 20px; padding: 0; border: 0; background: none; color: var(--_on); text-overflow: ellipsis; display: block; font-size: 14px; }
+.krobi-library .z-pickrows > button[aria-pressed="true"] > span:first-child { background: none; color: var(--_on); }
+.krobi-library .z-pickrows > button > .z-mono { color: var(--_on); line-height: 20px; }
+/* The SVGs keep their native aspect ratio and can only shrink to fit. */
+.krobi-library svg.z-bloom { flex: 1 1 0; min-height: 0; height: 0; max-height: 260px; max-width: 260px; align-self: center; }
+/* A clicked segment gets no ring (WebKit drew its blue focus box); the
+   keyboard's focus is the thick stroke. */
+.krobi-library svg.z-bloom path:focus { outline: none; }
+.krobi-library svg.z-bloom path:focus-visible { outline: none; stroke-width: 4px; stroke: var(--_on); }
+.krobi-library svg.z-dotmap { flex: 1 1 0; min-height: 45%; height: 0; box-sizing: border-box; }
+/* Use a dark field and faint unselected dots so the selected mood remains visible in either mode. */
+.krobi-library svg.z-dotmap { background: color-mix(in oklab, var(--line) 94%, var(--_c)); border-color: var(--line); }
+.krobi-library svg.z-dotmap circle { fill: color-mix(in srgb, white 28%, transparent); stroke: none; }
+.krobi-library svg.z-dotmap circle[data-on] { fill: var(--_c); }
+/* The mood chips: one row with no scrollbar (WebKit's clipped them), moved by
+   bare ‹ › arrows that show only while there is more on that side. */
+.krobi-library .tb-chips { flex: none; display: flex; align-items: center; gap: 2px; min-width: 0; }
+.krobi-library .tb-chips .z-pickchips { flex: 1; min-width: 0; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+.krobi-library .tb-chips .z-pickchips::-webkit-scrollbar { display: none; }
+.krobi-library .tb-chips__arrow { flex: none; display: grid; place-items: center; width: 22px; height: 26px; padding: 0; border: 0; background: transparent; box-shadow: none; color: var(--line); cursor: pointer; }
+.krobi-library .tb-chips__arrow svg { width: 16px; height: 16px; }
+.krobi-library .z-pickchips > button { flex: none; white-space: nowrap; }
+.krobi-library .tb-map-note { font-size: 12px; font-family: var(--font-mono); }
+.krobi-library .tb-mosaic { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-1-5); flex: none; }
+.krobi-library .tb-mosaic > span { width: 100%; aspect-ratio: 1; border: 2.5px solid var(--line); border-radius: 8px; }
+/* Covers yield before three readable rows. The square width follows the figure. */
+@container story-figure (height < calc((100cqw - 3 * 6px) / 4 + 3 * 44px + 2 * 5px + 10px)) {
+  .krobi-library .tb-mosaic { display: none; }
+}
+.krobi-library .tb-pager { margin-left: auto; flex: none; display: flex; align-items: center; gap: 4px; }
+.krobi-library .tb-pager .z-story-dots { margin: 0; }
+.krobi-library .tb-pager .z-story-dots > button { width: 8px; height: 8px; border: 0; background: color-mix(in oklab, var(--ink) 22%, var(--panel)); }
+.krobi-library .tb-pager .z-story-dots > button[aria-current="true"] { width: 16px; background: var(--line); }
+.krobi-library .tb-arrow { width: 22px; height: 22px; padding: 0; border: 0; border-radius: 6px; background: transparent; box-shadow: none; display: grid; place-items: center; cursor: pointer; color: var(--ink-3); }
+.krobi-library .tb-arrow:hover { color: var(--ink); }
+.krobi-library .tb-arrow svg { width: 16px; height: 16px; }
+/* Beside the claim: it plays the songs the claim names. */
+.krobi-library .tb-claim-line { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.krobi-library .tb-play { flex: none; display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border-radius: 50%; border: 2px solid var(--line); background: var(--line); color: var(--_cream); box-shadow: none; cursor: pointer; }
+.krobi-library .tb-play:disabled { opacity: .5; cursor: default; }
+/* Narrower, the dots become a ring seen edge-on: the card on show centred,
+   its neighbours smaller and fainter toward the edges, the far side hidden
+   (`data-d` = offset from the card on show). Five dots, then three. Changing
+   card turns the ring. */
+@container library (max-width: 335px) {
+  .krobi-library .tb-pager .z-story-dots { position: relative; display: block; width: 52px; height: 8px; }
+  .krobi-library .tb-pager .z-story-dots > button {
+    position: absolute; top: 0; left: 50%; margin-left: -4px;
+    transform: translateX(var(--_x, 0)) scale(var(--_s, 1)); opacity: var(--_o, 1);
+    transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease), width var(--dur) var(--ease), margin var(--dur) var(--ease);
+  }
+  .krobi-library .tb-pager .z-story-dots > button[aria-current="true"] { margin-left: -8px; }
+  .krobi-library .tb-pager .z-story-dots > button[data-d="-1"] { --_x: -14px; --_s: .8; --_o: .75; }
+  .krobi-library .tb-pager .z-story-dots > button[data-d="1"] { --_x: 14px; --_s: .8; --_o: .75; }
+  .krobi-library .tb-pager .z-story-dots > button[data-d="-2"] { --_x: -23px; --_s: .55; --_o: .4; }
+  .krobi-library .tb-pager .z-story-dots > button[data-d="2"] { --_x: 23px; --_s: .55; --_o: .4; }
+  .krobi-library .tb-pager .z-story-dots > button:is([data-d="3"], [data-d="-3"]) { --_s: .3; --_o: 0; pointer-events: none; }
+}
+@container library (max-width: 315px) {
+  .krobi-library .tb-pager .z-story-dots { width: 36px; }
+  .krobi-library .tb-pager .z-story-dots > button:is([data-d="2"], [data-d="-2"]) { --_x: 0px; --_s: .3; --_o: 0; pointer-events: none; }
+}
+.krobi-library button:focus-visible { outline: 3px solid var(--_on, var(--ink)); outline-offset: 3px; }
+.krobi-library .tb-play:hover:not(:disabled) { transform: translate(-1px, -1px); }
+.krobi-library .tb-none { flex: 1; display: grid; place-content: center; justify-items: center; gap: 12px; text-align: center; }
+.krobi-library .tb-none b { font-size: 22px; font-weight: 800; letter-spacing: -.01em; }
+.krobi-library .tb-none .z-mono { font-size: 13px; }
+.krobi-library .tb-empty-action { display: inline-flex; align-items: center; min-height: 38px; padding: 0 14px; border-radius: 10px; border: 2px solid var(--line); background: var(--color-bg-surface-primary); color: var(--line); font-weight: 800; font-size: 14px; text-decoration: none; box-shadow: 2px 2px 0 var(--line); cursor: pointer; }
+/* Key uses the circle's empty corners for its fact and bottom-left claim. */
+.krobi-library .z-story--side { position: relative; display: block; }
+.krobi-library .z-story--side .z-story__top { position: relative; z-index: var(--z-sticky); }
+.krobi-library .z-story--side > .z-story__fact { position: relative; display: block; margin-top: var(--space-1); font-size: var(--text-xs); z-index: var(--z-sticky); }
+.krobi-library .z-story--side .tb-claim { position: absolute; left: 0; bottom: 0; z-index: var(--z-sticky); gap: 2px; }
+.krobi-library .z-story--side .z-story__big { font-size: clamp(28px, 13cqh, 48px); margin-top: 0; }
+.krobi-library .z-story--side .z-story__word { font-size: clamp(14px, 5.8cqw, 20px); }
+.krobi-library .z-story--side .tb-claim .z-story__fact { display: none; }
+.krobi-library .z-story--side .z-story__fig { position: absolute; inset: 0; margin: 0; min-height: 0; display: grid; place-items: end center; container-type: normal; }
+.krobi-library .z-story--side svg.z-bloom { flex: none; width: 79cqw; height: 79cqh; max-width: 100%; max-height: 100%; }
+
+/* Claims and figures follow the actual square, including compact Home. */
+@container library (max-height: 460px) {
+  .krobi-library .tb-body { padding: 12px; gap: 10px; }
+  .krobi-library .z-story { gap: 5px; }
+  .krobi-library .tb-claim { gap: 3px; }
+  .krobi-library .z-story__big { margin-top: 2px; }
+  .krobi-library .z-story__word { font-size: 18px; }
+  .krobi-library .z-story__fig { margin-top: 4px; gap: 6px; }
+  .krobi-library .z-pickchips > button { padding: 3px 8px; font-size: 12px; }
+}
+
+

@@ -1,0 +1,63 @@
+{
+  "about": "The album page's «Más de <artista>»: which other albums it lists. The album's primary artist (the tag before «feat.»), folded; every other album whose artist tag names it as one of its parts; never the album itself; nothing when the album has no artist. In library order. Read by krobi-ios Tools/Checks, krobi-android ContratosTest and the renderer's LibraryAlbumPage tests.",
+  "masDe": [
+    {
+      "case": "same artist, never the album itself",
+      "album": { "path": "/m/Un Verano", "artist": "Bad Bunny" },
+      "albums": [
+        { "path": "/m/Un Verano", "artist": "Bad Bunny" },
+        { "path": "/m/YHLQMDLG", "artist": "Bad Bunny" },
+        { "path": "/m/Mañana", "artist": "Karol G" }
+      ],
+      "out": ["/m/YHLQMDLG"]
+    },
+    {
+      "case": "a shared tag names the artist as one of its parts",
+      "album": { "path": "/m/A", "artist": "Bad Bunny" },
+      "albums": [
+        { "path": "/m/A", "artist": "Bad Bunny" },
+        { "path": "/m/B", "artist": "Bad Bunny, Jhay Cortez" },
+        { "path": "/m/C", "artist": "Rosalía & Bad Bunny" }
+      ],
+      "out": ["/m/B", "/m/C"]
+    },
+    {
+      "case": "this album's «feat.» tail does not count",
+      "album": { "path": "/m/Discovery", "artist": "Daft Punk feat. Pharrell Williams" },
+      "albums": [
+        { "path": "/m/Discovery", "artist": "Daft Punk feat. Pharrell Williams" },
+        { "path": "/m/Homework", "artist": "Daft Punk" },
+        { "path": "/m/In My Mind", "artist": "Pharrell Williams" }
+      ],
+      "out": ["/m/Homework"]
+    },
+    {
+      "case": "case and accents fold",
+      "album": { "path": "/m/Motomami", "artist": "Rosalía" },
+      "albums": [
+        { "path": "/m/Motomami", "artist": "Rosalía" },
+        { "path": "/m/El Mal Querer", "artist": "ROSALIA" }
+      ],
+      "out": ["/m/El Mal Querer"]
+    },
+    {
+      "case": "an act with «&» is one name: «Simon» alone is not it",
+      "album": { "path": "/m/Bookends", "artist": "Simon & Garfunkel" },
+      "albums": [
+        { "path": "/m/Bookends", "artist": "Simon & Garfunkel" },
+        { "path": "/m/Bridge", "artist": "Simon & Garfunkel" },
+        { "path": "/m/Graceland", "artist": "Paul Simon" }
+      ],
+      "out": ["/m/Bridge"]
+    },
+    {
+      "case": "no artist, no section",
+      "album": { "path": "/m/X", "artist": null },
+      "albums": [
+        { "path": "/m/X", "artist": null },
+        { "path": "/m/Y", "artist": null }
+      ],
+      "out": []
+    }
+  ]
+}
