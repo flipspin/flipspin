@@ -67,7 +67,7 @@ jobs:
           sed -n 's/^APP_VERSION = "\([^"]*\)".*/version=\1/p' backend/app/config.py >> "$GITHUB_OUTPUT"
 
       - id: meta
-        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5.10.0
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
           # metadata-action lowercases this; ghcr.io rejects upper case.
           images: ghcr.io/flipspin/flipspin-server
